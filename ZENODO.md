@@ -10,7 +10,8 @@ Este documento describe el proceso para archivar una versión estable del reposi
 - [x] `LICENSE` definido (CC BY-SA 4.0)
 - [x] `papers.csv` con metadatos estructurados
 - [x] `research-protocol.md` con metodología reproducible
-- [ ] Release de GitHub creado (tag `v1.0.0`)
+- [x] Release de GitHub creado (`v1.0.0`, 2026-08-30)
+- [x] Archivo Zenodo publicado: [versión v1.0.0](https://doi.org/10.5281/zenodo.22179172) · DOI de concepto: [10.5281/zenodo.22179171](https://doi.org/10.5281/zenodo.22179171)
 
 ---
 
@@ -124,4 +125,4 @@ Para cada actualización mayor de la colección:
 
 ---
 
-*Última actualización: 2026-08-30*
+*Última actualización: 2026-08-30 — v1.0.0 archivada y verificada en Zenodo.*

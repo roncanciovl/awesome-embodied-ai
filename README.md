@@ -6,6 +6,7 @@ A curated and reproducible research resource covering **Embodied Artificial Inte
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22179172.svg)](https://doi.org/10.5281/zenodo.22179172)
 
 ---
 
@@ -55,6 +56,7 @@ A curated collection of **41 foundational papers** with structured metadata and 
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
 | [`ZENODO.md`](ZENODO.md) | Guide for archiving releases in Zenodo (DOI) |
+| [Zenodo v1.0.0](https://doi.org/10.5281/zenodo.22179172) | Archived stable release; concept DOI: [`10.5281/zenodo.22179171`](https://doi.org/10.5281/zenodo.22179171) |
 | [`LICENSE`](LICENSE) | CC BY-SA 4.0 |
 
 ## 🤖 Vision-Language-Action (VLA) Models

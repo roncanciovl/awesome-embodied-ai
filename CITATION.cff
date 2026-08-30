@@ -2,11 +2,17 @@ cff-version: 1.2.0
 message: "Si usas esta colección de papers en tu investigación, por favor cítala como se indica abajo."
 title: "Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real"
 type: dataset
+version: "v1.0.0"
+date-released: "2026-08-30"
+doi: "10.5281/zenodo.22179172"
 authors:
   - family-names: "Roncancio"
     given-names: "Henry Antonio"
     orcid: "https://orcid.org/0009-0009-9954-9813"
 identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22179171"
+    description: "Zenodo concept DOI"
   - type: url
     value: "https://github.com/roncanciovl/awesome-embodied-ai"
 repository-code: "https://github.com/roncanciovl/awesome-embodied-ai"
