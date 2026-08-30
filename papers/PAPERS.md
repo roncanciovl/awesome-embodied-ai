@@ -19,7 +19,8 @@ papers/
 ├── 02_Simulation_Environments/ # Simuladores y entornos 3D
 ├── 03_Sim2Real_RL/             # Transferencia Sim2Real y RL
 ├── 04_Robotics_Frameworks/     # ROS 2 y frameworks de manipulación
-└── 05_Surveys_Case_Studies/    # Surveys y agentes embodied
+├── 05_Surveys_Case_Studies/    # Surveys y agentes embodied
+└── 06_ROS2_AI_LLMs/            # ROS 2 + IA/LLMs para robótica
 ```
 
 ---
@@ -112,6 +113,38 @@ papers/
 - Los tres surveys cubren el estado del arte de Embodied AI y VLA (ideal como punto de entrada).
 - **SayPlan** conecta LLMs con grafos de escena 3D para planificación multi-habitación.
 - **Voyager** (NVIDIA) usa GPT-4 para aprendizaje abierto en Minecraft — referencia clave para agentes embodied con LLM.
+
+---
+
+## 🧩 06 — ROS 2 + IA/LLMs para Robótica
+
+| Paper | arXiv | Año | Archivo |
+|-------|-------|-----|---------|
+| **SayCan: Do As I Can, Not As I Say: Grounding Language in Robotic Affordances** | [2204.01691](https://arxiv.org/abs/2204.01691) | 2022 | `SayCan_Grounding_Language_in_Robotic_Affordances.pdf` |
+| **Code as Policies: Language Model Programs for Robots** | [2209.07753](https://arxiv.org/abs/2209.07753) | 2022 | `Code_as_Policies_Language_Model_Programs_for_Robots.pdf` |
+| **Inner Monologue: Embodied Reasoning through Planning with Language Models** | [2207.05608](https://arxiv.org/abs/2207.05608) | 2022 | `Inner_Monologue_Embodied_Reasoning_with_Language_Models.pdf` |
+| **VoxPoser: Composable 3D Value Maps for Robotic Manipulation with Language Models** | [2307.05973](https://arxiv.org/abs/2307.05973) | 2023 | `VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf` |
+| **ChatGPT for Robotics: Design Principles and Model Abilities** | [2306.17582](https://arxiv.org/abs/2306.17582) | 2023 | `ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf` |
+| **TidyBot: Personalized Robot Assistance with Large Language Models** | [2305.05706](https://arxiv.org/abs/2305.05706) | 2023 | `TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf` |
+| **GenSim: Generating Robotic Simulation Tasks with Large Language Models** | [2310.01361](https://arxiv.org/abs/2310.01361) | 2023 | `GenSim_Generating_Robotic_Simulation_Tasks_with_LLMs.pdf` |
+| **RoboGen: Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation** | [2311.01455](https://arxiv.org/abs/2311.01455) | 2023 | `RoboGen_Unleashing_Infinite_Data_for_Robot_Learning.pdf` |
+| **LLM+P: Empowering Large Language Models with Optimal Planning Proficiency** | [2304.11477](https://arxiv.org/abs/2304.11477) | 2023 | `LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf` |
+
+### Resumen rápido
+- **SayCan** (Google) fue el pionero: combina LLMs con funciones de valor de affordance para planificación de tareas robóticas reales.
+- **Code as Policies** demuestra que los LLMs pueden generar código de política robótica directamente (incluye ejemplos con APIs de ROS).
+- **ChatGPT for Robotics** (Microsoft) provee principios de diseño para integrar LLMs en sistemas robóticos, con ejemplos prácticos de ROS.
+- **Inner Monologue** añade retroalimentación de éxito/fallo del entorno al razonamiento del LLM.
+- **VoxPoser** usa LLMs + VLMs para componer mapas de valor 3D para manipulación sin entrenamiento adicional.
+- **TidyBot** muestra un caso de uso real: robot de servicio personalizado con LLMs.
+- **GenSim / RoboGen** usan LLMs para generar automáticamente tareas y entornos de simulación.
+- **LLM+P** combina LLMs con planificadores clásicos (PDDL) para planificación óptima.
+
+### Conexión con ROS 2
+Estos papers representan el paradigma emergente donde **ROS 2 actúa como la capa de ejecución** mientras los LLMs manejan el razonamiento de alto nivel:
+- Los LLMs generan código ROS 2 (nodos, servicios, acciones) o llaman APIs de alto nivel.
+- ROS 2 provee la infraestructura de comunicación (DDS), percepción (sensores) y actuación (controladores).
+- Proyectos como `burger_delivery` ya integran este patrón: ROS 2 Jazzy + modelos semánticos (gemini-robotics) para procesamiento de escenas.
 
 ---
 

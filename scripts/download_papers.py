@@ -57,6 +57,17 @@ PAPERS = [
     ("05_Surveys_Case_Studies", "Embodied_AI_Survey_Recent_Advances.pdf", "2311.11267"),
     ("05_Surveys_Case_Studies", "SayPlan_Grounding_LLMs_using_3D_Graphs.pdf", "2309.11489"),
     ("05_Surveys_Case_Studies", "Voyager_An_Open-Ended_Embodied_Agent.pdf", "2305.16291"),
+
+    # ── 06_ROS2_AI_LLMs ────────────────────────────────────────────
+    ("06_ROS2_AI_LLMs", "SayCan_Grounding_Language_in_Robotic_Affordances.pdf", "2204.01691"),
+    ("06_ROS2_AI_LLMs", "Code_as_Policies_Language_Model_Programs_for_Robots.pdf", "2209.07753"),
+    ("06_ROS2_AI_LLMs", "Inner_Monologue_Embodied_Reasoning_with_Language_Models.pdf", "2207.05608"),
+    ("06_ROS2_AI_LLMs", "VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf", "2307.05973"),
+    ("06_ROS2_AI_LLMs", "ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf", "2306.17582"),
+    ("06_ROS2_AI_LLMs", "TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf", "2305.05706"),
+    ("06_ROS2_AI_LLMs", "GenSim_Generating_Robotic_Simulation_Tasks_with_LLMs.pdf", "2310.01361"),
+    ("06_ROS2_AI_LLMs", "RoboGen_Unleashing_Infinite_Data_for_Robot_Learning.pdf", "2311.01455"),
+    ("06_ROS2_AI_LLMs", "LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf", "2304.11477"),
 ]
 
 # Corregir duplicado: Asymmetric Actor-Critic real es arXiv 1910.07113 (ya usado).
