@@ -56,12 +56,11 @@ papers/
 | **iGibson: A Simulation Environment for Interactive Tasks in Large Realistic Scenes** | [2008.11765](https://arxiv.org/abs/2008.11765) | 2020 | `iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf` |
 | **Habitat-Matterport 3D Dataset (HM3D): 1000 Large-scale 3D Environments for Embodied AI** | [2109.08238](https://arxiv.org/abs/2109.08238) | 2021 | `Habitat-Matterport_3D_Dataset.pdf` |
 | **RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots** | [2406.02523](https://arxiv.org/abs/2406.02523) | 2024 | `RoboCasa_Large-Scale_Simulation_of_Everyday_Tasks.pdf` |
-| **BEHAVIOR-1K: A Human-Centered, Embodied AI Benchmark with 1,000 Everyday Activities** | [2306.03310](https://arxiv.org/abs/2306.03310) | 2023 | `BEHAVIOR-1K_A_Human-Centered_Benchmark_for_Embodied_AI.pdf` |
 
 ### Resumen rápido
 - **Habitat** (Meta) es el estándar para navegación embodied en escenas 3D escaneadas.
 - **AI2-THOR** (Allen Institute) añade interactividad física (abrir puertas, mover objetos).
-- **iGibson / BEHAVIOR-1K** (Stanford) se enfocan en tareas domésticas realistas con física compleja.
+- **iGibson** (Stanford) se enfoca en tareas domésticas realistas con física compleja.
 - **HM3D** provee 1000 escenas 3D reales escaneadas para entrenar agentes.
 - **RoboCasa** (UT Austin/NVIDIA) genera 100+ cocinas proceduralmente para manipulación.
 
@@ -108,12 +107,10 @@ papers/
 | **Vision-Language-Action Models for Robotics: A Survey** | [2411.13548](https://arxiv.org/abs/2411.13548) | 2024 | `Vision-Language-Action_Models_Survey.pdf` |
 | **Embodied AI: Recent Advances and Future Directions** | [2311.11267](https://arxiv.org/abs/2311.11267) | 2023 | `Embodied_AI_Survey_Recent_Advances.pdf` |
 | **SayPlan: Grounding Large Language Models using 3D Scene Graphs for Scalable Robot Task Planning** | [2309.11489](https://arxiv.org/abs/2309.11489) | 2023 | `SayPlan_Grounding_LLMs_using_3D_Graphs.pdf` |
-| **Voyager: An Open-Ended Embodied Agent with Large Language Models** | [2305.16291](https://arxiv.org/abs/2305.16291) | 2023 | `Voyager_An_Open-Ended_Embodied_Agent.pdf` |
 
 ### Resumen rápido
 - Los tres surveys cubren el estado del arte de Embodied AI y VLA (ideal como punto de entrada).
 - **SayPlan** conecta LLMs con grafos de escena 3D para planificación multi-habitación.
-- **Voyager** (NVIDIA) usa GPT-4 para aprendizaje abierto en Minecraft — referencia clave para agentes embodied con LLM.
 
 ---
 
@@ -127,8 +124,6 @@ papers/
 | **VoxPoser: Composable 3D Value Maps for Robotic Manipulation with Language Models** | [2307.05973](https://arxiv.org/abs/2307.05973) | 2023 | `VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf` |
 | **ChatGPT for Robotics: Design Principles and Model Abilities** | [2306.17582](https://arxiv.org/abs/2306.17582) | 2023 | `ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf` |
 | **TidyBot: Personalized Robot Assistance with Large Language Models** | [2305.05706](https://arxiv.org/abs/2305.05706) | 2023 | `TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf` |
-| **GenSim: Generating Robotic Simulation Tasks with Large Language Models** | [2310.01361](https://arxiv.org/abs/2310.01361) | 2023 | `GenSim_Generating_Robotic_Simulation_Tasks_with_LLMs.pdf` |
-| **RoboGen: Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation** | [2311.01455](https://arxiv.org/abs/2311.01455) | 2023 | `RoboGen_Unleashing_Infinite_Data_for_Robot_Learning.pdf` |
 | **LLM+P: Empowering Large Language Models with Optimal Planning Proficiency** | [2304.11477](https://arxiv.org/abs/2304.11477) | 2023 | `LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf` |
 
 ### Resumen rápido
@@ -138,7 +133,6 @@ papers/
 - **Inner Monologue** añade retroalimentación de éxito/fallo del entorno al razonamiento del LLM.
 - **VoxPoser** usa LLMs + VLMs para componer mapas de valor 3D para manipulación sin entrenamiento adicional.
 - **TidyBot** muestra un caso de uso real: robot de servicio personalizado con LLMs.
-- **GenSim / RoboGen** usan LLMs para generar automáticamente tareas y entornos de simulación.
 - **LLM+P** combina LLMs con planificadores clásicos (PDDL) para planificación óptima.
 
 ### Conexión con ROS 2

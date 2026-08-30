@@ -36,7 +36,6 @@ PAPERS = [
     ("02_Simulation_Environments", "iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf", "2008.11765"),
     ("02_Simulation_Environments", "Habitat-Matterport_3D_Dataset.pdf", "2109.08238"),
     ("02_Simulation_Environments", "RoboCasa_Large-Scale_Simulation_of_Everyday_Tasks.pdf", "2406.02523"),
-    ("02_Simulation_Environments", "BEHAVIOR-1K_A_Human-Centered_Benchmark_for_Embodied_AI.pdf", "2306.03310"),
 
     # ── 03_Sim2Real_RL ─────────────────────────────────────────────
     ("03_Sim2Real_RL", "Domain_Randomization_for_Transferring_DNNs_from_Simulation.pdf", "1703.06907"),
@@ -56,7 +55,6 @@ PAPERS = [
     ("05_Surveys_Case_Studies", "Vision-Language-Action_Models_Survey.pdf", "2411.13548"),
     ("05_Surveys_Case_Studies", "Embodied_AI_Survey_Recent_Advances.pdf", "2311.11267"),
     ("05_Surveys_Case_Studies", "SayPlan_Grounding_LLMs_using_3D_Graphs.pdf", "2309.11489"),
-    ("05_Surveys_Case_Studies", "Voyager_An_Open-Ended_Embodied_Agent.pdf", "2305.16291"),
 
     # ── 06_ROS2_AI_LLMs ────────────────────────────────────────────
     ("06_ROS2_AI_LLMs", "SayCan_Grounding_Language_in_Robotic_Affordances.pdf", "2204.01691"),
@@ -65,8 +63,6 @@ PAPERS = [
     ("06_ROS2_AI_LLMs", "VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf", "2307.05973"),
     ("06_ROS2_AI_LLMs", "ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf", "2306.17582"),
     ("06_ROS2_AI_LLMs", "TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf", "2305.05706"),
-    ("06_ROS2_AI_LLMs", "GenSim_Generating_Robotic_Simulation_Tasks_with_LLMs.pdf", "2310.01361"),
-    ("06_ROS2_AI_LLMs", "RoboGen_Unleashing_Infinite_Data_for_Robot_Learning.pdf", "2311.01455"),
     ("06_ROS2_AI_LLMs", "LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf", "2304.11477"),
 
     # ── 07_Recent_2025_2026 (selección ROS 2 + LLMs robóticos) ─────

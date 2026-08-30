@@ -23,16 +23,16 @@ Embodied AI refers to artificial intelligence agents that interact with physical
 
 ## 📄 Paper Library (Local PDFs)
 
-A curated collection of **45 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
+A curated collection of **41 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
 
 | Category | Papers | Highlights |
 |----------|--------|------------|
 | 🤖 VLA Models | 6 | OpenVLA, RT-1, RT-2, Octo, RT-X, π0 |
-| 🏙️ Simulation Environments | 6 | Habitat, AI2-THOR, iGibson, HM3D, RoboCasa, BEHAVIOR-1K |
+| 🏙️ Simulation Environments | 5 | Habitat, AI2-THOR, iGibson, HM3D, RoboCasa |
 | 🌉 Sim2Real & RL | 7 | Domain Randomization, Teacher-Student, RMA, ANYmal |
 | ⚙️ Robotics Frameworks | 2 | ROS 2 Architecture, MoveIt 2 |
-| 📚 Surveys & Case Studies | 5 | Embodied AI Surveys, SayPlan, Voyager |
-| 🧩 ROS 2 + IA/LLMs | 9 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
+| 📚 Surveys & Case Studies | 4 | Embodied AI Surveys, SayPlan |
+| 🧩 ROS 2 + IA/LLMs | 7 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
 | 🚀 Recent 2025-2026 | 10 | ROS2SmolVLA, Florence-2 ROS 2, TurboVLA, CoRAL, Edge AI LLMs |
 
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
