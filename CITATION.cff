@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "Si usas esta colección de papers en tu investigación, por favor cítala como se indica abajo."
+title: "Awesome Embodied AI & Sim2Real: A Curated Paper Collection"
+type: dataset
+authors:
+  - family-names: "Roncancio"
+    given-names: "Henry"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Universidad Militar Nueva Granada"
+identifiers:
+  - type: url
+    value: "https://github.com/roncanciovl/awesome-embodied-ai"
+repository-code: "https://github.com/roncanciovl/awesome-embodied-ai"
+url: "https://github.com/roncanciovl/awesome-embodied-ai"
+abstract: >-
+  A curated collection of 41 foundational papers on Embodied AI,
+  Vision-Language-Action (VLA) models, Sim2Real transfer, and the
+  integration of Large Language Models with ROS 2. Includes structured
+  metadata (papers.csv), research protocol, and identified research gaps
+  across four sublines: multimodal perception, semantic planning,
+  edge AI inference, and Sim2Real safety.
+keywords:
+  - embodied-ai
+  - vision-language-action
+  - sim2real
+  - ros2
+  - large-language-models
+  - robotics
+  - reinforcement-learning
+  - edge-ai
+license: CC-BY-SA-4.0
+version: 1.0.0
+date-released: "2026-08-30"

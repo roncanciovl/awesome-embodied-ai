@@ -38,6 +38,18 @@ A curated collection of **41 foundational papers** (PDFs from arXiv) organized i
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
 🔄 **Re-download/update:** `python scripts/download_papers.py`
 
+### 📊 Research Infrastructure
+
+| Document | Description |
+|----------|-------------|
+| [`research-protocol.md`](research-protocol.md) | Research questions, sources, queries, inclusion/exclusion criteria |
+| [`papers.csv`](papers.csv) | Structured metadata (41 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
+| [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
+| [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
+| [`ZENODO.md`](ZENODO.md) | Guide for archiving releases in Zenodo (DOI) |
+| [`LICENSE`](LICENSE) | CC BY-SA 4.0 |
+
 ## 🤖 Vision-Language-Action (VLA) Models
 Foundation models that map visual and language inputs directly to robotic actions.
 
@@ -75,7 +87,7 @@ The standard middleware for building scalable robotic applications.
 ---
 
 ### Contributing
-Contributions are very welcome! If you know of an awesome framework, paper, or project that belongs here, please read the [contribution guidelines](CONTRIBUTING.md) (coming soon) and open a Pull Request.
+Contributions are very welcome! If you know of an awesome framework, paper, or project that belongs here, please read the [contribution guidelines](CONTRIBUTING.md) and open a Pull Request. See [`research-protocol.md`](research-protocol.md) for inclusion criteria.
 
 ---
 *Curated by [Roncanciovl](https://github.com/roncanciovl).*
