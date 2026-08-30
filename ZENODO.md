@@ -1,4 +1,4 @@
-# 🏛️ Guía de depósito en Zenodo
+md# 🏛️ Guía de depósito en Zenodo
 
 Este documento describe el proceso para archivar una versión estable del repositorio en [Zenodo](https://zenodo.org) y obtener un **DOI** permanente.
 
