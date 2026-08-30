@@ -22,19 +22,34 @@ El paper debe cumplir al menos 3 de estos criterios:
 - [ ] Tiene código, datos o implementación disponible (o es fundacional)
 - [ ] Es de alto impacto o de 2025-2026
 
-### Paso 2: Descargar el PDF
+### Paso 2: Verificar licencia del paper
+**IMPORTANTE:** Los PDFs NO se versionan en git por razones de licencia. Cada paper en arXiv tiene su propia licencia:
+
+| Licencia arXiv | ¿Redistribución permitida? |
+|----------------|---------------------------|
+| CC BY 4.0 | ✅ Sí, con atribución |
+| CC BY-SA 4.0 | ✅ Sí, con atribución + share-alike |
+| CC0 | ✅ Sí (dominio público) |
+| CC BY-NC-ND | ❌ No (no comercial, sin derivados) |
+| arXiv non-exclusive license | ❌ No (solo arXiv distribuye) |
+| Copyright del autor/editor | ❌ No |
+
+**Verificar licencia:** Ir a la página del paper en arXiv → sección "License" (esquina inferior derecha).
+
+El PDF se descarga localmente con:
 ```bash
 # Agregar la entrada en scripts/download_papers.py y ejecutar:
 python scripts/download_papers.py
 ```
-El PDF debe estar en arXiv y ser accesible públicamente.
 
 ### Paso 3: Actualizar metadatos
 Agregar una fila en [`papers.csv`](papers.csv) con todos los campos:
 
 ```csv
-arxiv_id,title,year,authors_first,robot_type,task,model_type,ros_integration,simulator,dataset,hardware,sim2real,latency_ms,compute_resources,code_available,data_available,limitations,gap_category,category,file_path
+arxiv_id,title,year,authors_first,robot_type,task,model_type,ros_integration,simulator,dataset,hardware,sim2real,latency_ms,compute_resources,code_available,data_available,limitations,gap_category,category,license,arxiv_url
 ```
+
+> **Nota:** El campo `file_path` fue reemplazado por `arxiv_url` ya que los PDFs no se versionan.
 
 ### Paso 4: Actualizar índice narrativo
 Agregar el paper en la sección correspondiente de [`papers/PAPERS.md`](papers/PAPERS.md).

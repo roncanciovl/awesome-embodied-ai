@@ -9,7 +9,7 @@ A curated list of awesome resources, papers, frameworks, and projects dedicated 
 
 ## 📑 Contents
 - [What is Embodied AI?](#-what-is-embodied-ai)
-- [Paper Library (Local PDFs)](#-paper-library-local-pdfs)
+- [Paper Library (Metadata + Links)](#-paper-library-metadata--links)
 - [Vision-Language-Action (VLA) Models](#-vision-language-action-vla-models)
 - [Simulation Environments & Digital Twins](#-simulation-environments--digital-twins)
 - [Sim2Real Transfer & Reinforcement Learning](#-sim2real-transfer--reinforcement-learning)
@@ -21,9 +21,14 @@ A curated list of awesome resources, papers, frameworks, and projects dedicated 
 ## 🧠 What is Embodied AI?
 Embodied AI refers to artificial intelligence agents that interact with physical (or physically simulated) environments. Unlike pure software agents, Embodied AI must perceive its surroundings through sensors, reason about the physical world, and take physical actions to accomplish tasks.
 
-## 📄 Paper Library (Local PDFs)
+## 📄 Paper Library (Metadata + Links)
 
-A curated collection of **41 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
+A curated collection of **41 foundational papers** with structured metadata and arXiv links, organized in [`papers/`](papers/PAPERS.md):
+
+> **📥 PDFs:** Por razones de licencia, los PDFs no se versionan en git. Cada paper en arXiv tiene su propia licencia (CC BY, CC BY-NC-ND, copyright del autor, etc.). Para descargar los PDFs localmente:
+> ```bash
+> python scripts/download_papers.py
+> ```
 
 | Category | Papers | Highlights |
 |----------|--------|------------|

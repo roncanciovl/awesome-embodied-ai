@@ -1,0 +1,15 @@
+# PDFs de papers: no se versionan por licencias de redistribución.
+# Cada paper en arXiv tiene su propia licencia (CC BY, CC BY-NC-ND, copyright, etc.)
+# y arXiv non-exclusive license NO permite redistribución fuera de arXiv.
+#
+# Para descargar los PDFs localmente:
+#   python scripts/download_papers.py
+#
+# Los metadatos y enlaces están en papers.csv y papers/PAPERS.md
+papers/**/*.pdf
+
+# Archivos temporales
+*.tmp
+*.log
+__pycache__/
+*.pyc
