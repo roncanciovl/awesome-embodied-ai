@@ -67,7 +67,7 @@ Al publicar el release, Zenodo automáticamente:
 |-------|-------|
 | **Upload type** | Dataset |
 | **Publication type** | Other |
-| **Title** | Awesome Embodied AI & Sim2Real: A Curated Paper Collection |
+| **Title** | Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real |
 | **Description** | (usar abstract de CITATION.cff) |
 | **Keywords** | embodied-ai, vision-language-action, sim2real, ros2, llm |
 | **License** | CC BY-SA 4.0 |
@@ -110,7 +110,7 @@ Para cada actualización mayor de la colección:
 |---------|---------------|
 | **Tipo** | Dataset / Compendio de investigación |
 | **No es** | Software (los scripts son auxiliares) |
-| **Contenido principal** | Papers PDF + metadatos estructurados |
+| **Contenido principal** | Metadatos estructurados, protocolo reproducible y análisis de brechas; los PDF no se redistribuyen |
 | **Valor de investigación** | Protocolo reproducible + análisis de brechas |
 
 ---

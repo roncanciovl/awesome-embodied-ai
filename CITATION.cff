@@ -1,12 +1,11 @@
 cff-version: 1.2.0
 message: "Si usas esta colección de papers en tu investigación, por favor cítala como se indica abajo."
-title: "Awesome Embodied AI & Sim2Real: A Curated Paper Collection"
+title: "Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real"
 type: dataset
 authors:
   - family-names: "Roncancio"
-    given-names: "Henry"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
-    affiliation: "Universidad Militar Nueva Granada"
+    given-names: "Henry Antonio"
+    orcid: "https://orcid.org/0009-0009-9954-9813"
 identifiers:
   - type: url
     value: "https://github.com/roncanciovl/awesome-embodied-ai"
@@ -29,5 +28,3 @@ keywords:
   - reinforcement-learning
   - edge-ai
 license: CC-BY-SA-4.0
-version: 1.0.0
-date-released: "2026-08-30"

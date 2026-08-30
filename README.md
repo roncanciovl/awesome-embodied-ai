@@ -1,6 +1,8 @@
 # Awesome Embodied AI & Sim2Real 🤖
 
-A curated list of awesome resources, papers, frameworks, and projects dedicated to **Embodied Artificial Intelligence**, **Vision-Language-Action (VLA) models**, and the bridge between simulation and reality (**Sim2Real**).
+**A living evidence map for ROS 2, VLA, and Sim2Real research.**
+
+A curated and reproducible research resource covering **Embodied Artificial Intelligence**, **Vision-Language-Action (VLA) models**, ROS 2 integration, and the bridge between simulation and reality (**Sim2Real**).
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
