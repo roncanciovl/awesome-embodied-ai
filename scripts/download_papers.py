@@ -68,6 +68,18 @@ PAPERS = [
     ("06_ROS2_AI_LLMs", "GenSim_Generating_Robotic_Simulation_Tasks_with_LLMs.pdf", "2310.01361"),
     ("06_ROS2_AI_LLMs", "RoboGen_Unleashing_Infinite_Data_for_Robot_Learning.pdf", "2311.01455"),
     ("06_ROS2_AI_LLMs", "LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf", "2304.11477"),
+
+    # ── 07_Recent_2025_2026 (selección ROS 2 + LLMs robóticos) ─────
+    ("07_Recent_2025_2026", "ROS2SmolVLA_Small_VLA_for_ROS2_Industrial_2026.pdf", "2608.23320"),
+    ("07_Recent_2025_2026", "ROS2_Wrapper_Florence-2_Local_VLM_2026.pdf", "2604.01179"),
+    ("07_Recent_2025_2026", "Conversational_Framework_HRI_Manipulation_GenAI_2026.pdf", "2606.06061"),
+    ("07_Recent_2025_2026", "Quantized_LLMs_Edge_AI_Robotics_2025.pdf", "2506.09581"),
+    ("07_Recent_2025_2026", "Harness_Engineering_Physical_AI_Middleware_2026.pdf", "2606.09416"),
+    ("07_Recent_2025_2026", "TurboVLA_Real-Time_VLA_32Hz_2026.pdf", "2607.27205"),
+    ("07_Recent_2025_2026", "CoRAL_Contact-Rich_LLM_Control_Manipulation_2026.pdf", "2605.02600"),
+    ("07_Recent_2025_2026", "Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf", "2605.02525"),
+    ("07_Recent_2025_2026", "Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf", "2508.05294"),
+    ("07_Recent_2025_2026", "LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf", "2603.03380"),
 ]
 
 # Corregir duplicado: Asymmetric Actor-Critic real es arXiv 1910.07113 (ya usado).

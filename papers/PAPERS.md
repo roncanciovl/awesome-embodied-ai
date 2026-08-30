@@ -20,7 +20,8 @@ papers/
 ├── 03_Sim2Real_RL/             # Transferencia Sim2Real y RL
 ├── 04_Robotics_Frameworks/     # ROS 2 y frameworks de manipulación
 ├── 05_Surveys_Case_Studies/    # Surveys y agentes embodied
-└── 06_ROS2_AI_LLMs/            # ROS 2 + IA/LLMs para robótica
+├── 06_ROS2_AI_LLMs/            # ROS 2 + IA/LLMs para robótica
+└── 07_Recent_2025_2026/        # Papers recientes ROS 2 + LLM (2025-2026)
 ```
 
 ---
@@ -145,6 +146,38 @@ Estos papers representan el paradigma emergente donde **ROS 2 actúa como la cap
 - Los LLMs generan código ROS 2 (nodos, servicios, acciones) o llaman APIs de alto nivel.
 - ROS 2 provee la infraestructura de comunicación (DDS), percepción (sensores) y actuación (controladores).
 - Proyectos como `burger_delivery` ya integran este patrón: ROS 2 Jazzy + modelos semánticos (gemini-robotics) para procesamiento de escenas.
+
+---
+
+## 🚀 07 — Papers Recientes ROS 2 + LLM (2025-2026)
+
+| Paper | arXiv | Año | Archivo |
+|-------|-------|-----|---------|
+| **ROS2SmolVLA: Enabling Small Vision-Language-Action Models for Integration into Industrial-Grade Lightweight ROS 2 Systems** | [2608.23320](https://arxiv.org/abs/2608.23320) | 2026 | `ROS2SmolVLA_Small_VLA_for_ROS2_Industrial_2026.pdf` |
+| **A ROS 2 Wrapper for Florence-2: Multi-Mode Local Vision-Language Inference for Robotic Systems** | [2604.01179](https://arxiv.org/abs/2604.01179) | 2026 | `ROS2_Wrapper_Florence-2_Local_VLM_2026.pdf` |
+| **A Conversational Framework for Human-Robot Collaborative Manipulation with Distributed Generative AI** | [2606.06061](https://arxiv.org/abs/2606.06061) | 2026 | `Conversational_Framework_HRI_Manipulation_GenAI_2026.pdf` |
+| **Integrating Quantized LLMs into Robotics Systems as Edge AI** | [2506.09581](https://arxiv.org/abs/2506.09581) | 2025 | `Quantized_LLMs_Edge_AI_Robotics_2025.pdf` |
+| **Harness Engineering for Physical AI: Robot Middleware Is the Harness Layer** | [2606.09416](https://arxiv.org/abs/2606.09416) | 2026 | `Harness_Engineering_Physical_AI_Middleware_2026.pdf` |
+| **TurboVLA: Real-Time Vision-Language-Action Model at 32 Hz on an RTX 4090 with <1 GB VRAM** | [2607.27205](https://arxiv.org/abs/2607.27205) | 2026 | `TurboVLA_Real-Time_VLA_32Hz_2026.pdf` |
+| **CoRAL: Contact-Rich Adaptive LLM-based Control for Robotic Manipulation** | [2605.02600](https://arxiv.org/abs/2605.02600) | 2026 | `CoRAL_Contact-Rich_LLM_Control_Manipulation_2026.pdf` |
+| **A Semantic Autonomy Framework for VLM-Integrated Indoor Mobile Robots** | [2605.02525](https://arxiv.org/abs/2605.02525) | 2026 | `Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf` |
+| **Towards Embodied Agentic AI: Review and Classification of LLM- and VLM-Driven Robot Autonomy** | [2508.05294](https://arxiv.org/abs/2508.05294) | 2025 | `Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf` |
+| **LiteVLA-Edge: Quantized On-Device Multimodal Control for Embedded Robotics** | [2603.03380](https://arxiv.org/abs/2603.03380) | 2026 | `LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf` |
+
+### Resumen rápido
+- **ROS2SmolVLA** ⭐ es el primer paper que integra un VLA pequeño directamente en sistemas ROS 2 industriales — referencia directa para el framework.
+- **ROS 2 Wrapper Florence-2** ⭐ provee inferencia VLM local vía nodos ROS 2, sin dependencia de la nube.
+- **Quantized LLMs Edge AI** muestra cómo ejecutar LLMs cuantizados en hardware embebido robótico.
+- **TurboVLA / LiteVLA-Edge** abordan la eficiencia: VLA en tiempo real con recursos limitados.
+- **CoRAL** combina LLMs con control adaptativo para manipulación contact-rich.
+- **Harness Engineering** posiciona al middleware robótico (ROS 2) como la capa "harness" de la IA física.
+- **Embodied Agentic AI Survey** (2025) clasifica el estado del arte de LLM/VLM en autonomía robótica.
+
+### Relevancia para el framework
+Estos papers representan la **frontera 2025-2026** de la integración ROS 2 + IA:
+- VLA/VLM ejecutándose como nodos ROS 2 nativos.
+- Edge AI y cuantización para despliegue en hardware real.
+- Middleware robótico como capa de orquestación de agentes IA.
 
 ---
 

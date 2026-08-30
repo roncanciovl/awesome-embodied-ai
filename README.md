@@ -23,7 +23,7 @@ Embodied AI refers to artificial intelligence agents that interact with physical
 
 ## 📄 Paper Library (Local PDFs)
 
-A curated collection of **35 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
+A curated collection of **45 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
 
 | Category | Papers | Highlights |
 |----------|--------|------------|
@@ -33,6 +33,7 @@ A curated collection of **35 foundational papers** (PDFs from arXiv) organized i
 | ⚙️ Robotics Frameworks | 2 | ROS 2 Architecture, MoveIt 2 |
 | 📚 Surveys & Case Studies | 5 | Embodied AI Surveys, SayPlan, Voyager |
 | 🧩 ROS 2 + IA/LLMs | 9 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
+| 🚀 Recent 2025-2026 | 10 | ROS2SmolVLA, Florence-2 ROS 2, TurboVLA, CoRAL, Edge AI LLMs |
 
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
 🔄 **Re-download/update:** `python scripts/download_papers.py`
