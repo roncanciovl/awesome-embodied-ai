@@ -10,7 +10,8 @@ Este documento describe el proceso para archivar una versión estable del reposi
 - [x] `LICENSE` definido (CC BY-SA 4.0)
 - [x] `papers.csv` con metadatos estructurados
 - [x] `research-protocol.md` con metodología reproducible
-- [ ] Release de GitHub creado (tag `v1.0.0`)
+- [x] Release de GitHub creado (`v1.0.0`, 2026-08-30)
+- [x] Archivo Zenodo publicado: [versión v1.0.0](https://doi.org/10.5281/zenodo.22179172) · DOI de concepto: [10.5281/zenodo.22179171](https://doi.org/10.5281/zenodo.22179171)
 
 ---
 
@@ -67,7 +68,7 @@ Al publicar el release, Zenodo automáticamente:
 |-------|-------|
 | **Upload type** | Dataset |
 | **Publication type** | Other |
-| **Title** | Awesome Embodied AI & Sim2Real: A Curated Paper Collection |
+| **Title** | Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real |
 | **Description** | (usar abstract de CITATION.cff) |
 | **Keywords** | embodied-ai, vision-language-action, sim2real, ros2, llm |
 | **License** | CC BY-SA 4.0 |
@@ -110,7 +111,7 @@ Para cada actualización mayor de la colección:
 |---------|---------------|
 | **Tipo** | Dataset / Compendio de investigación |
 | **No es** | Software (los scripts son auxiliares) |
-| **Contenido principal** | Papers PDF + metadatos estructurados |
+| **Contenido principal** | Metadatos estructurados, protocolo reproducible y análisis de brechas; los PDF no se redistribuyen |
 | **Valor de investigación** | Protocolo reproducible + análisis de brechas |
 
 ---
@@ -124,4 +125,4 @@ Para cada actualización mayor de la colección:
 
 ---
 
-*Última actualización: 2026-08-30*
+*Última actualización: 2026-08-30 — v1.0.0 archivada y verificada en Zenodo.*

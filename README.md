@@ -1,9 +1,12 @@
 # Awesome Embodied AI & Sim2Real 🤖
 
-A curated list of awesome resources, papers, frameworks, and projects dedicated to **Embodied Artificial Intelligence**, **Vision-Language-Action (VLA) models**, and the bridge between simulation and reality (**Sim2Real**).
+**A living evidence map for ROS 2, VLA, and Sim2Real research.**
+
+A curated and reproducible research resource covering **Embodied Artificial Intelligence**, **Vision-Language-Action (VLA) models**, ROS 2 integration, and the bridge between simulation and reality (**Sim2Real**).
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22179172.svg)](https://doi.org/10.5281/zenodo.22179172)
 
 ---
 
@@ -53,6 +56,7 @@ A curated collection of **41 foundational papers** with structured metadata and 
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
 | [`ZENODO.md`](ZENODO.md) | Guide for archiving releases in Zenodo (DOI) |
+| [Zenodo v1.0.0](https://doi.org/10.5281/zenodo.22179172) | Archived stable release; concept DOI: [`10.5281/zenodo.22179171`](https://doi.org/10.5281/zenodo.22179171) |
 | [`LICENSE`](LICENSE) | CC BY-SA 4.0 |
 
 ## 🤖 Vision-Language-Action (VLA) Models
