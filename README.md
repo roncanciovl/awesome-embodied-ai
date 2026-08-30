@@ -9,6 +9,7 @@ A curated list of awesome resources, papers, frameworks, and projects dedicated 
 
 ## 📑 Contents
 - [What is Embodied AI?](#-what-is-embodied-ai)
+- [Paper Library (Local PDFs)](#-paper-library-local-pdfs)
 - [Vision-Language-Action (VLA) Models](#-vision-language-action-vla-models)
 - [Simulation Environments & Digital Twins](#-simulation-environments--digital-twins)
 - [Sim2Real Transfer & Reinforcement Learning](#-sim2real-transfer--reinforcement-learning)
@@ -19,6 +20,21 @@ A curated list of awesome resources, papers, frameworks, and projects dedicated 
 
 ## 🧠 What is Embodied AI?
 Embodied AI refers to artificial intelligence agents that interact with physical (or physically simulated) environments. Unlike pure software agents, Embodied AI must perceive its surroundings through sensors, reason about the physical world, and take physical actions to accomplish tasks.
+
+## 📄 Paper Library (Local PDFs)
+
+A curated collection of **26 foundational papers** (PDFs from arXiv) organized in [`papers/`](papers/PAPERS.md):
+
+| Category | Papers | Highlights |
+|----------|--------|------------|
+| 🤖 VLA Models | 6 | OpenVLA, RT-1, RT-2, Octo, RT-X, π0 |
+| 🏙️ Simulation Environments | 6 | Habitat, AI2-THOR, iGibson, HM3D, RoboCasa, BEHAVIOR-1K |
+| 🌉 Sim2Real & RL | 7 | Domain Randomization, Teacher-Student, RMA, ANYmal |
+| ⚙️ Robotics Frameworks | 2 | ROS 2 Architecture, MoveIt 2 |
+| 📚 Surveys & Case Studies | 5 | Embodied AI Surveys, SayPlan, Voyager |
+
+👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
+🔄 **Re-download/update:** `python scripts/download_papers.py`
 
 ## 🤖 Vision-Language-Action (VLA) Models
 Foundation models that map visual and language inputs directly to robotic actions.
