@@ -1,113 +1,114 @@
 # 🤝 Contributing to Awesome Embodied AI & Sim2Real
 
-¡Gracias por tu interés en contribuir! Este repositorio es una colección curada de papers y recursos sobre Embodied AI, VLA, Sim2Real y ROS 2 + IA.
+Thank you for your interest in contributing! This repository is a curated collection of papers and resources about Embodied AI, VLA, Sim2Real and ROS 2 + AI.
 
 ---
 
-## 📋 Antes de contribuir
+## 📋 Before contributing
 
-1. Lee el [`research-protocol.md`](research-protocol.md) para entender los criterios de inclusión/exclusión.
-2. Verifica que el paper no esté ya en [`papers.csv`](papers.csv).
-3. Asegúrate de que el paper cumpla **al menos 3 de 5** criterios de inclusión.
+1. Read the [`research-protocol.md`](research-protocol.md) to understand the inclusion/exclusion criteria.
+2. Check that the paper is not already in [`papers.csv`](papers.csv).
+3. Make sure the paper meets **at least 3 of 5** inclusion criteria.
 
 ---
 
-## ➕ Cómo agregar un paper
+## ➕ How to add a paper
 
-### Paso 1: Verificar elegibilidad
-El paper debe cumplir al menos 3 de estos criterios:
-- [ ] Trata sobre Embodied AI, VLA/VLM/LLM en robótica, Sim2Real o ROS 2
-- [ ] Propone o evalúa soluciones en robots físicos o simuladores con transferencia a real
-- [ ] Menciona o utiliza ROS, ROS 2, MoveIt, Nav2, Isaac Sim u otro middleware robótico
-- [ ] Tiene código, datos o implementación disponible (o es fundacional)
-- [ ] Es de alto impacto o de 2025-2026
+### Step 1: Verify eligibility
+The paper must meet at least 3 of these criteria:
+- [ ] Addresses Embodied AI, VLA/VLM/LLM in robotics, Sim2Real or ROS 2
+- [ ] Proposes or evaluates solutions on physical robots or simulators with real-world transfer
+- [ ] Mentions or uses ROS, ROS 2, MoveIt, Nav2, Isaac Sim or other robotic middleware
+- [ ] Has code, data or implementation available (or is foundational)
+- [ ] Is high-impact or from 2025-2026
 
-### Paso 2: Verificar licencia del paper
-**IMPORTANTE:** Los PDFs NO se versionan en git por razones de licencia. Cada paper en arXiv tiene su propia licencia:
+### Step 2: Verify the paper license
+**IMPORTANT:** PDFs are NOT versioned in git for license reasons. Each paper on arXiv has its own license:
 
-| Licencia arXiv | ¿Redistribución permitida? |
-|----------------|---------------------------|
-| CC BY 4.0 | ✅ Sí, con atribución |
-| CC BY-SA 4.0 | ✅ Sí, con atribución + share-alike |
-| CC0 | ✅ Sí (dominio público) |
-| CC BY-NC-ND | ❌ No (no comercial, sin derivados) |
-| arXiv non-exclusive license | ❌ No (solo arXiv distribuye) |
-| Copyright del autor/editor | ❌ No |
+| arXiv license | Redistribution allowed? |
+|---------------|--------------------------|
+| CC BY 4.0 | ✅ Yes, with attribution |
+| CC BY-SA 4.0 | ✅ Yes, with attribution + share-alike |
+| CC0 | ✅ Yes (public domain) |
+| CC BY-NC-ND | ❌ No (non-commercial, no derivatives) |
+| arXiv non-exclusive license | ❌ No (only arXiv distributes) |
+| Author/editor copyright | ❌ No |
 
-**Verificar licencia:** Ir a la página del paper en arXiv → sección "License" (esquina inferior derecha).
+**Check the license:** Go to the paper's arXiv page → "License" section (bottom right corner).
 
-El PDF se descarga localmente con:
+The PDF is downloaded locally with:
 ```bash
-# Agregar la entrada en scripts/download_papers.py y ejecutar:
+# Add the entry in scripts/download_papers.py and run:
 python scripts/download_papers.py
 ```
 
-### Paso 3: Actualizar metadatos
-Agregar una fila en [`papers.csv`](papers.csv) con todos los campos:
+### Step 3: Update metadata
+Add a row in [`papers.csv`](papers.csv) with all fields:
 
 ```csv
 arxiv_id,title,year,authors_first,robot_type,task,model_type,ros_integration,simulator,dataset,hardware,sim2real,latency_ms,compute_resources,code_available,data_available,limitations,gap_category,category,license,arxiv_url
 ```
 
-> **Nota:** El campo `file_path` fue reemplazado por `arxiv_url` ya que los PDFs no se versionan.
+> **Note:** `file_path` refers to the local PDF downloaded by `scripts/download_papers.py`; PDFs are **not versioned in git** for license reasons (see `.gitignore` and Step 2).
 
-### Paso 4: Actualizar índice narrativo
-Agregar el paper en la sección correspondiente de [`papers/PAPERS.md`](papers/PAPERS.md).
+### Step 4: Update the narrative index
+Add the paper to the corresponding section of [`papers/PAPERS.md`](papers/PAPERS.md).
 
-### Paso 5: Registrar decisión
-Agregar una fila en la tabla de decisiones de [`research-protocol.md`](research-protocol.md).
+### Step 5: Log the decision
+Add a row in the decision table of [`research-protocol.md`](research-protocol.md).
 
-### Paso 6: Pull Request
-- Título: `Add paper: [Título corto]`
-- Descripción: Justificación de inclusión según criterios
+### Step 6: Pull Request
+- Title: `Add paper: [short title]`
+- Description: Justification of inclusion according to criteria
 - Labels: `paper`, `category-XX`
+---
+
+## 🧹 How to propose removing a paper
+
+A paper can be removed if:
+- It no longer meets the inclusion criteria (see `research-protocol.md`)
+- It is duplicated or redundant
+- Its PDF is not accessible
+
+Process:
+1. Open an issue with label `removal`
+2. Justify according to the exclusion criteria
+3. Wait for maintainer approval
 
 ---
 
-## 🧹 Cómo proponer la eliminación de un paper
+## 🔍 Metadata quality control
 
-Un paper puede eliminarse si:
-- No cumple criterios de inclusión (ver `research-protocol.md`)
-- Está duplicado o es redundante
-- No tiene PDF accesible
+Any PR that modifies `papers.csv` must pass these checks:
 
-Proceso:
-1. Abrir issue con label `removal`
-2. Justificar según criterios de exclusión
-3. Esperar aprobación del maintainer
-
----
-
-## 🔍 Control de calidad de metadatos
-
-Cada PR que modifique `papers.csv` debe pasar estas verificaciones:
-
-| Campo | Regla |
-|-------|-------|
-| `arxiv_id` | Formato `YYMM.NNNNN` válido |
+| Field | Rule |
+|-------|------|
+| `arxiv_id` | Valid `YYMM.NNNNN` format |
 | `year` | 2017-2026 |
-| `title` | Coincide con el PDF |
-| `file_path` | Existe en el repositorio |
-| `category` | Una de las 7 categorías válidas |
-| `limitations` | No vacío (mínimo 10 caracteres) |
+| `title` | Matches the PDF |
+| `file_path` | Points to the local PDF downloaded by the script (not versioned in git) |
+| `category` | One of the 7 valid categories |
+| `limitations` | Not empty (minimum 10 characters) |
 
-Script de validación (TODO): `scripts/validate_metadata.py`
+Validation script (TODO): `scripts/validate_metadata.py`
 
 ---
 
-## 📁 Estructura del repositorio
+## 📁 Repository structure
 
 ```
 awesome-embodied-ai/
-├── README.md                 # Índice principal
-├── research-protocol.md      # Protocolo de investigación
-├── research-gaps.md          # Brechas identificadas
-├── papers.csv                # Metadatos estructurados
-├── CITATION.cff              # Citación del repositorio
-├── LICENSE                   # Licencia CC BY-SA 4.0
-├── CONTRIBUTING.md           # Este archivo
-├── papers/                   # PDFs organizados por categoría
-│   ├── PAPERS.md             # Índice narrativo
+├── README.md                 # Main index
+├── research-protocol.md      # Research protocol
+├── research-gaps.md          # Identified gaps
+├── papers.csv                # Structured metadata
+├── CITATION.cff              # Repository citation
+├── LICENSE                   # CC BY-SA 4.0 license
+├── CONTRIBUTING.md           # This file
+├── GLOSSARY.md               # Glossary of terms
+├── ZENODO.md                 # Zenodo deposition guide
+├── papers/                   # Local PDFs organized by category (gitignored)
+│   ├── PAPERS.md             # Narrative index
 │   ├── 01_VLA_Models/
 │   ├── 02_Simulation_Environments/
 │   ├── 03_Sim2Real_RL/
@@ -116,38 +117,38 @@ awesome-embodied-ai/
 │   ├── 06_ROS2_AI_LLMs/
 │   └── 07_Recent_2025_2026/
 └── scripts/
-    ├── download_papers.py    # Descarga con reintentos
-    └── search_recent_papers.py  # Búsqueda en arXiv API
+    ├── download_papers.py    # Resilient download with retries
+    └── search_recent_papers.py  # arXiv API search
 ```
 
 ---
 
-## 🏷️ Categorías válidas
+## 🏷️ Valid categories
 
-| Categoría | Scope |
-|-----------|-------|
-| `VLA_Models` | Modelos Vision-Language-Action |
-| `Simulation_Environments` | Simuladores y datasets 3D |
-| `Sim2Real_RL` | Transferencia sim2real y RL |
+| Category | Scope |
+|----------|-------|
+| `VLA_Models` | Vision-Language-Action models |
+| `Simulation_Environments` | Simulators and 3D datasets |
+| `Sim2Real_RL` | Sim2Real transfer and RL |
 | `Robotics_Frameworks` | ROS 2, MoveIt, Nav2, middleware |
-| `Surveys_Case_Studies` | Surveys y casos de estudio |
-| `ROS2_AI_LLMs` | Integración ROS 2 + LLM/VLM |
-| `Recent_2025_2026` | Papers de frontera (2025-2026) |
+| `Surveys_Case_Studies` | Surveys and case studies |
+| `ROS2_AI_LLMs` | ROS 2 + LLM/VLM integration |
+| `Recent_2025_2026` | Frontier papers (2025-2026) |
 
 ---
 
-## ⚖️ Licencia
+## ⚖️ License
 
-Al contribuir, aceptas que tu contribución se licencie bajo [CC BY-SA 4.0](LICENSE).
-Los PDFs de papers pertenecen a sus autores originales (ver licencias de arXiv).
+By contributing, you agree that your contribution is licensed under [CC BY-SA 4.0](LICENSE).
+Paper PDFs belong to their original authors (see arXiv licenses).
 
 ---
 
-## 📧 Contacto
+## 📧 Contact
 
 - Maintainer: [Roncanciovl](https://github.com/roncanciovl)
 - Issues: [GitHub Issues](https://github.com/roncanciovl/awesome-embodied-ai/issues)
 
 ---
 
-*Última actualización: 2026-08-30*
+*Last updated: 2026-08-30*

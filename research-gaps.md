@@ -1,55 +1,55 @@
 # 🔍 Research Gaps — Embodied AI & Sim2Real
 
-**Fecha de corte:** 2026-08-30
-**Basado en:** 41 papers analizados (ver [`papers.csv`](papers.csv))
-**Protocolo:** [`research-protocol.md`](research-protocol.md)
+**Cutoff date:** 2026-08-30
+**Based on:** 41 papers analyzed (see [`papers.csv`](papers.csv))
+**Protocol:** [`research-protocol.md`](research-protocol.md)
 
 ---
 
-## 📌 Resumen ejecutivo
+## 📌 Executive Summary
 
-El análisis de la colección revela **cuatro sublíneas de investigación** con brechas significativas. Cada una representa una oportunidad para contribuciones originales, especialmente en el contexto de integración con **ROS 2** como framework de producción.
+The analysis of the collection reveals **four research sublines** with significant gaps. Each represents an opportunity for original contributions, especially in the context of integration with **ROS 2** as a production framework.
 
 ---
 
-## 1️⃣ Percepción y Grounding Multimodal
+## 1️⃣ Multimodal Perception and Grounding
 
-### Estado actual
-- Los VLMs (Florence-2, GPT-4V, Gemini) logran comprensión semántica de escenas, pero su integración como **nodos ROS 2 nativos** es incipiente (solo `ROS2_Wrapper_Florence-2_2026`).
-- El grounding espacial (mapear "la taza roja" → coordenadas 3D) depende de pipelines fragmentados: VLM + detector + estimador de pose.
-- Papers como VoxPoser y SayCan usan percepción multimodal, pero con arquitecturas propietarias sin camino claro a ROS 2.
+### Current state
+- VLMs (Florence-2, GPT-4V, Gemini) achieve semantic understanding of scenes, but their integration as **native ROS 2 nodes** is incipient (only `ROS2_Wrapper_Florence-2_2026`).
+- Spatial grounding (mapping "the red cup" → 3D coordinates) relies on fragmented pipelines: VLM + detector + pose estimator.
+- Papers such as VoxPoser and SayCan use multimodal perception, but with proprietary architectures without a clear path to ROS 2.
 
-### Brechas identificadas
-| Brecha | Evidencia | Oportunidad |
-|--------|-----------|-------------|
-| **Falta de estándar ROS 2 para VLMs** | Solo 1 paper (2604.01179) provee wrapper ROS 2 | Crear `ros2_vlm_msgs` con interfaces estándar |
-| **Grounding 3D en tiempo real** | VoxPoser requiere VLM externo; latencia >500ms | VLM cuantizado + proyección 3D en <100ms |
-| **Fusión sensorial multimodal** | Papers tratan cámara/LiDAR/táctil por separado | Nodo ROS 2 de fusión temprana VLM+depth+tactile |
-| **Calibración semántica** | No hay papers sobre calibración VLM-robot | Benchmark de grounding métrico-semántico |
+### Identified gaps
+| Gap | Evidence | Opportunity |
+|-----|----------|-------------|
+| **Lack of a ROS 2 standard for VLMs** | Only 1 paper (2604.01179) provides a ROS 2 wrapper | Create `ros2_vlm_msgs` with standard interfaces |
+| **Real-time 3D grounding** | VoxPoser requires an external VLM; latency >500 ms | Quantized VLM + 3D projection in <100 ms |
+| **Multimodal sensor fusion** | Papers treat camera/LiDAR/tactile separately | Early-fusion ROS 2 node VLM+depth+tactile |
+| **Semantic calibration** | No papers on VLM-robot calibration | Metric-semantic grounding benchmark |
 
-### Papers clave de referencia
+### Key reference papers
 - `2604.01179` (ROS 2 Wrapper Florence-2)
 - `2307.05973` (VoxPoser)
 - `2204.01691` (SayCan)
 
 ---
 
-## 2️⃣ Planificación Semántica y Agentes Robóticos
+## 2️⃣ Semantic Planning and Robotic Agents
 
-### Estado actual
-- LLMs como planificadores de alto nivel (SayCan, Code as Policies, SayPlan, LLM+P) demuestran capacidad de descomposición de tareas.
-- La ejecución de bajo nivel sigue siendo clásica (MoveIt 2, controladores PID) — el puente semántico→acción es el cuello de botella.
-- Los VLAs (OpenVLA, π0) prometen unificar planificación y control, pero su latencia (>50ms) limita el uso reactivo.
+### Current state
+- LLMs as high-level planners (SayCan, Code as Policies, SayPlan, LLM+P) demonstrate task decomposition capability.
+- Low-level execution remains classical (MoveIt 2, PID controllers) — the semantic→action bridge is the bottleneck.
+- VLAs (OpenVLA, π0) promise to unify planning and control, but their latency (>50 ms) limits reactive use.
 
-### Brechas identificadas
-| Brecha | Evidencia | Oportunidad |
-|--------|-----------|-------------|
-| **Puente LLM→ROS 2 estandarizado** | Code as Policies genera código ad-hoc | Framework de "skill primitives" ROS 2 accionables por LLM |
-| **Recuperación ante fallos** | Solo FLARE (2608.26645, no incluido) aborda fallos | Agente ROS 2 con auto-diagnóstico y re-planificación |
-| **Memoria episódica robótica** | Inner Monologue usa feedback manual | Grafo de memoria ROS 2 persistente entre sesiones |
-| **Multi-robot semántico** | MA-VLA (2608.25864) es reciente | Orquestación LLM de flotas ROS 2 heterogéneas |
+### Identified gaps
+| Gap | Evidence | Opportunity |
+|-----|----------|-------------|
+| **Standardized LLM→ROS 2 bridge** | Code as Policies generates ad-hoc code | Framework of ROS 2 "skill primitives" callable by LLMs |
+| **Failure recovery** | Only FLARE (2608.26645, not included) addresses failures | ROS 2 agent with self-diagnosis and re-planning |
+| **Robotic episodic memory** | Inner Monologue uses manual feedback | Persistent ROS 2 memory graph across sessions |
+| **Multi-robot semantic** | MA-VLA (2608.25864) is recent | LLM orchestration of heterogeneous ROS 2 fleets |
 
-### Papers clave de referencia
+### Key reference papers
 - `2209.07753` (Code as Policies)
 - `2309.11489` (SayPlan)
 - `2304.11477` (LLM+P)
@@ -57,47 +57,39 @@ El análisis de la colección revela **cuatro sublíneas de investigación** con
 
 ---
 
-## 3️⃣ Inferencia Local y Edge AI
+## 3️⃣ Local Inference and Edge AI
 
-### Estado actual
-- La mayoría de VLAs requieren GPUs de datacenter (A100, TPU) — incompatible con robots móviles autónomos.
-- Papers 2025-2026 (TurboVLA, LiteVLA-Edge, Quantized LLMs, ROS2SmolVLA) atacan el problema, pero son soluciones aisladas.
-- No existe un benchmark estándar de **latencia/precisión/consumo** para VLAs en hardware embebido (Jetson, Raspberry Pi, NPU).
+### Current state
+- Most VLAs require datacenter GPUs (A100, TPU) — incompatible with autonomous mobile robots.
+- 2025-2026 papers (TurboVLA, LiteVLA-Edge, Quantized LLMs, ROS2SmolVLA) attack the problem, but as isolated solutions.
+- There is no standard **latency/accuracy/power** benchmark for VLAs on embedded hardware (Jetson, Raspberry Pi, NPU).
 
-### Brechas identificadas
-| Brecha | Evidencia | Oportunidad |
-|--------|-----------|-------------|
-| **Benchmark Edge-VLA** | Cada paper usa su propio hardware/métrica | Benchmark ROS 2 + Jetson Orin con métricas unificadas |
-| **Cuantización sin pérdida robótica** | LiteVLA-Edge cuantiza pero pierde precisión | Técnicas QAT (Quantization-Aware Training) específicas para acciones |
-| **Inferencia asíncrona ROS 2** | FlashVLA (2608.27384) propone streaming | Nodo ROS 2 con pipeline asíncrono VLA + executor |
-| **NPU/FPGA para VLA** | Sin papers sobre NPU robótica | Portar SmolVLA a NPU (Hailo, Coral, Jetson) |
+### Identified gaps
+| Gap | Evidence | Opportunity |
+|-----|----------|-------------|
+| **Edge-VLA benchmark** | Each paper uses its own hardware/metric | ROS 2 + Jetson Orin benchmark with unified metrics |
+| **Lossless robotic quantization** | LiteVLA-Edge quantizes but loses accuracy | QAT (Quantization-Aware Training) techniques specific to actions |
+| **Asynchronous ROS 2 inference** | FlashVLA (2608.27384) proposes streaming | ROS 2 node with async VLA pipeline + executor |
+| **NPU/FPGA for VLA** | No papers on robotic NPU | Port SmolVLA to NPU (Hailo, Coral, Jetson) |
 
-### Papers clave de referencia
-- `2608.23320` (ROS2SmolVLA)
-- `2607.27205` (TurboVLA)
-- `2603.03380` (LiteVLA-Edge)
-- `2506.09581` (Quantized LLMs Edge AI)
+## 4️⃣ Sim2Real, Safety and Reproducible Evaluation
 
----
+### Current state
+- Domain Randomization (2017) is still the dominant technique; few methodological improvements in 8 years.
+- Locomotion papers (RMA, ANYmal) have robust Sim2Real, but **contact-rich manipulation** still fails.
+- There are no safety protocols for deploying VLA policies on collaborative robots (ISO/TS 15066).
+- Evaluation is irreproducible: each paper uses its own setup, without shared benchmarks.
 
-## 4️⃣ Sim2Real, Seguridad y Evaluación Reproducible
+### Identified gaps
+| Gap | Evidence | Opportunity |
+|-----|----------|-------------|
+| **Sim2Real for soft manipulation** | Only 1910.07113 (OpenAI) addresses dexterous | Sim2Real with tactile sensors + VLA |
+| **Policy certification** | 2608.21572 (not included) proposes certificates | Pre-deployment verification framework for ROS 2 |
+| **VLA safety in cobots** | No papers on ISO/TS 15066 + VLA | ROS 2 safety layer that validates VLA actions |
+| **Reproducible benchmark** | RoboCasa is sim-only; no real | Dual sim+real benchmark with ROS 2 + AprilTags |
+| **Standardized success metrics** | Each paper defines "success" differently | Metric taxonomy (task success, safety, latency, energy) |
 
-### Estado actual
-- Domain Randomization (2017) sigue siendo la técnica dominante; pocas mejoras metodológicas en 8 años.
-- Los papers de locomoción (RMA, ANYmal) tienen Sim2Real robusto, pero **manipulación contact-rich** sigue fallando.
-- No hay protocolos de seguridad para desplegar políticas VLA en robots colaborativos (ISO/TS 15066).
-- La evaluación es irreproducible: cada paper usa su propio setup, sin benchmarks compartidos.
-
-### Brechas identificadas
-| Brecha | Evidencia | Oportunidad |
-|--------|-----------|-------------|
-| **Sim2Real para manipulación blanda** | Solo 1910.07113 (OpenAI) aborda diestra | Sim2Real con sensores táctiles + VLA |
-| **Certificación de políticas** | 2608.21572 (no incluido) propone certificados | Framework de verificación pre-despliegue ROS 2 |
-| **Seguridad VLA en cobots** | Sin papers sobre ISO/TS 15066 + VLA | Capa de seguridad ROS 2 que valide acciones VLA |
-| **Benchmark reproducible** | RoboCasa es sim-only; sin real | Benchmark dual sim+real con ROS 2 + AprilTags |
-| **Métricas de éxito estandarizadas** | Cada paper define "éxito" distinto | Taxonomía de métricas (task success, safety, latency, energy) |
-
-### Papers clave de referencia
+### Key reference papers
 - `1703.06907` (Domain Randomization)
 - `2107.04034` (RMA)
 - `1910.07113` (Dexterous Manipulation)
@@ -105,37 +97,37 @@ El análisis de la colección revela **cuatro sublíneas de investigación** con
 
 ---
 
-## 🎯 Matriz de oportunidades
+## 🎯 Opportunity Matrix
 
-| Sublínea | Impacto | Factibilidad con ROS 2 | Prioridad |
-|----------|---------|------------------------|-----------|
-| Percepción multimodal | Alto | Alta (wrappers existentes) | 🥇 |
-| Planificación semántica | Alto | Media (requiere diseño de skills) | 🥈 |
-| Edge AI / inferencia local | Muy alto | Alta (ROS2SmolVLA como base) | 🥇 |
-| Sim2Real + seguridad | Crítico | Media (requiere hardware) | 🥉 |
-
----
-
-## 🔬 Propuesta experimental: `burger_delivery` como banco de pruebas
-
-El proyecto [burger_delivery](https://github.com/roncanciovl/burger_delivery) (ROS 2 Jazzy + Kinova Gen3 + AprilTags + gemini-robotics) es ideal para validar estas brechas:
-
-| Experimento | Arquitectura | Métrica |
-|-------------|--------------|---------|
-| **Baseline clásico** | AprilTags + MoveIt 2 + FSM | Task success rate, latency |
-| **VLM en la nube** | gemini-robotics API + MoveIt 2 | Latencia, costo, robustez |
-| **VLA local cuantizado** | SmolVLA/Florence-2 ROS 2 + MoveIt 2 | Latencia, precisión, consumo |
-
-**Hipótesis:** La alternativa local cuantizada alcanzará ≥80% del success rate de la solución en nube con <50% de latencia.
+| Sublines | Impact | Feasibility with ROS 2 | Priority |
+|----------|--------|------------------------|----------|
+| Multimodal perception | High | High (existing wrappers) | 🥇 |
+| Semantic planning | High | Medium (requires skill design) | 🥈 |
+| Edge AI / local inference | Very high | High (ROS2SmolVLA as base) | 🥇 |
+| Sim2Real + safety | Critical | Medium (requires hardware) | 🥉 |
 
 ---
 
-## 📎 Referencias cruzadas
+## 🔬 Experimental Proposal: `burger_delivery` as a Testbed
 
-- Metadatos completos: [`papers.csv`](papers.csv)
-- Protocolo de investigación: [`research-protocol.md`](research-protocol.md)
-- Índice narrativo: [`papers/PAPERS.md`](papers/PAPERS.md)
+The [burger_delivery](https://github.com/roncanciovl/burger_delivery) project (ROS 2 Jazzy + Kinova Gen3 + AprilTags + gemini-robotics) is ideal to validate these gaps:
+
+| Experiment | Architecture | Metric |
+|------------|--------------|--------|
+| **Classical baseline** | AprilTags + MoveIt 2 + FSM | Task success rate, latency |
+| **Cloud VLM** | gemini-robotics API + MoveIt 2 | Latency, cost, robustness |
+| **Quantized local VLA** | SmolVLA/Florence-2 ROS 2 + MoveIt 2 | Latency, accuracy, power |
+
+**Hypothesis:** The quantized local alternative will reach ≥80% of the cloud solution's success rate with <50% of its latency.
 
 ---
 
-*Documento vivo — actualizar con cada revisión de la colección.*
+## 📎 Cross references
+
+- Full metadata: [`papers.csv`](papers.csv)
+- Research protocol: [`research-protocol.md`](research-protocol.md)
+- Narrative index: [`papers/PAPERS.md`](papers/PAPERS.md)
+
+---
+
+*Living document — update with every revision of the collection.*

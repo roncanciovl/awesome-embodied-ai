@@ -1,5 +1,5 @@
 """
-Busca papers recientes (2025-2026) en arXiv sobre Embodied AI, VLA y ROS 2 + IA.
+Searches recent (2025-2026) arXiv papers on Embodied AI, VLA and ROS 2 + AI.
 """
 
 import urllib.request
@@ -18,7 +18,7 @@ QUERIES = [
 
 
 def search_arxiv(query: str, max_results: int = 10):
-    """Busca en la API de arXiv y retorna lista de (id, fecha, titulo)."""
+    """Search the arXiv API and return a list of (id, date, title)."""
     url = (
         "http://export.arxiv.org/api/query?"
         + urllib.parse.urlencode({
@@ -45,7 +45,7 @@ def search_arxiv(query: str, max_results: int = 10):
         title = re.search(r"<title>(.*?)</title>", e, re.DOTALL)
         if arxiv_id and published and title:
             aid = arxiv_id.group(1).split("/abs/")[-1]
-            # Quitar versión (v1, v2...)
+            # Remove version suffix (v1, v2...)
             aid = re.sub(r"v\d+$", "", aid)
             date = published.group(1)[:10]
             ttl = " ".join(title.group(1).split())[:100]
@@ -61,7 +61,7 @@ def main():
         results = search_arxiv(query)
         for aid, date, ttl in results:
             print(f"  {aid} | {date} | {ttl}")
-        time.sleep(3)  # Respetar rate limit de la API
+        time.sleep(3)  # Respect the API rate limit
 
 
 if __name__ == "__main__":

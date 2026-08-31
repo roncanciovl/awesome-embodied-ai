@@ -1,198 +1,198 @@
-# 📖 Glosario — Awesome Embodied AI & Sim2Real
+# 📖 Glossary — Awesome Embodied AI & Sim2Real
 
-Glosario de términos usados en esta colección y en la literatura de IA aplicada a robótica.
+Glossary of terms used in this collection and in the literature of AI applied to robotics.
 
 ---
 
-## 🧠 Modelos de Inteligencia Artificial
+## 🧠 Artificial Intelligence Models
 
-### LLM — Large Language Model (Modelo de Lenguaje a Gran Escala)
-Red neuronal entrenada con masivos textos para comprender y generar lenguaje natural. Ejemplos: GPT-4, Claude, Llama 2, Gemini. En robótica se usan para **planificación de tareas** ("recoge la taza y ponla en el fregadero" → secuencia de pasos) y **generación de código** de control.
+### LLM — Large Language Model
+A neural network trained on massive text corpora to understand and generate natural language. Examples: GPT-4, Claude, Llama 2, Gemini. In robotics they are used for **task planning** ("pick up the cup and put it in the sink" → sequence of steps) and **control code generation**.
 
-### VLM — Vision-Language Model (Modelo Visión-Lenguaje)
-Modelo multimodal que combina visión (imágenes/cámara) y lenguaje. Entiende el contenido de una escena y responde preguntas sobre ella. Ejemplos: Florence-2, CLIP, GPT-4V, Gemini Vision. En robótica se usan para **percepción semántica**: "¿dónde está el objeto rojo?", "¿qué está haciendo el humano?".
+### VLM — Vision-Language Model
+A multimodal model that combines vision (images/camera) and language. It understands the content of a scene and answers questions about it. Examples: Florence-2, CLIP, GPT-4V, Gemini Vision. In robotics they are used for **semantic perception**: "where is the red object?", "what is the human doing?".
 
-### VLA — Vision-Language-Action (Modelo Visión-Lenguaje-Acción)
-La evolución del VLM: además de percibir y entender, **genera acciones robóticas directamente** (coordenadas de movimiento, comandos de agarre). Es el paradigma central de esta colección. Ejemplos: OpenVLA, RT-2, π0, Octo, SmolVLA.
-> 📌 **Diferencia clave:** VLM responde con texto; VLA responde con acciones físicas.
+### VLA — Vision-Language-Action Model
+The evolution of the VLM: in addition to perceiving and understanding, it **directly generates robotic actions** (motion coordinates, grasp commands). It is the central paradigm of this collection. Examples: OpenVLA, RT-2, π0, Octo, SmolVLA.
+> 📌 **Key difference:** a VLM responds with text; a VLA responds with physical actions.
 
-### RL — Reinforcement Learning (Aprendizaje por Refuerzo)
-Paradigma donde un agente aprende mediante prueba y error, recibiendo recompensas o castigos. Base de los papers de locomoción (RMA, ANYmal) y control (Domain Randomization). Alternativa a la supervisión directa de VLAs.
+### RL — Reinforcement Learning
+A paradigm where an agent learns through trial and error, receiving rewards or penalties. Basis of the locomotion papers (RMA, ANYmal) and control (Domain Randomization). Alternative to direct VLA supervision.
 
-### IL — Imitation Learning (Aprendizaje por Imitación)
-El agente aprende imitando demostraciones humanas (teleoperación, kinesthetic teaching). Fuente principal de datos para entrenar VLAs (Open X-Embodiment: 800k+ trayectorias).
+### IL — Imitation Learning
+The agent learns by imitating human demonstrations (teleoperation, kinesthetic teaching). Main data source for training VLAs (Open X-Embodiment: 800k+ trajectories).
 
 ### PDDL — Planning Domain Definition Language
-Lenguaje formal para planificadores clásicos de IA. LLM+P lo combina con LLMs: el LLM traduce lenguaje natural → PDDL, el planificador resuelve óptimamente.
+Formal language for classical AI planners. LLM+P combines it with LLMs: the LLM translates natural language → PDDL, and the planner solves it optimally.
 
 ---
 
-## 🌉 Sim2Real (Simulación → Realidad)
+## 🌉 Sim2Real (Simulation → Reality)
 
-### Sim2Real — Sim-to-Real Transfer (Transferencia Simulación-Realidad)
-El proceso de entrenar un modelo en simulación y hacerlo funcionar en el mundo físico. El problema central: la simulación nunca es perfecta (el "reality gap").
+### Sim2Real — Sim-to-Real Transfer
+The process of training a model in simulation and making it work in the physical world. Core problem: simulation is never perfect (the "reality gap").
 
-### Reality Gap (Brecha de Realidad)
-Diferencia entre la simulación y el mundo real: física simplificada, sensores ideales, sin ruido. Causa principal del fallo de políticas transferidas.
+### Reality Gap
+The difference between simulation and the real world: simplified physics, ideal sensors, no noise. Main cause of failure for transferred policies.
 
-### Domain Randomization (Randomización de Dominio)
-Técnica fundacional (Tobin et al., 2017): randomizar masivamente propiedades del simulador (texturas, iluminación, física) para que el modelo aprenda a ser robusto ante variaciones, en lugar de ajustarse a una simulación específica.
+### Domain Randomization
+Foundational technique (Tobin et al., 2017): massively randomize simulator properties (textures, lighting, physics) so the model learns to be robust to variations instead of overfitting to one specific simulation.
 
 ### Dynamics Randomization
-Extensión: randomizar parámetros dinámicos (masa, fricción, rigidez de motores) además de los visuales.
+Extension: randomize dynamic parameters (mass, friction, motor stiffness) in addition to visual ones.
 
-### Teacher-Student (Profesor-Alumno)
-Paradigma de destilación: el "Teacher" se entrena en simulación con información privilegiada (privileged info: posiciones exactas, fricción real); el "Student" aprende solo de observaciones disponibles en el robot real. Base de RMA.
+### Teacher-Student
+Distillation paradigm: the "Teacher" is trained in simulation with privileged information (exact positions, real friction); the "Student" learns only from observations available on the real robot. Basis of RMA.
 
 ### RMA — Rapid Motor Adaptation
-Arquitectura (Kumar et al., 2021) con dos módulos: un estimador de entorno (adaptation module) que se ajusta online a cambios no vistos (carga, terreno), y una política que usa esa estimación.
+Architecture (Kumar et al., 2021) with two modules: an environment estimator (adaptation module) that adjusts online to unseen changes (load, terrain), and a policy that uses that estimate.
 
 ---
 
-## 🤖 Robótica y Frameworks
+## 🤖 Robotics and Frameworks
 
 ### ROS — Robot Operating System
-Middleware de código abierto para robótica. No es un "sistema operativo" sino una capa de abstracción con nodos, mensajes, tópicos, servicios y acciones.
+Open-source middleware for robotics. Not an "operating system" but an abstraction layer with nodes, messages, topics, services and actions.
 
 ### ROS 2
-Versión moderna de ROS (2020+). Cambia el transporte de TCPROS a **DDS**, con mejoras de:
-- **Tiempo real** y determinismo
-- **QoS** (Quality of Service) configurable
-- **Seguridad** (SROS)
-- Multi-plataforma (Windows, macOS, RTOS)
+Modern version of ROS (2020+). Changes the transport from TCPROS to **DDS**, with improvements in:
+- **Real-time** performance and determinism
+- Configurable **QoS** (Quality of Service)
+- **Security** (SROS)
+- Cross-platform support (Windows, macOS, RTOS)
 
 ### DDS — Data Distribution Service
-Estándar OMG de comunicación publish-subscribe usado por ROS 2. Provee descubrimiento automático de nodos, QoS por tópico y transporte eficiente sin broker central.
+OMG standard for publish-subscribe communication used by ROS 2. Provides automatic node discovery, per-topic QoS and efficient transport without a central broker.
 
-### Nodo / Tópico / Servicio / Acción (ROS 2)
-- **Nodo:** proceso que ejecuta una función (ej. `camera_driver`, `vla_policy`)
-- **Tópico:** canal publish-subscribe (ej. `/image_raw`)
-- **Servicio:** llamada request-response (ej. `/get_pose`)
-- **Acción:** objetivo largo con feedback (ej. `/move_to` con progreso)
+### Node / Topic / Service / Action (ROS 2)
+- **Node:** a process that runs a function (e.g., `camera_driver`, `vla_policy`)
+- **Topic:** publish-subscribe channel (e.g., `/image_raw`)
+- **Service:** request-response call (e.g., `/get_pose`)
+- **Action:** long-lived goal with feedback (e.g., `/move_to` with progress)
 
 ### MoveIt 2
-Framework de **planificación de movimiento** para ROS 2: cinemática inversa (IK), planificación de trayectorias (OMPL, Pilz), gestión de colisiones. Usado para manipular brazos como el Kinova Gen3.
+**Motion planning** framework for ROS 2: inverse kinematics (IK), trajectory planning (OMPL, Pilz), collision management. Used to manipulate arms such as the Kinova Gen3.
 
 ### Nav2
-Framework de **navegación autónoma** para ROS 2: SLAM, localización (AMCL), planificación de rutas, evasión de obstáculos. Para robots móviles.
+**Autonomous navigation** framework for ROS 2: SLAM, localization (AMCL), path planning, obstacle avoidance. For mobile robots.
 
 ### ros2_control
-Framework de control en tiempo real de ROS 2: interfaces de hardware (motores, sensores), controladores (PID, effort, velocity).
+Real-time control framework for ROS 2: hardware interfaces (motors, sensors), controllers (PID, effort, velocity).
 
 ### micro-ROS
-ROS 2 para **microcontroladores** (STM32, ESP32): permite que dispositivos embebidos participen en la red ROS 2 (Edge AI).
+ROS 2 for **microcontrollers** (STM32, ESP32): lets embedded devices participate in the ROS 2 network (Edge AI).
 
 ### AprilTags
-Marcadores visuales tipo QR para **localización espacial**: el robot detecta el tag con la cámara y calcula su pose absoluta. Usados en `burger_delivery`.
+QR-like visual markers for **spatial localization**: the robot detects the tag with the camera and computes its absolute pose. Used in `burger_delivery`.
 
-### Cobot — Robot Colaborativo
-Robot diseñado para trabajar junto a humanos sin jaulas de seguridad (ej. Kinova Gen3, UR5). Regulados por ISO/TS 15066.
+### Cobot — Collaborative Robot
+A robot designed to work alongside humans without safety cages (e.g., Kinova Gen3, UR5). Regulated by ISO/TS 15066.
 
 ---
 
-## 🎯 Conceptos de IA Embodied
+## 🎯 Embodied AI Concepts
 
-### Grounding (Anclaje)
-Conectar símbolos del lenguaje con el mundo físico: "taza" → detectar taza en imagen + estimar posición 3D. El problema central del puente lenguaje→acción.
+### Grounding
+Connecting language symbols with the physical world: "cup" → detect cup in image + estimate 3D position. The central problem of the language→action bridge.
 
-### Affordance (Aforanza)
-Propiedad de un objeto que indica qué acciones permite: una taza "aforda" ser agarrada por el asa; una puerta "aforda" abrirse. SayCan usa funciones de valor de affordance para que los LLMs propongan acciones factibles.
+### Affordance
+A property of an object that indicates what actions it permits: a cup "affords" being grabbed by its handle; a door "affords" opening. SayCan uses affordance value functions so LLMs propose feasible actions.
 
-### Embodied AI (IA Embodied / Encarnada)
-IA que percibe, razona y **actúa en un entorno físico** (o simulado físicamente). Contraste con IA "de escritorio" (chatbots, generación de imágenes).
+### Embodied AI
+AI that perceives, reasons and **acts in a physical environment** (or physically simulated). Contrast with "desktop" AI (chatbots, image generation).
 
-### Task Planning (Planificación de Tareas)
-Descomponer un objetivo de alto nivel ("prepara un café") en acciones ejecutables ("agarrar jarra" → "llenar de agua" → "verter"...).
+### Task Planning
+Decomposing a high-level goal ("make a coffee") into executable actions ("grab jug" → "fill with water" → "pour"...).
 
-### Skill Primitive (Primitiva de Habilidad)
-Acción robótica atómica y reutilizable ("pick", "place", "open"). Los LLMs planifican combinando primitivas; el controlador las ejecuta.
+### Skill Primitive
+An atomic, reusable robot action ("pick", "place", "open"). LLMs plan by combining primitives; the controller executes them.
 
 ### HRI — Human-Robot Interaction
-Interacción Humano-Robot: interfaces, seguridad, colaboración. `Conversational_Framework_HRI` (2026) es un ejemplo reciente.
+Interaction between humans and robots: interfaces, safety, collaboration. `Conversational_Framework_HRI` (2026) is a recent example.
 
-### World Model (Modelo del Mundo)
-Red neuronal que predice cómo cambia el entorno tras acciones (simulación interna aprendida). Base de GenSim, RoboGen y los enfoques de model-based RL.
+### World Model
+A neural network that predicts how the environment changes after actions (learned internal simulation). Basis of GenSim, RoboGen and model-based RL approaches.
 
 ---
 
-## ⚡ Inferencia y Despliegue
+## ⚡ Inference and Deployment
 
 ### Edge AI
-Ejecutar modelos de IA **en el dispositivo** (robot) en lugar de la nube. Ventajas: latencia baja, privacidad, funciona sin internet. Desafío: hardware limitado.
+Running AI models **on the device** (robot) instead of the cloud. Advantages: low latency, privacy, works offline. Challenge: limited hardware.
 
-### Cuantización (Quantization)
-Reducir la precisión numérica de un modelo (FP32 → INT8/INT4) para hacerlo más pequeño y rápido, con mínima pérdida de calidad. Clave para Edge AI. Ejemplos en la colección: LiteVLA-Edge, Quantized LLMs.
+### Quantization
+Reducing the numerical precision of a model (FP32 → INT8/INT4) to make it smaller and faster with minimal quality loss. Key for Edge AI. Examples in the collection: LiteVLA-Edge, Quantized LLMs.
 
 ### QAT — Quantization-Aware Training
-Entrenamiento considerando la cuantización desde el inicio (vs. cuantizar post-entrenamiento), preservando mejor la precisión.
+Training that considers quantization from the start (vs. post-training quantization), preserving accuracy better.
 
-### Latencia (Latency)
-Tiempo de respuesta del modelo (percepción → acción). Crítico en robótica:
-- <10 ms: control reactivo de alto nivel
-- 10-50 ms: control estándar
-- 50-200 ms: planificación aceptable
-- >200 ms: solo decisiones no urgentes
+### Latency
+Model response time (perception → action). Critical in robotics:
+- <10 ms: high-level reactive control
+- 10-50 ms: standard control
+- 50-200 ms: acceptable planning
+- >200 ms: only non-urgent decisions
 
-### FPS / Hz en VLA
-Frecuencia de decisión de una política. TurboVLA logra 32 Hz (31 ms) — suficiente para manipulación dinámica. La mayoría de VLAs clásicos operan a 1-10 Hz.
+### FPS / Hz in VLA
+Decision frequency of a policy. TurboVLA achieves 32 Hz (31 ms) — enough for dynamic manipulation. Most classical VLAs run at 1-10 Hz.
 
 ### VRAM
-Memoria de la GPU. TurboVLA opera con <1 GB VRAM; OpenVLA (7B parámetros) requiere ~14 GB en FP16.
+GPU memory. TurboVLA runs with <1 GB VRAM; OpenVLA (7B parameters) requires ~14 GB in FP16.
 
 ---
 
-## 📊 Datasets y Benchmarks
+## 📊 Datasets and Benchmarks
 
 ### Open X-Embodiment
-Dataset colaborativo (2023) con datos de **22 robots distintos** (Google, Stanford, ETH, etc.). Base para entrenar políticas generalistas cross-embodiment (RT-X).
+Collaborative dataset (2023) with data from **22 different robots** (Google, Stanford, ETH, etc.). Basis for training cross-embodiment generalist policies (RT-X).
 
 ### Benchmark
-Suite estandarizada de tareas para comparar métodos de forma reproducible. Ejemplos: RoboCasa (sim), GuardianBench (seguridad), Arena 4.0 (ROS 2 navegación).
+Standardized task suite to compare methods reproducibly. Examples: RoboCasa (sim), GuardianBench (safety), Arena 4.0 (ROS 2 navigation).
 
-### Success Rate (Tasa de Éxito)
-Métrica principal: % de episodios donde el robot completa la tarea. Complementada por: tiempo al éxito, colisiones, sujeciones fallidas.
+### Success Rate
+Main metric: % of episodes where the robot completes the task. Complemented by: time to success, collisions, failed grasps.
 
 ---
 
-## 🏢 Sistemas específicos
+## 🏢 Specific Systems
 
 ### Gemini Robotics (Google DeepMind)
-**Familia de modelos con clasificaciones distintas** — importante no confundirlos:
+**Model family with different classifications** — important not to confuse them:
 
-| Variante | Tipo | ¿Genera acciones? | Uso |
+| Variant | Type | Generates actions? | Use |
 |----------|------|-------------------|-----|
-| **Gemini Robotics** (base, 1.5) | ✅ **VLA** | Sí — controla brazos (ALOHA 2) y humanoides (Apollo) | Control directo de robots |
-| **Gemini Robotics-ER** (*Embodied Reasoning*) | ⚠️ **VLM** con razonamiento espacial | ❌ No — solo percibe y razona | Percepción semántica, integración con controladores existentes |
-| **Gemini Robotics On-Device** (1.5) | ✅ **VLA cuantizado** | Sí — localmente en el robot (Jetson), sin nube | Edge AI, robots sin conectividad |
+| **Gemini Robotics** (base, 1.5) | ✅ **VLA** | Yes — controls arms (ALOHA 2) and humanoids (Apollo) | Direct robot control |
+| **Gemini Robotics-ER** (*Embodied Reasoning*) | ⚠️ **VLM** with spatial reasoning | ❌ No — only perceives and reasons | Semantic perception, integration with existing controllers |
+| **Gemini Robotics On-Device** (1.5) | ✅ **Quantized VLA** | Yes — locally on the robot (Jetson), no cloud | Edge AI, robots without connectivity |
 
-> 📌 **En `burger_delivery`:** se usa `gemini-robotics` para *semantic scene processing* → corresponde al modo **ER (VLM)**: la escena se interpreta semánticamente y las acciones las ejecuta MoveIt 2. No es control VLA end-to-end.
+> 📌 **In `burger_delivery`:** `gemini-robotics` is used for *semantic scene processing* → this is the **ER (VLM)** mode: the scene is interpreted semantically and actions are executed by MoveIt 2. It is NOT end-to-end VLA control.
 >
-> 📌 **Gemini Robotics On-Device** es especialmente relevante para la sublínea *Edge AI* de [`research-gaps.md`](research-gaps.md): es el análogo comercial de lo que ROS2SmolVLA / LiteVLA-Edge proponen en investigación.
+> 📌 **Gemini Robotics On-Device** is especially relevant to the *Edge AI* subline of [`research-gaps.md`](research-gaps.md): it is the commercial analog of what ROS2SmolVLA / LiteVLA-Edge propose in research.
 
 ---
 
-## 🏢 Grupos y Sistemas mencionados
+## 🏢 Mentioned Groups and Systems
 
-| Nombre | Qué es |
+| Name | What it is |
 |--------|--------|
-| **Google DeepMind** | Creador de RT-1, RT-2, RT-X, SayCan, MuJoCo, Gemini Robotics |
-| **Physical Intelligence** | Startup creadora de π0 |
-| **Stanford iGibson/BEHAVIOR** | Lab de Li Fei-Fei, simuladores domésticos |
-| **ETH Zurich (ANYmal)** | Lab de locomoción cuadrúpeda de Hutter |
-| **Kinova Gen3** | Brazo robótico colaborativo de 7 DOF |
-| **NVIDIA Isaac Sim** | Simulador basado en Omniverse con fotorrealismo |
-| **Gazebo** | Simulador clásico de ROS (ahora gz-sim) |
-| **MuJoCo** | Motor de física de contactos (DeepMind, open-source) |
+| **Google DeepMind** | Creator of RT-1, RT-2, RT-X, SayCan, MuJoCo, Gemini Robotics |
+| **Physical Intelligence** | Startup creator of π0 |
+| **Stanford iGibson/BEHAVIOR** | Li Fei-Fei's lab, household simulators |
+| **ETH Zurich (ANYmal)** | Hutter's quadrupedal locomotion lab |
+| **Kinova Gen3** | 7-DOF collaborative robotic arm |
+| **NVIDIA Isaac Sim** | Omniverse-based simulator with photorealism |
+| **Gazebo** | Classic ROS simulator (now gz-sim) |
+| **MuJoCo** | Contact physics engine (DeepMind, open-source) |
 
 ---
 
-## 🔗 Referencias cruzadas
+## 🔗 Cross references
 
-- Metadatos: [`papers.csv`](papers.csv)
-- Índice de papers: [`papers/PAPERS.md`](papers/PAPERS.md)
-- Protocolo: [`research-protocol.md`](research-protocol.md)
-- Brechas: [`research-gaps.md`](research-gaps.md)
+- Metadata: [`papers.csv`](papers.csv)
+- Paper index: [`papers/PAPERS.md`](papers/PAPERS.md)
+- Protocol: [`research-protocol.md`](research-protocol.md)
+- Gaps: [`research-gaps.md`](research-gaps.md)
 
 ---
 
-*Última actualización: 2026-08-30. Sugerencias de términos: abrir issue con label `glossary`.*
+*Last updated: 2026-08-30. Term suggestions: open an issue with label `glossary`.*

@@ -29,7 +29,7 @@ Embodied AI refers to artificial intelligence agents that interact with physical
 
 A curated collection of **41 foundational papers** with structured metadata and arXiv links, organized in [`papers/`](papers/PAPERS.md):
 
-> **📥 PDFs:** Por razones de licencia, los PDFs no se versionan en git. Cada paper en arXiv tiene su propia licencia (CC BY, CC BY-NC-ND, copyright del autor, etc.). Para descargar los PDFs localmente:
+> **📥 PDFs:** By license, PDFs are not versioned in git. Each paper on arXiv has its own license (CC BY, CC BY-NC-ND, author copyright, etc.). To download the PDFs locally:
 > ```bash
 > python scripts/download_papers.py
 > ```
@@ -41,7 +41,7 @@ A curated collection of **41 foundational papers** with structured metadata and 
 | 🌉 Sim2Real & RL | 7 | Domain Randomization, Teacher-Student, RMA, ANYmal |
 | ⚙️ Robotics Frameworks | 2 | ROS 2 Architecture, MoveIt 2 |
 | 📚 Surveys & Case Studies | 4 | Embodied AI Surveys, SayPlan |
-| 🧩 ROS 2 + IA/LLMs | 7 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
+| 🧩 ROS 2 + AI/LLMs | 7 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
 | 🚀 Recent 2025-2026 | 10 | ROS2SmolVLA, Florence-2 ROS 2, TurboVLA, CoRAL, Edge AI LLMs |
 
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
@@ -85,8 +85,6 @@ A comprehensive glossary of terms used in this collection and the embodied AI li
 📖 **Full glossary:** [`GLOSSARY.md`](GLOSSARY.md) (covers Sim2Real, ROS 2, Edge AI, datasets, and key systems)
 
 ---
-
-## 🤖 Vision-Language-Action (VLA) Models
 
 ## 🤖 Vision-Language-Action (VLA) Models
 Foundation models that map visual and language inputs directly to robotic actions.

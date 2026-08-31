@@ -1,8 +1,8 @@
 """
-Script de descarga de papers para Awesome Embodied AI.
-Descarga PDFs desde arXiv (mirror export.arxiv.org) con reintentos y validación.
+Paper download script for Awesome Embodied AI.
+Downloads PDFs from arXiv (export.arxiv.org mirror) with retries and validation.
 
-Uso:
+Usage:
     python download_papers.py
 """
 
@@ -12,15 +12,15 @@ import time
 import urllib.request
 import urllib.error
 
-# Ruta base: awesome-embodied-ai/papers/
+# Base path: awesome-embodied-ai/papers/
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "papers"))
 
-# User-Agent para evitar bloqueos
+# User-Agent to avoid blocks
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (research-paper-collection; contact: roncanciovl@github)"
 }
 
-# Lista de papers: (carpeta_destino, nombre_archivo, arxiv_id)
+# Paper list: (destination_folder, filename, arxiv_id)
 PAPERS = [
     # ── 01_VLA_Models ──────────────────────────────────────────────
     ("01_VLA_Models", "OpenVLA_An_Open-Source_Vision-Language-Action_Model.pdf", "2406.09246"),
@@ -42,7 +42,7 @@ PAPERS = [
     ("03_Sim2Real_RL", "Sim-to-Real_Transfer_of_Robotic_Control_with_Dynamics_Randomization.pdf", "1710.06537"),
     ("03_Sim2Real_RL", "Learning_Quadrupedal_Locomotion_over_Challenging_Terrain.pdf", "1910.11100"),
     ("03_Sim2Real_RL", "Sim-to-Real_Transfer_for_Dexterous_Manipulation.pdf", "1910.07113"),
-    ("03_Sim2Real_RL", "Asymmetric_Actor-Critic_for_Sim-to-Real.pdf", "1910.07113v1"),  # placeholder, se valida abajo
+    ("03_Sim2Real_RL", "Asymmetric_Actor-Critic_for_Sim-to-Real.pdf", "1910.07113v1"),  # placeholder, validated below
     ("03_Sim2Real_RL", "Teacher-Student_Framework_for_Sim-to-Real_Locomotion.pdf", "2009.03317"),
     ("03_Sim2Real_RL", "RMA_Rapid_Motor_Adaptation_for_Legged_Robots.pdf", "2107.04034"),
 
@@ -65,7 +65,7 @@ PAPERS = [
     ("06_ROS2_AI_LLMs", "TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf", "2305.05706"),
     ("06_ROS2_AI_LLMs", "LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf", "2304.11477"),
 
-    # ── 07_Recent_2025_2026 (selección ROS 2 + LLMs robóticos) ─────
+    # ── 07_Recent_2025_2026 (ROS 2 + robotic LLMs selection) ─────
     ("07_Recent_2025_2026", "ROS2SmolVLA_Small_VLA_for_ROS2_Industrial_2026.pdf", "2608.23320"),
     ("07_Recent_2025_2026", "ROS2_Wrapper_Florence-2_Local_VLM_2026.pdf", "2604.01179"),
     ("07_Recent_2025_2026", "Conversational_Framework_HRI_Manipulation_GenAI_2026.pdf", "2606.06061"),
@@ -78,8 +78,8 @@ PAPERS = [
     ("07_Recent_2025_2026", "LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf", "2603.03380"),
 ]
 
-# Corregir duplicado: Asymmetric Actor-Critic real es arXiv 1910.07113 (ya usado).
-# Lo reemplazamos por "Learning Agile and Dynamic Motor Skills for Legged Robots" (1901.08652)
+# Fix duplicate: the real Asymmetric Actor-Critic paper is arXiv 1910.07113 (already used).
+# Replace it with "Learning Agile and Dynamic Motor Skills for Legged Robots" (1901.08652)
 PAPERS = [p for p in PAPERS if p[2] != "1910.07113v1"]
 PAPERS.insert(
     PAPERS.index(("03_Sim2Real_RL", "Sim-to-Real_Transfer_for_Dexterous_Manipulation.pdf", "1910.07113")) + 1,
@@ -88,36 +88,36 @@ PAPERS.insert(
 
 
 def download_paper(folder: str, filename: str, arxiv_id: str, max_retries: int = 3) -> bool:
-    """Descarga un paper desde arXiv con reintentos."""
+    """Download a paper from arXiv with retries."""
     dest_dir = os.path.join(BASE_DIR, folder)
     os.makedirs(dest_dir, exist_ok=True)
     dest_path = os.path.join(dest_dir, filename)
 
-    # Si ya existe y es un PDF válido (>10KB y empieza con %PDF), saltar
+    # If it already exists and is a valid PDF (>10KB and starts with %PDF), skip it
     if os.path.exists(dest_path):
         size = os.path.getsize(dest_path)
         if size > 10_000:
             with open(dest_path, "rb") as f:
                 header = f.read(4)
             if header == b"%PDF":
-                print(f"  [SKIP] {filename} (ya existe, {size/1e6:.1f} MB)")
+                print(f"  [SKIP] {filename} (already exists, {size/1e6:.1f} MB)")
                 return True
-        # Archivo inválido, eliminar y re-descargar
+        # Invalid file, delete and re-download
         os.remove(dest_path)
 
-    # Usar export.arxiv.org (mirror con menos throttling)
+    # Use export.arxiv.org (mirror with less throttling)
     url = f"https://export.arxiv.org/pdf/{arxiv_id}.pdf"
 
     for attempt in range(1, max_retries + 1):
         try:
-            print(f"  [DL] {filename} (intento {attempt}/{max_retries})...")
+            print(f"  [DL] {filename} (attempt {attempt}/{max_retries})...")
             req = urllib.request.Request(url, headers=HEADERS)
             with urllib.request.urlopen(req, timeout=120) as response:
                 data = response.read()
 
-            # Validar que sea PDF
+            # Validate that it is a PDF
             if not data.startswith(b"%PDF"):
-                print(f"  [WARN] Respuesta no es PDF para {arxiv_id}, reintentando...")
+                print(f"  [WARN] Response is not a PDF for {arxiv_id}, retrying...")
                 time.sleep(5 * attempt)
                 continue
 
@@ -131,17 +131,17 @@ def download_paper(folder: str, filename: str, arxiv_id: str, max_retries: int =
             print(f"  [ERR] {e}")
             if attempt < max_retries:
                 wait = 10 * attempt
-                print(f"  Esperando {wait}s antes de reintentar...")
+                print(f"  Waiting {wait}s before retrying...")
                 time.sleep(wait)
 
-    print(f"  [FAIL] No se pudo descargar {filename} (arXiv:{arxiv_id})")
+    print(f"  [FAIL] Could not download {filename} (arXiv:{arxiv_id})")
     return False
 
 
 def main():
     print("=" * 60)
-    print("Awesome Embodied AI - Descarga de Papers")
-    print(f"Destino: {BASE_DIR}")
+    print("Awesome Embodied AI - Paper Downloader")
+    print(f"Destination: {BASE_DIR}")
     print("=" * 60)
 
     results = {"ok": [], "fail": []}
@@ -153,13 +153,13 @@ def main():
             results["ok"].append(filename)
         else:
             results["fail"].append((filename, arxiv_id))
-        # Pausa entre descargas para respetar rate limits de arXiv
+        # Pause between downloads to respect arXiv rate limits
         time.sleep(3)
 
     print("\n" + "=" * 60)
-    print(f"RESUMEN: {len(results['ok'])} descargados, {len(results['fail'])} fallidos")
+    print(f"SUMMARY: {len(results['ok'])} downloaded, {len(results['fail'])} failed")
     if results["fail"]:
-        print("\nFallidos:")
+        print("\nFailed:")
         for fname, aid in results["fail"]:
             print(f"  - {fname} (arXiv:{aid})")
     print("=" * 60)
