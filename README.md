@@ -13,6 +13,7 @@ A curated and reproducible research resource covering **Embodied Artificial Inte
 ## 📑 Contents
 - [What is Embodied AI?](#-what-is-embodied-ai)
 - [Paper Library (Metadata + Links)](#-paper-library-metadata--links)
+- [Glossary (VLA/VLM/LLM, Sim2Real, ROS 2)](#-glossary-vlavlmllm-sim2real-ros-2)
 - [Vision-Language-Action (VLA) Models](#-vision-language-action-vla-models)
 - [Simulation Environments & Digital Twins](#-simulation-environments--digital-twins)
 - [Sim2Real Transfer & Reinforcement Learning](#-sim2real-transfer--reinforcement-learning)
@@ -53,11 +54,39 @@ A curated collection of **41 foundational papers** with structured metadata and 
 | [`research-protocol.md`](research-protocol.md) | Research questions, sources, queries, inclusion/exclusion criteria |
 | [`papers.csv`](papers.csv) | Structured metadata (41 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
+| [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
 | [`ZENODO.md`](ZENODO.md) | Guide for archiving releases in Zenodo (DOI) |
 | [Zenodo v1.0.0](https://doi.org/10.5281/zenodo.22179172) | Archived stable release; concept DOI: [`10.5281/zenodo.22179171`](https://doi.org/10.5281/zenodo.22179171) |
 | [`LICENSE`](LICENSE) | CC BY-SA 4.0 |
+## 📖 Glossary (VLA/VLM/LLM, Sim2Real, ROS 2)
+
+A comprehensive glossary of terms used in this collection and the embodied AI literature is available in [`GLOSSARY.md`](GLOSSARY.md). Key definitions:
+
+| Acronym | Full Name | Role in Robotics |
+|---------|-----------|------------------|
+| **LLM** | Large Language Model | Task planning, code generation (e.g., GPT-4, Llama 2, Gemini) |
+| **VLM** | Vision-Language Model | Semantic perception: \"where is the red object?\" (e.g., Florence-2, CLIP, GPT-4V) |
+| **VLA** | Vision-Language-Action | Direct action generation: perception → motor commands (e.g., OpenVLA, RT-2, π0) |
+
+### Is Gemini Robotics a VLA?
+
+**It depends on the variant** — Gemini Robotics is a *family* with distinct classifications:
+
+| Variant | Type | Generates Actions? | Use Case |
+|---------|------|--------------------|----------|
+| **Gemini Robotics** (base) | ✅ **VLA** | Yes — controls arms (ALOHA 2) and humanoids (Apollo) | Direct robot control |
+| **Gemini Robotics-ER** (Embodied Reasoning) | ⚠️ **VLM** | No — only perceives and reasons | Semantic scene understanding |
+| **Gemini Robotics On-Device** | ✅ **VLA (quantized)** | Yes — runs locally on robot (Jetson) | Edge AI, offline robots |
+
+> 📌 **In `burger_delivery`:** `gemini-robotics` is used for *semantic scene processing* → this is the **ER (VLM)** mode: the scene is interpreted semantically, and actions are executed by MoveIt 2. It is NOT end-to-end VLA control.
+
+📖 **Full glossary:** [`GLOSSARY.md`](GLOSSARY.md) (covers Sim2Real, ROS 2, Edge AI, datasets, and key systems)
+
+---
+
+## 🤖 Vision-Language-Action (VLA) Models
 
 ## 🤖 Vision-Language-Action (VLA) Models
 Foundation models that map visual and language inputs directly to robotic actions.
