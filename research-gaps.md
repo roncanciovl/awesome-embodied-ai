@@ -77,14 +77,19 @@ The analysis of the collection reveals **four research sublines** with significa
 ### Current state
 - Domain Randomization (2017) is still the dominant technique; few methodological improvements in 8 years.
 - Locomotion papers (RMA, ANYmal) have robust Sim2Real, but **contact-rich manipulation** still fails.
-- There are no safety protocols for deploying VLA policies on collaborative robots (ISO/TS 15066).
+- Human-hand dexterity remains unsolved in the collection: only one paper (1910.07113, OpenAI, 2019) transfers dexterous hands to reality; no papers cover in-hand manipulation, tactile skins, or deformable objects.
+- Commercial triaxial tactile hardware now exists (e.g., PaXini PX-6AX GEN3/GEN4: 1 kHz output, 0.005 N resolution, up to 30 taxels/cm²) with community ROS 2 drivers, but there is no peer-reviewed, standardized tactile-VLA integration.
+- There are no safety protocols for deploying VLA policies on collaborative robots (ISO/TS 15066), and no paper assigns liability or accountability when a deployed policy fails.
 - Evaluation is irreproducible: each paper uses its own setup, without shared benchmarks.
 
 ### Identified gaps
 | Gap | Evidence | Opportunity |
 |-----|----------|-------------|
 | **Sim2Real for soft manipulation** | Only 1910.07113 (OpenAI) addresses dexterous | Sim2Real with tactile sensors + VLA |
+| **Dexterous in-hand manipulation** | Only 1910.07113 (2019); CoRAL (2605.02600) admits contact-rich "remains challenging"; zero papers on in-hand manipulation, deformable objects or tool use | Multi-finger VLA policies driven by distributed fingertip tactile arrays |
+| **Tactile-VLA on a standard framework** | Hardware SOTA is commercial, not academic (PaXini PX-6AX GEN3/GEN4 triaxial arrays) and community ROS 2 drivers exist (e.g., `THU-DA-Robotics/paxini_ros2`), but no standardized ROS 2 tactile interface for VLAs | `ros2_tactile_msgs` standard + tactile-VLA node validated on the Kinova Gen3 gripper |
 | **Policy certification** | 2608.21572 (not included) proposes certificates | Pre-deployment verification framework for ROS 2 |
+| **Liability & accountability for failures** | 0 papers address who is responsible when a deployed VLA fails (dropped/broken objects, injury); certification (2608.21572) is pre-deployment only and FLARE (2608.26645) only recovery | ROS 2 audit trail ("black box" logger) + safety layer mapped to ISO 10218 / ISO/TS 15066 / EU AI Act feeding the certification loop |
 | **VLA safety in cobots** | No papers on ISO/TS 15066 + VLA | ROS 2 safety layer that validates VLA actions |
 | **Reproducible benchmark** | RoboCasa is sim-only; no real | Dual sim+real benchmark with ROS 2 + AprilTags |
 | **Standardized success metrics** | Each paper defines "success" differently | Metric taxonomy (task success, safety, latency, energy) |
@@ -127,7 +132,10 @@ The [burger_delivery](https://github.com/roncanciovl/burger_delivery) project (R
 - Full metadata: [`papers.csv`](papers.csv)
 - Research protocol: [`research-protocol.md`](research-protocol.md)
 - Narrative index: [`papers/PAPERS.md`](papers/PAPERS.md)
+- Tactile & dexterity SOTA: [`tactile-sota.md`](tactile-sota.md)
 
 ---
 
 *Living document — update with every revision of the collection.*
+
+> **Addendum 2026-09-05:** Added gaps on human-hand dexterity, tactile-VLA integration, and liability & accountability after a state-of-the-art review of commercial tactile sensing: PaXini PX-6AX GEN3 (1 MHz sampling / 1 kHz output, 0.01 N min force, up to 717 triaxial signals, 0.1 mm spatial resolution) and GEN4 "FUSE" 6D chip (0.005 N, 30 taxels/cm², 2 mm thin, electronic-skin tiles), plus its ecosystem (DexH13 dexterous hand, TORA-ONE humanoid, OmniSharing DB). Sources: paxini.com/us/ax/gen3, paxini.com/us/ax/gen4, and GitHub `paxini` search (24 community repos incl. ROS 2 drivers, Python SDK, V-T-L-A stacks), consulted 2026-09-05. Vendor specs are lab-claimed, not independently peer-reviewed.

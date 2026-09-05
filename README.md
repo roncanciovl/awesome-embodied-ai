@@ -54,6 +54,7 @@ A curated collection of **41 foundational papers** with structured metadata and 
 | [`research-protocol.md`](research-protocol.md) | Research questions, sources, queries, inclusion/exclusion criteria |
 | [`papers.csv`](papers.csv) | Structured metadata (41 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
+| [`tactile-sota.md`](tactile-sota.md) | Tactile sensing & manual dexterity SOTA: V-T-L-A frontier, PaXini GEN3/GEN4 hardware, ROS 2 ecosystem |
 | [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
