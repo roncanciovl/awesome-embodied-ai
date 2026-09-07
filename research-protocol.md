@@ -105,6 +105,21 @@ A paper is **excluded** if it meets any:
 | GenSim (2310.01361) | ❌ Excluded | Redundant with RoboGen |
 | ROS2SmolVLA (2608.23320) | ✅ Included | Native VLA on industrial ROS 2 |
 | ROS 2 Wrapper Florence-2 (2604.01179) | ✅ Included | Local VLM as ROS 2 node |
+| SAFE (2506.09937) | ✅ Included | NeurIPS 2025; multitask failure detection for VLAs (OpenVLA, pi0, pi0-FAST); code available |
+| UQ for Flow-Based VLA (2606.18043) | ✅ Included | Uncertainty quantification + failure detection for flow VLAs (LIBERO); fills the silent-failure gap |
+| KnowLoop (2406.00430) | ✅ Included | Uncertainty-based failure detection for closed-loop LLM planners; addresses hallucination directly |
+| Path Deviation Detection (2603.13782) | ✅ Included | Training-free hallucination detection in frozen VLAs; ROS integration; real robot |
+| Asking for Help / BCVA (2302.04334) | ❌ Excluded | On-theme (failure prediction in behavioral cloning, ICRA 2023) but redundant with SAFE; no code; pre-VLA era |
+| ELLIPSE (2603.04585) | ✅ Included | Real-world evidential recalibration under domain shift — the data-side silent failure ("dangerously overconfident in unfamiliar states") |
+| SAGE (2608.29772) | ✅ Included | Self-aware competence estimation with human takeover under shift; real-world navigation |
+| Sensor Fault Detection & Compensation (2305.19157) | ❌ Excluded | The ONLY arXiv hit for "sensor fault detection" + robot; sim-only, no code, no learning — logged to document the vacuum |
+| Industrial Dexterity Benchmark (2607.14021) | ✅ Included | Industrial boards (datacenter cabling, automotive harness, gearbox); 78% vs 36% multimodal; DAG-ROS framework |
+| Connector Assembly BC (2602.22100) | ✅ Included | Wire-harness connector insertion with F/T + vision; >90% on five geometries; real UR5e cell |
+| Wire Harness Vision SLR (2309.13744) | ✅ Included | Systematic review from industrial engineering; documents the "simplified industrial configurations" gap |
+| Certifiably Safe DLO (2505.13889) | ✅ Included | ICRA 2025 WS; certified-safe wire-harness manipulation via shape + tension prediction (zonotopes) |
+| Shallow-π (2601.20262) | ✅ Included | Edge deployment: 18→6 layers, >2× faster, <1% drop, validated on Jetson Orin/Thor |
+| Onboard Multi-Agent VLM (2607.07403) | ✅ Included | PAAMS 2026; onboard compute without cloud; industrial warehouse; open-source sim (Apache 2.0) |
+| GNN Cable Deformation (2203.15004) | ✅ Included | RA-L 2022; sim-trained GNN + online residual for cables — foundational Sim2Real for deformables |
 
 ---
 

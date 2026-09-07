@@ -18,7 +18,7 @@ identifiers:
 repository-code: "https://github.com/roncanciovl/awesome-embodied-ai"
 url: "https://github.com/roncanciovl/awesome-embodied-ai"
 abstract: >-
-  A curated collection of 41 foundational papers on Embodied AI,
+  A curated collection of 54 foundational papers on Embodied AI,
   Vision-Language-Action (VLA) models, Sim2Real transfer, and the
   integration of Large Language Models with ROS 2. Includes structured
   metadata (papers.csv), research protocol, and identified research gaps

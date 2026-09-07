@@ -9,7 +9,7 @@
 
 ## 📌 Executive Summary
 
-The paper collection (41 papers, cutoff 2026-08-30) contains **zero papers** integrating tactile sensing with VLA policies, and only one (OpenAI 2019) that transferred dexterous-hand skills to reality. Meanwhile, the 2025–2026 arXiv frontier shows a consolidating paradigm — **tactile-integrated world models and V-T-L-A policies** — and commercial triaxial tactile hardware (PaXini PX-6AX GEN3/GEN4) with community ROS 2 drivers is already shipping.
+The paper collection (41 papers at cutoff 2026-08-30; 54 after the September 2026 updates) contains **zero papers** integrating tactile sensing with VLA policies, and only one (OpenAI 2019) that transferred dexterous-hand skills to reality. Meanwhile, the 2025–2026 arXiv frontier shows a consolidating paradigm — **tactile-integrated world models and V-T-L-A policies** — and commercial triaxial tactile hardware (PaXini PX-6AX GEN3/GEN4) with community ROS 2 drivers is already shipping.
 
 **Key claim:** touch is the only modality that observes the **hidden contact states** — force, incipient slip, contact stability — that vision and language cannot provide, and that human manual dexterity exploits by default (*"Vision and language … cannot reliably reveal hidden contact states such as force, slip, and contact stability"* — TouchWorld, `2607.07287`).
 
@@ -99,7 +99,7 @@ Query: `api.github.com/search/repositories?q=paxini` → **24 repos**; official 
 
 1. **No standardized ROS 2 tactile interface** — 24 fragmented repos, zero standard messages → opportunity: `ros2_tactile_msgs`.
 2. **Tactile sim-to-real fidelity** — GPU-parallel tactile simulation exists (`2606.22332`) but triaxial-array noise/drift realism is still young.
-3. **No peer-reviewed commercial-array × VLA integration** — the 41-paper collection contains zero such papers.
+3. **No peer-reviewed commercial-array × VLA integration** — the collection contains zero such papers.
 4. **Reproducibility** — every paper uses a different sensor; a metric taxonomy is needed (task success, slip rate, grip-force margin, safety).
 5. **Security of the tactile channel** — contactless EMI spoofing can induce excessive force (`2608.20817`) → audit trail + certification.
 6. **Full-hand demonstration data** — HT-Bench direction; teleoperation capture rigs (PXCap, VR bimanual) are the scaling path.

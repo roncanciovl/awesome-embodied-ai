@@ -75,6 +75,7 @@ papers/
 | **Learning Agile and Dynamic Motor Skills for Legged Robots** | [1901.08652](https://arxiv.org/abs/1901.08652) | 2019 | `Learning_Agile_and_Dynamic_Motor_Skills_for_Legged_Robots.pdf` |
 | **Rapid Motor Adaptation for Legged Robots (Teacher-Student)** | [2009.03317](https://arxiv.org/abs/2009.03317) | 2020 | `Teacher-Student_Framework_for_Sim-to-Real_Locomotion.pdf` |
 | **RMA: Rapid Motor Adaptation for Legged Robots** | [2107.04034](https://arxiv.org/abs/2107.04034) | 2021 | `RMA_Rapid_Motor_Adaptation_for_Legged_Robots.pdf` |
+| **Offline-Online Learning of Deformation Model for Cable Manipulation with Graph Neural Networks** | [2203.15004](https://arxiv.org/abs/2203.15004) | 2022 | `GNN_Cable_Deformation_Offline_Online_2022.pdf` |
 
 ### Quick summary
 - **Domain Randomization** (Tobin et al., OpenAI) is the foundational technique: randomize textures/physics in simulation so the model becomes robust in the real world.
@@ -99,6 +100,7 @@ papers/
 | **Vision-Language-Action Models for Robotics: A Survey** | [2411.13548](https://arxiv.org/abs/2411.13548) | 2024 | `Vision-Language-Action_Models_Survey.pdf` |
 | **Embodied AI: Recent Advances and Future Directions** | [2311.11267](https://arxiv.org/abs/2311.11267) | 2023 | `Embodied_AI_Survey_Recent_Advances.pdf` |
 | **SayPlan: Grounding Large Language Models using 3D Scene Graphs for Scalable Robot Task Planning** | [2309.11489](https://arxiv.org/abs/2309.11489) | 2023 | `SayPlan_Grounding_LLMs_using_3D_Graphs.pdf` |
+| **A Systematic Literature Review of Computer Vision Applications in Robotized Wire Harness Assembly** | [2309.13744](https://arxiv.org/abs/2309.13744) | 2024 | `Wire_Harness_Assembly_Vision_SLR_2024.pdf` |
 
 ### Quick summary
 - The three surveys cover the state of the art in Embodied AI and VLA (ideal entry point).
@@ -147,6 +149,17 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 | **A Semantic Autonomy Framework for VLM-Integrated Indoor Mobile Robots** | [2605.02525](https://arxiv.org/abs/2605.02525) | 2026 | `Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf` |
 | **Towards Embodied Agentic AI: Review and Classification of LLM- and VLM-Driven Robot Autonomy** | [2508.05294](https://arxiv.org/abs/2508.05294) | 2025 | `Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf` |
 | **LiteVLA-Edge: Quantized On-Device Multimodal Control for Embedded Robotics** | [2603.03380](https://arxiv.org/abs/2603.03380) | 2026 | `LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf` |
+| **SAFE: Multitask Failure Detection for Vision-Language-Action Models** | [2506.09937](https://arxiv.org/abs/2506.09937) | 2025 | `SAFE_Multitask_Failure_Detection_VLA_2025.pdf` |
+| **Uncertainty Quantification for Flow-Based Vision-Language-Action Models** | [2606.18043](https://arxiv.org/abs/2606.18043) | 2026 | `UQ_Flow-Based_VLA_Uncertainty_2026.pdf` |
+| **Evaluating Uncertainty-based Failure Detection for Closed-Loop LLM Planners** | [2406.00430](https://arxiv.org/abs/2406.00430) | 2024 | `KnowLoop_Uncertainty_Failure_Detection_LLM_Planners_2024.pdf` |
+| **Your Vision-Language-Action Model Already Has Attention Heads For Path Deviation Detection** | [2603.13782](https://arxiv.org/abs/2603.13782) | 2026 | `VLA_Attention_Heads_Path_Deviation_Detection_2026.pdf` |
+| **ELLIPSE: Evidential Learning for Robust Waypoints and Uncertainties** | [2603.04585](https://arxiv.org/abs/2603.04585) | 2026 | `ELLIPSE_Evidential_Learning_Waypoints_Uncertainties_2026.pdf` |
+| **SAGE: Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving** | [2608.29772](https://arxiv.org/abs/2608.29772) | 2026 | `SAGE_Self-Aware_Active_Learning_2026.pdf` |
+| **Industrial Dexterity Benchmark: A Hardware-Software Benchmarking Platform for Industrial Dexterous Manipulation** | [2607.14021](https://arxiv.org/abs/2607.14021) | 2026 | `Industrial_Dexterity_Benchmark_IDB_2026.pdf` |
+| **Behavioral Cloning for Robotic Connector Assembly: An Empirical Study** | [2602.22100](https://arxiv.org/abs/2602.22100) | 2026 | `Behavioral_Cloning_Robotic_Connector_Assembly_2026.pdf` |
+| **Certifiably Safe Manipulation of Deformable Linear Objects via Joint Shape and Tension Prediction** | [2505.13889](https://arxiv.org/abs/2505.13889) | 2025 | `Certifiably_Safe_DLO_Shape_Tension_2025.pdf` |
+| **Shallow-π: Knowledge Distillation for Flow-based VLAs** | [2601.20262](https://arxiv.org/abs/2601.20262) | 2026 | `Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf` |
+| **Multi-Agent Robotic Control with Onboard Vision-Language Models** | [2607.07403](https://arxiv.org/abs/2607.07403) | 2026 | `Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf` |
 
 ### Quick summary
 - **ROS2SmolVLA** ⭐ is the first paper to integrate a small VLA directly into industrial ROS 2 systems — a direct reference for the framework.
@@ -156,6 +169,9 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 - **CoRAL** combines LLMs with adaptive control for contact-rich manipulation.
 - **Harness Engineering** positions robotic middleware (ROS 2) as the "harness" layer of physical AI.
 - **Embodied Agentic AI Survey** (2025) classifies the state of the art of LLM/VLM in robot autonomy.
+- **SAFE** ⭐ (NeurIPS 2025) attacks the silent failure: a multitask failure detector for VLAs (OpenVLA, π0, π0-FAST) that tells the robot when to stop, backtrack, or ask for help.
+- **Failure-detection cluster** (added September 2026): reasoning side — uncertainty quantification for flow-based VLAs, uncertainty-based failure detection in closed-loop LLM planners, training-free hallucination detection via VLA attention heads. Data side — evidential recalibration under domain shift (ELLIPSE) and self-aware takeover under shift (SAGE).
+- **Industrial deployment cluster** ⭐ (added September 2026): the lab→plant gap — wire-harness and connector assembly. **Industrial Dexterity Benchmark** (datacenter cabling, automotive harness, gearbox boards; 78% multimodal vs 36% monocular), **connector assembly** with F/T + vision (>90% on five geometries), the **wire-harness systematic review** from industrial engineering, **certifiably safe DLO manipulation**, plus edge deployment on Jetson Orin/Thor (**Shallow-π**) and onboard multi-agent VLMs.
 
 ### Framework relevance
 These papers represent the **2025-2026 frontier** of ROS 2 + AI integration:

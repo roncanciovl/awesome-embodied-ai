@@ -1,7 +1,7 @@
 # 🔍 Research Gaps — Embodied AI & Sim2Real
 
 **Cutoff date:** 2026-08-30
-**Based on:** 41 papers analyzed (see [`papers.csv`](papers.csv))
+**Based on:** 54 papers analyzed (see [`papers.csv`](papers.csv))
 **Protocol:** [`research-protocol.md`](research-protocol.md)
 
 ---
@@ -45,7 +45,7 @@ The analysis of the collection reveals **four research sublines** with significa
 | Gap | Evidence | Opportunity |
 |-----|----------|-------------|
 | **Standardized LLM→ROS 2 bridge** | Code as Policies generates ad-hoc code | Framework of ROS 2 "skill primitives" callable by LLMs |
-| **Failure recovery** | Only FLARE (2608.26645, not included) addresses failures | ROS 2 agent with self-diagnosis and re-planning |
+| **Failure recovery** | Detection now covered on both origins — reasoning (SAFE 2506.09937, UQ-VLA 2606.18043) and captured data (ELLIPSE 2603.04585, SAGE 2608.29772); recovery only FLARE (2608.26645, not included) | ROS 2 agent with self-diagnosis and re-planning on top of the new detectors |
 | **Robotic episodic memory** | Inner Monologue uses manual feedback | Persistent ROS 2 memory graph across sessions |
 | **Multi-robot semantic** | MA-VLA (2608.25864) is recent | LLM orchestration of heterogeneous ROS 2 fleets |
 
@@ -102,6 +102,34 @@ The analysis of the collection reveals **four research sublines** with significa
 
 ---
 
+## 5️⃣ Industrial Deployment and Wire-Harness Assembly
+
+### Current state
+- Wire-harness and connector assembly remain manual in automotive, aerospace and electrical-cabinet production. The arXiv literature is recent and fragmented (cluster added 2026-09-07).
+- Best reported results: connector insertion **>90%** with F/T + vision across five geometries (`2602.22100`); cable routing **78%** multimodal vs **36%** monocular on an industrial board (`2607.14021`, 48 trials per configuration).
+- A systematic review from industrial engineering (`2309.13744`, *Advanced Engineering Informatics*) finds most solutions are proposed **"under simplified industrial configurations"** — demos, not lines.
+- Edge deployment is validated on plant-class hardware (`2601.20262` on Jetson Orin/Thor; `2607.07403` onboard multi-agent VLMs), but always in demos or hardware-in-the-loop simulation.
+- Certified safety for deformables exists only in simulation (`2505.13889`, wire-harness task with polynomial zonotopes, zero safety violations).
+
+### Identified gaps
+| Gap | Evidence | Opportunity |
+|-----|----------|-------------|
+| **No plant-grade benchmark** | IDB (`2607.14021`) uses purpose-built boards; no production-line integration | Benchmark on a real cell with cycle time, OEE and scrap rate as metrics |
+| **Deformable Sim2Real** | Only `2203.15004` (online residual GNN) and `2505.13889` (sim-only) | Cable Sim2Real with tactile feedback + certified safety on real hardware |
+| **Force-limited insertion as a standard skill** | `2602.22100` tunes force limits per connector geometry | ROS 2 compliant-insertion skill with force-envelope monitoring |
+| **Certification for deformable tasks** | `2505.13889` certifies in simulation only | Pre-deployment certificates for DLO tasks wired into ROS 2 |
+| **Shift-robust deployment** | SLR (`2309.13744`): simplified configurations | Domain-shift monitoring connected to ELLIPSE/SAGE-style detectors |
+
+### Key reference papers
+- `2607.14021` (Industrial Dexterity Benchmark)
+- `2602.22100` (Connector Assembly)
+- `2309.13744` (Wire-Harness Vision SLR)
+- `2505.13889` (Certifiably Safe DLO)
+- `2601.20262` (Shallow-π)
+- `2203.15004` (GNN Cable Deformation)
+
+---
+
 ## 🎯 Opportunity Matrix
 
 | Sublines | Impact | Feasibility with ROS 2 | Priority |
@@ -110,6 +138,7 @@ The analysis of the collection reveals **four research sublines** with significa
 | Semantic planning | High | Medium (requires skill design) | 🥈 |
 | Edge AI / local inference | Very high | High (ROS2SmolVLA as base) | 🥇 |
 | Sim2Real + safety | Critical | Medium (requires hardware) | 🥉 |
+| Industrial deployment (wire harness) | Very high | Medium (requires a real cell) | 🥇 |
 
 ---
 

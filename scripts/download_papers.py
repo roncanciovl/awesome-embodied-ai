@@ -76,6 +76,19 @@ PAPERS = [
     ("07_Recent_2025_2026", "Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf", "2605.02525"),
     ("07_Recent_2025_2026", "Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf", "2508.05294"),
     ("07_Recent_2025_2026", "LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf", "2603.03380"),
+    ("07_Recent_2025_2026", "SAFE_Multitask_Failure_Detection_VLA_2025.pdf", "2506.09937"),
+    ("07_Recent_2025_2026", "UQ_Flow-Based_VLA_Uncertainty_2026.pdf", "2606.18043"),
+    ("07_Recent_2025_2026", "KnowLoop_Uncertainty_Failure_Detection_LLM_Planners_2024.pdf", "2406.00430"),
+    ("07_Recent_2025_2026", "VLA_Attention_Heads_Path_Deviation_Detection_2026.pdf", "2603.13782"),
+    ("07_Recent_2025_2026", "ELLIPSE_Evidential_Learning_Waypoints_Uncertainties_2026.pdf", "2603.04585"),
+    ("07_Recent_2025_2026", "SAGE_Self-Aware_Active_Learning_2026.pdf", "2608.29772"),
+    ("07_Recent_2025_2026", "Industrial_Dexterity_Benchmark_IDB_2026.pdf", "2607.14021"),
+    ("07_Recent_2025_2026", "Behavioral_Cloning_Robotic_Connector_Assembly_2026.pdf", "2602.22100"),
+    ("07_Recent_2025_2026", "Certifiably_Safe_DLO_Shape_Tension_2025.pdf", "2505.13889"),
+    ("07_Recent_2025_2026", "Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf", "2601.20262"),
+    ("07_Recent_2025_2026", "Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf", "2607.07403"),
+    ("05_Surveys_Case_Studies", "Wire_Harness_Assembly_Vision_SLR_2024.pdf", "2309.13744"),
+    ("03_Sim2Real_RL", "GNN_Cable_Deformation_Offline_Online_2022.pdf", "2203.15004"),
 ]
 
 # Fix duplicate: the real Asymmetric Actor-Critic paper is arXiv 1910.07113 (already used).
