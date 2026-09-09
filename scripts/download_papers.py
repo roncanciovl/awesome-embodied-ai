@@ -87,6 +87,7 @@ PAPERS = [
     ("07_Recent_2025_2026", "Certifiably_Safe_DLO_Shape_Tension_2025.pdf", "2505.13889"),
     ("07_Recent_2025_2026", "Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf", "2601.20262"),
     ("07_Recent_2025_2026", "Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf", "2607.07403"),
+    ("07_Recent_2025_2026", "Loud_or_Silent_Per-Modality_Failure_Analysis_2026.pdf", "2608.01462"),
     ("05_Surveys_Case_Studies", "Wire_Harness_Assembly_Vision_SLR_2024.pdf", "2309.13744"),
     ("03_Sim2Real_RL", "GNN_Cable_Deformation_Offline_Online_2022.pdf", "2203.15004"),
 ]

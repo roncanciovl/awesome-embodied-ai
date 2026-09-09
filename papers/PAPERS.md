@@ -160,6 +160,7 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 | **Certifiably Safe Manipulation of Deformable Linear Objects via Joint Shape and Tension Prediction** | [2505.13889](https://arxiv.org/abs/2505.13889) | 2025 | `Certifiably_Safe_DLO_Shape_Tension_2025.pdf` |
 | **Shallow-π: Knowledge Distillation for Flow-based VLAs** | [2601.20262](https://arxiv.org/abs/2601.20262) | 2026 | `Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf` |
 | **Multi-Agent Robotic Control with Onboard Vision-Language Models** | [2607.07403](https://arxiv.org/abs/2607.07403) | 2026 | `Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf` |
+| **Loud or Silent? A Reusable Framework for Per-Modality Failure Analysis in Multimodal Clinical AI** | [2608.01462](https://arxiv.org/abs/2608.01462) | 2026 | `Loud_or_Silent_Per-Modality_Failure_Analysis_2026.pdf` |
 
 ### Quick summary
 - **ROS2SmolVLA** ⭐ is the first paper to integrate a small VLA directly into industrial ROS 2 systems — a direct reference for the framework.
@@ -170,7 +171,7 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 - **Harness Engineering** positions robotic middleware (ROS 2) as the "harness" layer of physical AI.
 - **Embodied Agentic AI Survey** (2025) classifies the state of the art of LLM/VLM in robot autonomy.
 - **SAFE** ⭐ (NeurIPS 2025) attacks the silent failure: a multitask failure detector for VLAs (OpenVLA, π0, π0-FAST) that tells the robot when to stop, backtrack, or ask for help.
-- **Failure-detection cluster** (added September 2026): reasoning side — uncertainty quantification for flow-based VLAs, uncertainty-based failure detection in closed-loop LLM planners, training-free hallucination detection via VLA attention heads. Data side — evidential recalibration under domain shift (ELLIPSE) and self-aware takeover under shift (SAGE).
+- **Failure-detection cluster** (added September 2026): reasoning side — uncertainty quantification for flow-based VLAs, uncertainty-based failure detection in closed-loop LLM planners, training-free hallucination detection via VLA attention heads. Data side — evidential recalibration under domain shift (ELLIPSE) and self-aware takeover under shift (SAGE). Per-modality sensor failure — **Loud or Silent?** ⭐ (arXiv:2608.01462, 2026) formalizes per-modality silent failures (e.g., degraded/loose ECG electrode vs missing echo) that pass unflagged with nominal confidence.
 - **Industrial deployment cluster** ⭐ (added September 2026): the lab→plant gap — wire-harness and connector assembly. **Industrial Dexterity Benchmark** (datacenter cabling, automotive harness, gearbox boards; 78% multimodal vs 36% monocular), **connector assembly** with F/T + vision (>90% on five geometries), the **wire-harness systematic review** from industrial engineering, **certifiably safe DLO manipulation**, plus edge deployment on Jetson Orin/Thor (**Shallow-π**) and onboard multi-agent VLMs.
 
 ### Framework relevance

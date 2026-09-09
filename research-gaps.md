@@ -1,7 +1,7 @@
 # 🔍 Research Gaps — Embodied AI & Sim2Real
 
-**Cutoff date:** 2026-08-30
-**Based on:** 54 papers analyzed (see [`papers.csv`](papers.csv))
+**Cutoff date:** 2026-08-30 (updated September 2026)
+**Based on:** 55 papers analyzed (see [`papers.csv`](papers.csv))
 **Protocol:** [`research-protocol.md`](research-protocol.md)
 
 ---

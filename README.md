@@ -27,7 +27,7 @@ Embodied AI refers to artificial intelligence agents that interact with physical
 
 ## 📄 Paper Library (Metadata + Links)
 
-A curated collection of **54 foundational papers** with structured metadata and arXiv links, organized in [`papers/`](papers/PAPERS.md):
+A curated collection of **55 foundational papers** with structured metadata and arXiv links, organized in [`papers/`](papers/PAPERS.md):
 
 > **📥 PDFs:** By license, PDFs are not versioned in git. Each paper on arXiv has its own license (CC BY, CC BY-NC-ND, author copyright, etc.). To download the PDFs locally:
 > ```bash
@@ -42,7 +42,7 @@ A curated collection of **54 foundational papers** with structured metadata and 
 | ⚙️ Robotics Frameworks | 2 | ROS 2 Architecture, MoveIt 2 |
 | 📚 Surveys & Case Studies | 5 | Embodied AI Surveys, SayPlan, Wire-Harness SLR |
 | 🧩 ROS 2 + AI/LLMs | 7 | SayCan, Code as Policies, ChatGPT for Robotics, VoxPoser, TidyBot |
-| 🚀 Recent 2025-2026 | 21 | ROS2SmolVLA, SAFE, ELLIPSE, Industrial Dexterity Benchmark, Shallow-π |
+| 🚀 Recent 2025-2026 | 22 | ROS2SmolVLA, SAFE, ELLIPSE, Loud or Silent?, Industrial Dexterity Benchmark, Shallow-π |
 
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
 🔄 **Re-download/update:** `python scripts/download_papers.py`
@@ -52,7 +52,7 @@ A curated collection of **54 foundational papers** with structured metadata and 
 | Document | Description |
 |----------|-------------|
 | [`research-protocol.md`](research-protocol.md) | Research questions, sources, queries, inclusion/exclusion criteria |
-| [`papers.csv`](papers.csv) | Structured metadata (54 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
+| [`papers.csv`](papers.csv) | Structured metadata (55 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
 | [`tactile-sota.md`](tactile-sota.md) | Tactile sensing & manual dexterity SOTA: V-T-L-A frontier, PaXini GEN3/GEN4 hardware, ROS 2 ecosystem |
 | [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
