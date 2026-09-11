@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this paper collection in your research, please cite it as indicated below."
 title: "Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real"
 type: dataset
-version: "v1.0.0"
-date-released: "2026-08-30"
+version: "v1.1.0"
+date-released: "2026-09-11"
 doi: "10.5281/zenodo.22179172"
 authors:
   - family-names: "Roncancio"
