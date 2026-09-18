@@ -1,7 +1,7 @@
 # 🔍 Research Gaps — Embodied AI & Sim2Real
 
 **Cutoff date:** 2026-08-30 (updated September 2026)
-**Based on:** 55 papers analyzed (see [`papers.csv`](papers.csv))
+**Based on:** 53 papers analyzed (see [`papers.csv`](papers.csv))
 **Protocol:** [`research-protocol.md`](research-protocol.md)
 
 ---
@@ -51,7 +51,7 @@ The analysis of the collection reveals **four research sublines** with significa
 
 ### Key reference papers
 - `2209.07753` (Code as Policies)
-- `2309.11489` (SayPlan)
+- `2307.06135` (SayPlan)
 - `2304.11477` (LLM+P)
 - `2606.09416` (Harness Engineering)
 

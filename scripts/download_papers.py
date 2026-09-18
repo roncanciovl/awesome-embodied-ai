@@ -33,28 +33,26 @@ PAPERS = [
     # ── 02_Simulation_Environments ─────────────────────────────────
     ("02_Simulation_Environments", "Habitat_A_Platform_for_Embodied_AI_Research.pdf", "1904.01201"),
     ("02_Simulation_Environments", "AI2-THOR_An_Interactive_3D_Environment_for_Visual_AI.pdf", "1712.05474"),
-    ("02_Simulation_Environments", "iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf", "2008.11765"),
+    ("02_Simulation_Environments", "iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf", "2012.02924"),
     ("02_Simulation_Environments", "Habitat-Matterport_3D_Dataset.pdf", "2109.08238"),
     ("02_Simulation_Environments", "RoboCasa_Large-Scale_Simulation_of_Everyday_Tasks.pdf", "2406.02523"),
 
     # ── 03_Sim2Real_RL ─────────────────────────────────────────────
     ("03_Sim2Real_RL", "Domain_Randomization_for_Transferring_DNNs_from_Simulation.pdf", "1703.06907"),
     ("03_Sim2Real_RL", "Sim-to-Real_Transfer_of_Robotic_Control_with_Dynamics_Randomization.pdf", "1710.06537"),
-    ("03_Sim2Real_RL", "Learning_Quadrupedal_Locomotion_over_Challenging_Terrain.pdf", "1910.11100"),
+    ("03_Sim2Real_RL", "Learning_Quadrupedal_Locomotion_over_Challenging_Terrain.pdf", "2010.11251"),
     ("03_Sim2Real_RL", "Sim-to-Real_Transfer_for_Dexterous_Manipulation.pdf", "1910.07113"),
     ("03_Sim2Real_RL", "Asymmetric_Actor-Critic_for_Sim-to-Real.pdf", "1910.07113v1"),  # placeholder, validated below
-    ("03_Sim2Real_RL", "Teacher-Student_Framework_for_Sim-to-Real_Locomotion.pdf", "2009.03317"),
     ("03_Sim2Real_RL", "RMA_Rapid_Motor_Adaptation_for_Legged_Robots.pdf", "2107.04034"),
 
     # ── 04_Robotics_Frameworks ─────────────────────────────────────
-    ("04_Robotics_Frameworks", "ROS2_Architecture_and_Performance.pdf", "2202.01734"),
-    ("04_Robotics_Frameworks", "MoveIt2_and_Real-Time_Manipulation.pdf", "2405.13268"),
+    ("04_Robotics_Frameworks", "ROS2_Design_Architecture_and_Uses_in_the_Wild.pdf", "2211.07752"),
 
     # ── 05_Surveys_Case_Studies ────────────────────────────────────
-    ("05_Surveys_Case_Studies", "A_Survey_of_Embodied_AI_From_Sim-to-Real.pdf", "2407.01738"),
-    ("05_Surveys_Case_Studies", "Vision-Language-Action_Models_Survey.pdf", "2411.13548"),
-    ("05_Surveys_Case_Studies", "Embodied_AI_Survey_Recent_Advances.pdf", "2311.11267"),
-    ("05_Surveys_Case_Studies", "SayPlan_Grounding_LLMs_using_3D_Graphs.pdf", "2309.11489"),
+    ("05_Surveys_Case_Studies", "Survey_of_Embodied_AI_From_Simulators_to_Research_Tasks.pdf", "2103.04918"),
+    ("05_Surveys_Case_Studies", "Survey_on_VLA_Models_for_Embodied_AI.pdf", "2405.14093"),
+    ("05_Surveys_Case_Studies", "Comprehensive_Survey_on_Embodied_AI_Cyber_Physical.pdf", "2407.06886"),
+    ("05_Surveys_Case_Studies", "SayPlan_Grounding_LLMs_using_3D_Graphs.pdf", "2307.06135"),
 
     # ── 06_ROS2_AI_LLMs ────────────────────────────────────────────
     ("06_ROS2_AI_LLMs", "SayCan_Grounding_Language_in_Robotic_Affordances.pdf", "2204.01691"),
@@ -62,7 +60,7 @@ PAPERS = [
     ("06_ROS2_AI_LLMs", "Inner_Monologue_Embodied_Reasoning_with_Language_Models.pdf", "2207.05608"),
     ("06_ROS2_AI_LLMs", "VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf", "2307.05973"),
     ("06_ROS2_AI_LLMs", "ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf", "2306.17582"),
-    ("06_ROS2_AI_LLMs", "TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf", "2305.05706"),
+    ("06_ROS2_AI_LLMs", "TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf", "2305.05658"),
     ("06_ROS2_AI_LLMs", "LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf", "2304.11477"),
 
     # ── 07_Recent_2025_2026 (ROS 2 + robotic LLMs selection) ─────

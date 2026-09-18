@@ -53,7 +53,7 @@ papers/
 |-------|-------|------|------|
 | **Habitat: A Platform for Embodied AI Research** | [1904.01201](https://arxiv.org/abs/1904.01201) | 2019 | `Habitat_A_Platform_for_Embodied_AI_Research.pdf` |
 | **AI2-THOR: An Interactive 3D Environment for Visual AI** | [1712.05474](https://arxiv.org/abs/1712.05474) | 2017 | `AI2-THOR_An_Interactive_3D_Environment_for_Visual_AI.pdf` |
-| **iGibson: A Simulation Environment for Interactive Tasks in Large Realistic Scenes** | [2008.11765](https://arxiv.org/abs/2008.11765) | 2020 | `iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf` |
+| **iGibson 1.0: a Simulation Environment for Interactive Tasks in Large Realistic Scenes** | [2012.02924](https://arxiv.org/abs/2012.02924) | 2020 | `iGibson_A_Simulation_Environment_for_Interactive_Tasks.pdf` |
 | **Habitat-Matterport 3D Dataset (HM3D): 1,000 Large-scale 3D Environments for Embodied AI** | [2109.08238](https://arxiv.org/abs/2109.08238) | 2021 | `Habitat-Matterport_3D_Dataset.pdf` |
 | **RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots** | [2406.02523](https://arxiv.org/abs/2406.02523) | 2024 | `RoboCasa_Large-Scale_Simulation_of_Everyday_Tasks.pdf` |
 
@@ -70,10 +70,9 @@ papers/
 |-------|-------|------|------|
 | **Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World** | [1703.06907](https://arxiv.org/abs/1703.06907) | 2017 | `Domain_Randomization_for_Transferring_DNNs_from_Simulation.pdf` |
 | **Sim-to-Real Transfer of Robotic Control with Dynamics Randomization** | [1710.06537](https://arxiv.org/abs/1710.06537) | 2017 | `Sim-to-Real_Transfer_of_Robotic_Control_with_Dynamics_Randomization.pdf` |
-| **Learning Quadrupedal Locomotion over Challenging Terrain** | [1910.11100](https://arxiv.org/abs/1910.11100) | 2019 | `Learning_Quadrupedal_Locomotion_over_Challenging_Terrain.pdf` |
-| **Sim-to-Real Transfer for Dexterous Manipulation** | [1910.07113](https://arxiv.org/abs/1910.07113) | 2019 | `Sim-to-Real_Transfer_for_Dexterous_Manipulation.pdf` |
+| **Learning Quadrupedal Locomotion over Challenging Terrain** | [2010.11251](https://arxiv.org/abs/2010.11251) | 2020 | `Learning_Quadrupedal_Locomotion_over_Challenging_Terrain.pdf` |
+| **Solving Rubik's Cube with a Robot Hand** | [1910.07113](https://arxiv.org/abs/1910.07113) | 2019 | `Sim-to-Real_Transfer_for_Dexterous_Manipulation.pdf` |
 | **Learning Agile and Dynamic Motor Skills for Legged Robots** | [1901.08652](https://arxiv.org/abs/1901.08652) | 2019 | `Learning_Agile_and_Dynamic_Motor_Skills_for_Legged_Robots.pdf` |
-| **Rapid Motor Adaptation for Legged Robots (Teacher-Student)** | [2009.03317](https://arxiv.org/abs/2009.03317) | 2020 | `Teacher-Student_Framework_for_Sim-to-Real_Locomotion.pdf` |
 | **RMA: Rapid Motor Adaptation for Legged Robots** | [2107.04034](https://arxiv.org/abs/2107.04034) | 2021 | `RMA_Rapid_Motor_Adaptation_for_Legged_Robots.pdf` |
 | **Offline-Online Learning of Deformation Model for Cable Manipulation with Graph Neural Networks** | [2203.15004](https://arxiv.org/abs/2203.15004) | 2022 | `GNN_Cable_Deformation_Offline_Online_2022.pdf` |
 
@@ -89,17 +88,16 @@ papers/
 
 | Paper | arXiv | Year | File |
 |-------|-------|------|------|
-| **ROS 2: Architecture and Performance** | [2202.01734](https://arxiv.org/abs/2202.01734) | 2022 | `ROS2_Architecture_and_Performance.pdf` |
-| **MoveIt 2: Real-Time Motion Planning and Manipulation** | [2405.13268](https://arxiv.org/abs/2405.13268) | 2024 | `MoveIt2_and_Real-Time_Manipulation.pdf` |
+| **Robot Operating System 2: Design, Architecture, and Uses In The Wild** | [2211.07752](https://arxiv.org/abs/2211.07752) | 2022 | `ROS2_Design_Architecture_and_Uses_in_the_Wild.pdf` |
 
 ## 📚 05 — Surveys & Case Studies
 
 | Paper | arXiv | Year | File |
 |-------|-------|------|------|
-| **A Survey of Embodied AI: From Sim-to-Real and Beyond** | [2407.01738](https://arxiv.org/abs/2407.01738) | 2024 | `A_Survey_of_Embodied_AI_From_Sim-to-Real.pdf` |
-| **Vision-Language-Action Models for Robotics: A Survey** | [2411.13548](https://arxiv.org/abs/2411.13548) | 2024 | `Vision-Language-Action_Models_Survey.pdf` |
-| **Embodied AI: Recent Advances and Future Directions** | [2311.11267](https://arxiv.org/abs/2311.11267) | 2023 | `Embodied_AI_Survey_Recent_Advances.pdf` |
-| **SayPlan: Grounding Large Language Models using 3D Scene Graphs for Scalable Robot Task Planning** | [2309.11489](https://arxiv.org/abs/2309.11489) | 2023 | `SayPlan_Grounding_LLMs_using_3D_Graphs.pdf` |
+| **A Survey of Embodied AI: From Simulators to Research Tasks** | [2103.04918](https://arxiv.org/abs/2103.04918) | 2021 | `Survey_of_Embodied_AI_From_Simulators_to_Research_Tasks.pdf` |
+| **A Survey on Vision-Language-Action Models for Embodied AI** | [2405.14093](https://arxiv.org/abs/2405.14093) | 2024 | `Survey_on_VLA_Models_for_Embodied_AI.pdf` |
+| **Aligning Cyber Space with Physical World: A Comprehensive Survey on Embodied AI** | [2407.06886](https://arxiv.org/abs/2407.06886) | 2024 | `Comprehensive_Survey_on_Embodied_AI_Cyber_Physical.pdf` |
+| **SayPlan: Grounding Large Language Models using 3D Scene Graphs for Scalable Robot Task Planning** | [2307.06135](https://arxiv.org/abs/2307.06135) | 2023 | `SayPlan_Grounding_LLMs_using_3D_Graphs.pdf` |
 | **A Systematic Literature Review of Computer Vision Applications in Robotized Wire Harness Assembly** | [2309.13744](https://arxiv.org/abs/2309.13744) | 2024 | `Wire_Harness_Assembly_Vision_SLR_2024.pdf` |
 
 ### Quick summary
@@ -112,12 +110,12 @@ papers/
 
 | Paper | arXiv | Year | File |
 |-------|-------|------|------|
-| **SayCan: Do As I Can, Not As I Say: Grounding Language in Robotic Affordances** | [2204.01691](https://arxiv.org/abs/2204.01691) | 2022 | `SayCan_Grounding_Language_in_Robotic_Affordances.pdf` |
-| **Code as Policies: Language Model Programs for Robots** | [2209.07753](https://arxiv.org/abs/2209.07753) | 2022 | `Code_as_Policies_Language_Model_Programs_for_Robots.pdf` |
+| **Do As I Can, Not As I Say: Grounding Language in Robotic Affordances** | [2204.01691](https://arxiv.org/abs/2204.01691) | 2022 | `SayCan_Grounding_Language_in_Robotic_Affordances.pdf` |
+| **Code as Policies: Language Model Programs for Embodied Control** | [2209.07753](https://arxiv.org/abs/2209.07753) | 2022 | `Code_as_Policies_Language_Model_Programs_for_Robots.pdf` |
 | **Inner Monologue: Embodied Reasoning through Planning with Language Models** | [2207.05608](https://arxiv.org/abs/2207.05608) | 2022 | `Inner_Monologue_Embodied_Reasoning_with_Language_Models.pdf` |
 | **VoxPoser: Composable 3D Value Maps for Robotic Manipulation with Language Models** | [2307.05973](https://arxiv.org/abs/2307.05973) | 2023 | `VoxPoser_Composable_3D_Value_Maps_with_Language_Models.pdf` |
 | **ChatGPT for Robotics: Design Principles and Model Abilities** | [2306.17582](https://arxiv.org/abs/2306.17582) | 2023 | `ChatGPT_for_Robotics_Design_Principles_and_Model_Abilities.pdf` |
-| **TidyBot: Personalized Robot Assistance with Large Language Models** | [2305.05706](https://arxiv.org/abs/2305.05706) | 2023 | `TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf` |
+| **TidyBot: Personalized Robot Assistance with Large Language Models** | [2305.05658](https://arxiv.org/abs/2305.05658) | 2023 | `TidyBot_Personalized_Robot_Assistance_with_LLMs.pdf` |
 | **LLM+P: Empowering Large Language Models with Optimal Planning Proficiency** | [2304.11477](https://arxiv.org/abs/2304.11477) | 2023 | `LLM+P_Empowering_LLMs_with_Optimal_Planning.pdf` |
 
 ### Quick summary
@@ -139,22 +137,22 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 
 | Paper | arXiv | Year | File |
 |-------|-------|------|------|
-| **ROS2SmolVLA: Enabling Small Vision-Language-Action Models for Integration into Industrial-Grade Lightweight ROS 2 Systems** | [2608.23320](https://arxiv.org/abs/2608.23320) | 2026 | `ROS2SmolVLA_Small_VLA_for_ROS2_Industrial_2026.pdf` |
+| **ROS2SmolVLA: Enabling Small Vision-Language-Action Models for Integration into Industrial-Grade Lightweight Robots** | [2608.23320](https://arxiv.org/abs/2608.23320) | 2026 | `ROS2SmolVLA_Small_VLA_for_ROS2_Industrial_2026.pdf` |
 | **A ROS 2 Wrapper for Florence-2: Multi-Mode Local Vision-Language Inference for Robotic Systems** | [2604.01179](https://arxiv.org/abs/2604.01179) | 2026 | `ROS2_Wrapper_Florence-2_Local_VLM_2026.pdf` |
-| **A Conversational Framework for Human-Robot Collaborative Manipulation with Distributed Generative AI** | [2606.06061](https://arxiv.org/abs/2606.06061) | 2026 | `Conversational_Framework_HRI_Manipulation_GenAI_2026.pdf` |
-| **Integrating Quantized LLMs into Robotics Systems as Edge AI** | [2506.09581](https://arxiv.org/abs/2506.09581) | 2025 | `Quantized_LLMs_Edge_AI_Robotics_2025.pdf` |
+| **A Conversational Framework for Human-Robot Collaborative Manipulation with Distributed Generative AI models** | [2606.06061](https://arxiv.org/abs/2606.06061) | 2026 | `Conversational_Framework_HRI_Manipulation_GenAI_2026.pdf` |
+| **Integrating Quantized LLMs into Robotics Systems as Edge AI to Leverage their Natural Language Processing Capabilities** | [2506.09581](https://arxiv.org/abs/2506.09581) | 2025 | `Quantized_LLMs_Edge_AI_Robotics_2025.pdf` |
 | **Harness Engineering for Physical AI: Robot Middleware Is the Harness Layer** | [2606.09416](https://arxiv.org/abs/2606.09416) | 2026 | `Harness_Engineering_Physical_AI_Middleware_2026.pdf` |
 | **TurboVLA: Real-Time Vision-Language-Action Model at 32 Hz on an RTX 4090 with <1 GB VRAM** | [2607.27205](https://arxiv.org/abs/2607.27205) | 2026 | `TurboVLA_Real-Time_VLA_32Hz_2026.pdf` |
 | **CoRAL: Contact-Rich Adaptive LLM-based Control for Robotic Manipulation** | [2605.02600](https://arxiv.org/abs/2605.02600) | 2026 | `CoRAL_Contact-Rich_LLM_Control_Manipulation_2026.pdf` |
-| **A Semantic Autonomy Framework for VLM-Integrated Indoor Mobile Robots** | [2605.02525](https://arxiv.org/abs/2605.02525) | 2026 | `Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf` |
-| **Towards Embodied Agentic AI: Review and Classification of LLM- and VLM-Driven Robot Autonomy** | [2508.05294](https://arxiv.org/abs/2508.05294) | 2025 | `Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf` |
+| **A Semantic Autonomy Framework for VLM-Integrated Indoor Mobile Robots: Hybrid Deterministic Reasoning and Cross-Robot Adaptive Memory** | [2605.02525](https://arxiv.org/abs/2605.02525) | 2026 | `Semantic_Autonomy_VLM_Indoor_Mobile_Robots_2026.pdf` |
+| **Towards Embodied Agentic AI: Review and Classification of LLM- and VLM-Driven Robot Autonomy and Interaction** | [2508.05294](https://arxiv.org/abs/2508.05294) | 2025 | `Embodied_Agentic_AI_Survey_LLM_VLM_Robot_2025.pdf` |
 | **LiteVLA-Edge: Quantized On-Device Multimodal Control for Embedded Robotics** | [2603.03380](https://arxiv.org/abs/2603.03380) | 2026 | `LiteVLA-Edge_Quantized_On-Device_Control_2026.pdf` |
 | **SAFE: Multitask Failure Detection for Vision-Language-Action Models** | [2506.09937](https://arxiv.org/abs/2506.09937) | 2025 | `SAFE_Multitask_Failure_Detection_VLA_2025.pdf` |
 | **Uncertainty Quantification for Flow-Based Vision-Language-Action Models** | [2606.18043](https://arxiv.org/abs/2606.18043) | 2026 | `UQ_Flow-Based_VLA_Uncertainty_2026.pdf` |
 | **Evaluating Uncertainty-based Failure Detection for Closed-Loop LLM Planners** | [2406.00430](https://arxiv.org/abs/2406.00430) | 2024 | `KnowLoop_Uncertainty_Failure_Detection_LLM_Planners_2024.pdf` |
 | **Your Vision-Language-Action Model Already Has Attention Heads For Path Deviation Detection** | [2603.13782](https://arxiv.org/abs/2603.13782) | 2026 | `VLA_Attention_Heads_Path_Deviation_Detection_2026.pdf` |
 | **ELLIPSE: Evidential Learning for Robust Waypoints and Uncertainties** | [2603.04585](https://arxiv.org/abs/2603.04585) | 2026 | `ELLIPSE_Evidential_Learning_Waypoints_Uncertainties_2026.pdf` |
-| **SAGE: Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving** | [2608.29772](https://arxiv.org/abs/2608.29772) | 2026 | `SAGE_Self-Aware_Active_Learning_2026.pdf` |
+| **Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving** | [2608.29772](https://arxiv.org/abs/2608.29772) | 2026 | `SAGE_Self-Aware_Active_Learning_2026.pdf` |
 | **Industrial Dexterity Benchmark: A Hardware-Software Benchmarking Platform for Industrial Dexterous Manipulation** | [2607.14021](https://arxiv.org/abs/2607.14021) | 2026 | `Industrial_Dexterity_Benchmark_IDB_2026.pdf` |
 | **Behavioral Cloning for Robotic Connector Assembly: An Empirical Study** | [2602.22100](https://arxiv.org/abs/2602.22100) | 2026 | `Behavioral_Cloning_Robotic_Connector_Assembly_2026.pdf` |
 | **Certifiably Safe Manipulation of Deformable Linear Objects via Joint Shape and Tension Prediction** | [2505.13889](https://arxiv.org/abs/2505.13889) | 2025 | `Certifiably_Safe_DLO_Shape_Tension_2025.pdf` |
