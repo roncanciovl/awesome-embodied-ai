@@ -159,6 +159,15 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 | **Shallow-π: Knowledge Distillation for Flow-based VLAs** | [2601.20262](https://arxiv.org/abs/2601.20262) | 2026 | `Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf` |
 | **Multi-Agent Robotic Control with Onboard Vision-Language Models** | [2607.07403](https://arxiv.org/abs/2607.07403) | 2026 | `Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf` |
 | **Loud or Silent? A Reusable Framework for Per-Modality Failure Analysis in Multimodal Clinical AI** | [2608.01462](https://arxiv.org/abs/2608.01462) | 2026 | `Loud_or_Silent_Per-Modality_Failure_Analysis_2026.pdf` |
+| **PP-Tac: Paper Picking Using Tactile Feedback in Dexterous Robotic Hands** | [2504.16649](https://arxiv.org/abs/2504.16649) | 2025 | `PP-Tac_Paper_Picking_Tactile_Feedback_Dexterous_Hands_2025.pdf` |
+| **Tactile Genesis: Exploring Tactile Sensors at Scale for Learning Dexterous Tasks** | [2606.22332](https://arxiv.org/abs/2606.22332) | 2026 | `Tactile_Genesis_Tactile_Sensors_at_Scale_Dexterous_Tasks_2026.pdf` |
+| **TouchWorld: A Predictive and Reactive Tactile Foundation Model for Dexterous Manipulation** | [2607.07287](https://arxiv.org/abs/2607.07287) | 2026 | `TouchWorld_Predictive_Reactive_Tactile_Foundation_Model_2026.pdf` |
+| **GhostTac: Manipulating Tactile Sensors without Physical Contact** | [2608.20817](https://arxiv.org/abs/2608.20817) | 2026 | `GhostTac_Manipulating_Tactile_Sensors_without_Physical_Contact_2026.pdf` |
+| **Physics-Informed Deep Learning for False Ventricular Tachycardia Alarm Reduction in the ICU** | [2609.08992](https://arxiv.org/abs/2609.08992) | 2026 | `Physics-Informed_Deep_Learning_False_VT_Alarm_Reduction_ICU_2026.pdf` |
+| **Towards Expert-Level Medical Question Answering with Large Language Models (Med-PaLM 2)** | [2305.09617](https://arxiv.org/abs/2305.09617) | 2023 | `Towards_Expert-Level_Medical_Question_Answering_LLMs_2023.pdf` |
+| **MedXpertQA: Benchmarking Expert-Level Medical Reasoning and Understanding** | [2501.18362](https://arxiv.org/abs/2501.18362) | 2025 | `MedXpertQA_Benchmarking_Expert-Level_Medical_Reasoning_2025.pdf` |
+| **Capabilities of GPT-5 on Multimodal Medical Reasoning** | [2508.08224](https://arxiv.org/abs/2508.08224) | 2025 | `GPT-5_Capabilities_Multimodal_Medical_Reasoning_2025.pdf` |
+| **HealthBench Professional: Evaluating Large Language Models on Real Clinician Chats** | [2604.27470](https://arxiv.org/abs/2604.27470) | 2026 | `HealthBench_Professional_Real_Clinician_Chats_2026.pdf` |
 
 ### Quick summary
 - **ROS2SmolVLA** ⭐ is the first paper to integrate a small VLA directly into industrial ROS 2 systems — a direct reference for the framework.
@@ -171,6 +180,8 @@ These papers represent the emerging paradigm where **ROS 2 acts as the execution
 - **SAFE** ⭐ (NeurIPS 2025) attacks the silent failure: a multitask failure detector for VLAs (OpenVLA, π0, π0-FAST) that tells the robot when to stop, backtrack, or ask for help.
 - **Failure-detection cluster** (added September 2026): reasoning side — uncertainty quantification for flow-based VLAs, uncertainty-based failure detection in closed-loop LLM planners, training-free hallucination detection via VLA attention heads. Data side — evidential recalibration under domain shift (ELLIPSE) and self-aware takeover under shift (SAGE). Per-modality sensor failure — **Loud or Silent?** ⭐ (arXiv:2608.01462, 2026) formalizes per-modality silent failures (e.g., degraded/loose ECG electrode vs missing echo) that pass unflagged with nominal confidence.
 - **Industrial deployment cluster** ⭐ (added September 2026): the lab→plant gap — wire-harness and connector assembly. **Industrial Dexterity Benchmark** (datacenter cabling, automotive harness, gearbox boards; 78% multimodal vs 36% monocular), **connector assembly** with F/T + vision (>90% on five geometries), the **wire-harness systematic review** from industrial engineering, **certifiably safe DLO manipulation**, plus edge deployment on Jetson Orin/Thor (**Shallow-π**) and onboard multi-agent VLMs.
+
+- **Tactile + medical cohort** ⭐ (added September 2026): the Technology Camp 2026 deck citations — the tactile/manual-dexterity set (**PP-Tac**, **Tactile Genesis**, **TouchWorld**, **GhostTac**), the physics-informed false-VT alarm reduction (Papastathopoulos et al.), and the expert-level medical reasoning set (Med-PaLM 2, MedXpertQA, GPT-5 multimodal, HealthBench Professional).
 
 ### Framework relevance
 These papers represent the **2025-2026 frontier** of ROS 2 + AI integration:

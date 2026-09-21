@@ -13,3 +13,6 @@ papers/**/*.pdf
 *.log
 __pycache__/
 *.pyc
+
+# Plan privado de publicaciones de Henry
+/PLAN_PUBLICACIONES_HENRY.md

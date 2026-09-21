@@ -86,6 +86,18 @@ PAPERS = [
     ("07_Recent_2025_2026", "Shallow-pi_Knowledge_Distillation_Flow_VLA_2026.pdf", "2601.20262"),
     ("07_Recent_2025_2026", "Multi-Agent_Onboard_VLM_Industrial_Warehouse_2026.pdf", "2607.07403"),
     ("07_Recent_2025_2026", "Loud_or_Silent_Per-Modality_Failure_Analysis_2026.pdf", "2608.01462"),
+
+    # ── Tactile + clinical cohort (deck citations, added September 2026) ──
+    ("07_Recent_2025_2026", "PP-Tac_Paper_Picking_Tactile_Feedback_Dexterous_Hands_2025.pdf", "2504.16649"),
+    ("07_Recent_2025_2026", "Tactile_Genesis_Tactile_Sensors_at_Scale_Dexterous_Tasks_2026.pdf", "2606.22332"),
+    ("07_Recent_2025_2026", "TouchWorld_Predictive_Reactive_Tactile_Foundation_Model_2026.pdf", "2607.07287"),
+    ("07_Recent_2025_2026", "GhostTac_Manipulating_Tactile_Sensors_without_Physical_Contact_2026.pdf", "2608.20817"),
+    ("07_Recent_2025_2026", "Physics-Informed_Deep_Learning_False_VT_Alarm_Reduction_ICU_2026.pdf", "2609.08992"),
+    ("07_Recent_2025_2026", "Towards_Expert-Level_Medical_Question_Answering_LLMs_2023.pdf", "2305.09617"),
+    ("07_Recent_2025_2026", "MedXpertQA_Benchmarking_Expert-Level_Medical_Reasoning_2025.pdf", "2501.18362"),
+    ("07_Recent_2025_2026", "GPT-5_Capabilities_Multimodal_Medical_Reasoning_2025.pdf", "2508.08224"),
+    ("07_Recent_2025_2026", "HealthBench_Professional_Real_Clinician_Chats_2026.pdf", "2604.27470"),
+
     ("05_Surveys_Case_Studies", "Wire_Harness_Assembly_Vision_SLR_2024.pdf", "2309.13744"),
     ("03_Sim2Real_RL", "GNN_Cable_Deformation_Offline_Online_2022.pdf", "2203.15004"),
 ]

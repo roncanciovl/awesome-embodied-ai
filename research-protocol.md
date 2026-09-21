@@ -120,6 +120,16 @@ A paper is **excluded** if it meets any:
 | Shallow-π (2601.20262) | ✅ Included | Edge deployment: 18→6 layers, >2× faster, <1% drop, validated on Jetson Orin/Thor |
 | Onboard Multi-Agent VLM (2607.07403) | ✅ Included | PAAMS 2026; onboard compute without cloud; industrial warehouse; open-source sim (Apache 2.0) |
 | GNN Cable Deformation (2203.15004) | ✅ Included | RA-L 2022; sim-trained GNN + online residual for cables — foundational Sim2Real for deformables |
+| PP-Tac (2504.16649) | ✅ Included | Tactile feedback for thin deformable grasping (paper) on a dexterous hand; cited by the 2026 deck's manipulation section |
+| Tactile Genesis (2606.22332) | ✅ Included | GPU-parallel tactile sensor simulation at scale; design guidance (coverage over resolution); XHand transfer |
+| TouchWorld (2607.07287) | ✅ Included | Predictive + reactive tactile foundation model (V-T-L-A); the deck's core tactile reference |
+| GhostTac (2608.20817) | ✅ Included | ACM CCS 2026; contactless EMI attack on tactile sensing — the security side of the contact channel |
+| False VT Alarm Reduction (2609.08992) | ✅ Included | CinC 2026; physics-informed DL (Windkessel) suppresses artifact-driven false VT alarms — biomedical silent-failure case |
+| Med-PaLM 2 (2305.09617) | ✅ Included | Foundational expert-level medical QA (67.2% MedQA); the "saturated exam" anchor cited by the 2026 deck |
+| MedXpertQA (2501.18362) | ✅ Included | Expert-level medical reasoning benchmark (4460 questions / 17 specialties); text + multimodal subsets |
+| GPT-5 Multimodal Medical (2508.08224) | ✅ Included | Zero-shot GPT-5 medical reasoning across text and VQA; generalist-vs-specialist evidence cited by the deck |
+| HealthBench Professional (2604.27470) | ✅ Included | OpenAI 2026; rubric-scored real clinician chats — the free-text clinical benchmark cited by the deck |
+| Sensor Fault Detection PDF (2305.19157) | ⚠️ Excluded (PDF archived) | Deck cites it as vacuum evidence; PDF kept in `papers/_retirados/` — NOT in the active collection or `papers.csv` |
 
 ---
 
