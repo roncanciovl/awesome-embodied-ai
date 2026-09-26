@@ -59,7 +59,7 @@ A curated collection of **62 foundational papers** with structured metadata and 
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
 | [`ZENODO.md`](ZENODO.md) | Guide for archiving releases in Zenodo (DOI) |
-| [Zenodo v1.1.0](https://doi.org/10.5281/zenodo.22714216) | Latest archived release; concept DOI (always resolves to latest): [`10.5281/zenodo.22179171`](https://doi.org/10.5281/zenodo.22179171) |
+| [Zenodo v1.2.0](https://doi.org/10.5281/zenodo.22984143) | Latest archived release; concept DOI (always resolves to latest): [`10.5281/zenodo.22179171`](https://doi.org/10.5281/zenodo.22179171) |
 | [`LICENSE`](LICENSE) | CC BY-SA 4.0 |
 ## 📖 Glossary (VLA/VLM/LLM, Sim2Real, ROS 2)
 
