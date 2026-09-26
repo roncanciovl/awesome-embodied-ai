@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this paper collection in your research, please cite it as indicated below."
 title: "Awesome Embodied AI & Sim2Real: A Living Evidence Map for ROS 2, VLA, and Sim2Real"
 type: dataset
-version: "v1.1.0"
-date-released: "2026-09-11"
+version: "v1.2.0"
+date-released: "2026-09-26"
 doi: "10.5281/zenodo.22714216"
 authors:
   - family-names: "Roncancio"
@@ -18,7 +18,7 @@ identifiers:
 repository-code: "https://github.com/roncanciovl/awesome-embodied-ai"
 url: "https://github.com/roncanciovl/awesome-embodied-ai"
 abstract: >-
-  A curated collection of 53 foundational papers on Embodied AI,
+  A curated collection of 62 foundational papers on Embodied AI,
   Vision-Language-Action (VLA) models, Sim2Real transfer, and the
   integration of Large Language Models with ROS 2. Includes structured
   metadata (papers.csv), research protocol, and identified research gaps
