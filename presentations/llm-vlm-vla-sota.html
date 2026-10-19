@@ -179,6 +179,8 @@ html[data-theme="light"] .tbl thead th{background:var(--panel2)}
 .tl-body .ev{font-size:clamp(.68rem,1.02vw,.84rem); color:var(--muted)}
 .tl-body .ev strong{color:var(--text)}
 /* ---------- ladder (title) ---------- */
+.title-wrap{display:flex; flex-direction:column; gap:clamp(.6rem,1.4vh,1rem);
+  justify-content:center; height:100%; min-height:0}
 .ladder{display:flex; gap:.5rem; flex-wrap:wrap; align-items:stretch}
 .step{flex:1 1 170px; border:1px solid var(--border); border-radius:var(--radius);
   padding:.7rem .8rem; background:var(--panel); display:flex; flex-direction:column; gap:.28rem;
@@ -222,7 +224,7 @@ html[data-theme="light"] .tbl thead th{background:var(--panel2)}
   font-family:var(--mono); font-size:8px; color:var(--faint)}
 #deck.overview .slide.sel{border-color:var(--accent);
   box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
-#deck.overview .bar-fill{transition:none}
+#deck.overview .bar-fill{width:var(--w) !important; transition:none}
 /* ---------- notes & help ---------- */
 #notes{position:fixed; z-index:22; left:0; right:0; bottom:0; display:none; max-height:36vh;
   overflow:auto; padding:.65rem clamp(.7rem,2.5vw,1.6rem) 2.8rem;
@@ -248,6 +250,13 @@ kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1
 }
 @media (prefers-reduced-motion:reduce){.slide{animation:none} .bar-fill{transition:none}}
 </style>
+<noscript><style>
+/* No-JS fallback: the deck becomes a single scrollable document */
+.slide{position:relative; inset:auto; display:flex; height:auto; min-height:auto;
+  border-bottom:1px solid var(--border); animation:none}
+#hud,#progress{display:none}
+.bar-fill{width:var(--w) !important}
+</style></noscript>
 </head>
 <body>
 <div id="progress"></div>
@@ -608,7 +617,7 @@ kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1
           <li>Uncertainty is poorly calibrated for safety-critical gating</li>
         </ul>
       </div>
-      <div class="note"><strong>2026 status:</strong> closed-loop LLM planners now ship with uncertainty-based failure detection (see <span class="mono">2405.xxxx</span> UQ for planners in <span class="mono">papers.csv</span>), but <em>recovery</em> — not just detection — remains an open gap in <span class="mono">research-gaps.md</span>.</div>
+      <div class="note"><strong>2026 status:</strong> closed-loop LLM planners now ship with uncertainty-based failure detection (<span class="mono">2406.00430</span>, Zheng et al.), but <em>recovery</em> — not just detection — remains an open gap in <span class="mono">research-gaps.md</span>.</div>
     </div>
   </div>
 </section>
@@ -987,7 +996,481 @@ kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1
   </div>
   <p class="tiny">Source: DeepMind blog "Gemini Robotics 2 brings whole-body intelligence to robots" (Jul 2026) and model pages, as catalogued by ay-robots.com (entry checked 2026-08-11).</p>
 </section>
-<!--SLIDES-->
+<!-- ============ 15 · LATENCY WALL ============ -->
+<section class="slide" data-section="VLA" data-notes="Latency is the VLA's hardest engineering constraint. A 24× spread separates the fastest reactive policy from the most general one. Note the 2026 research line — TurboVLA, LiteVLA-Edge, ROS2SmolVLA — attacking exactly this, and that they are the ones that fit inside a robot instead of a datacentre.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vla)"></span> Part 4 · The latency wall</span>
+    <h2>24× between the fastest and the most general</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card vla">
+        <div class="k">Inference latency per action step (lower is better)</div>
+        <div class="bars">
+          <div class="bar-row"><span class="lbl">ACT · 80M</span><span class="bar-track"><span class="bar-fill" style="--w:4.1%;--c:var(--ok)"></span></span><span class="val">20 ms</span></div>
+          <div class="bar-row"><span class="lbl">TurboVLA · 32 Hz</span><span class="bar-track"><span class="bar-fill" style="--w:6.4%;--c:var(--ok)"></span></span><span class="val">31 ms</span></div>
+          <div class="bar-row"><span class="lbl">ROS2SmolVLA</span><span class="bar-track"><span class="bar-fill" style="--w:20.6%;--c:var(--vla)"></span></span><span class="val">&lt;100 ms</span></div>
+          <div class="bar-row"><span class="lbl">LiteVLA-Edge</span><span class="bar-track"><span class="bar-fill" style="--w:20.6%;--c:var(--vla)"></span></span><span class="val">&lt;100 ms</span></div>
+          <div class="bar-row"><span class="lbl">OpenVLA · 7B</span><span class="bar-track"><span class="bar-fill" style="--w:20.6%;--c:var(--vla)"></span></span><span class="val">~100 ms</span></div>
+          <div class="bar-row"><span class="lbl">GR00T N1.7 · 3B</span><span class="bar-track"><span class="bar-fill" style="--w:31.3%;--c:var(--accent)"></span></span><span class="val">152 ms</span></div>
+          <div class="bar-row"><span class="lbl">GR00T N1.5 · 3B</span><span class="bar-track"><span class="bar-fill" style="--w:34%;--c:var(--accent)"></span></span><span class="val">165 ms</span></div>
+          <div class="bar-row"><span class="lbl">SmolVLA · 450M</span><span class="bar-track"><span class="bar-fill" style="--w:50.5%;--c:var(--accent)"></span></span><span class="val">245 ms</span></div>
+          <div class="bar-row"><span class="lbl">π0.5 · 3B</span><span class="bar-track"><span class="bar-fill" style="--w:100%;--c:var(--danger)"></span></span><span class="val">485 ms</span></div>
+        </div>
+        <p class="tiny">Latency ≠ control rate: chunking lets π0.5 command at 50 Hz while each inference takes 485 ms. Bar length is proportional to per-step inference latency.</p>
+      </div>
+      <div class="card tinted">
+        <div class="k">Latency budget in robotics (this repo's <span class="mono">GLOSSARY.md</span>)</div>
+        <div class="row">
+          <span class="badge good">&lt;10 ms · high-level reactive control</span>
+          <span class="badge good">10–50 ms · standard control</span>
+          <span class="badge gold">50–200 ms · acceptable planning</span>
+          <span class="badge bad">&gt;200 ms · non-urgent decisions only</span>
+        </div>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card vla">
+        <div class="k">Edge / on-device line (2025–2026)</div>
+        <ul class="tight">
+          <li><strong>TurboVLA</strong> (<span class="mono">2607.27205</span>): 32 Hz on an RTX 4090 with <strong>&lt;1 GB VRAM</strong></li>
+          <li><strong>SmolVLA</strong>: 450M params, fine-tunes on a single 24 GB card, ~30-episode floor, async inference</li>
+          <li><strong>ROS2SmolVLA</strong> (<span class="mono">2608.23320</span>): ROS 2-native small VLA on industrial lightweight arms</li>
+          <li><strong>LiteVLA-Edge</strong> (<span class="mono">2603.03380</span>): quantised on-device multimodal control for embedded robots</li>
+          <li><strong>Gemini Robotics On-Device</strong> (Jun 2025) and <strong>On-Device 2</strong> (Jul 2026): quantised VLA running locally, no cloud</li>
+          <li><strong>Shallow-π</strong> (<span class="mono">2601.20262</span>): knowledge distillation for flow-based VLAs</li>
+        </ul>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v bad">24×</span><span class="l">latency spread across trainable policies</span></div>
+        <div class="kpi"><span class="v vla">37×</span><span class="l">parameter spread (80M → 3B)</span></div>
+        <div class="kpi"><span class="v gold">12×</span><span class="l">cost spread per fine-tuning run ($1–3 → $4–12)</span></div>
+        <div class="kpi"><span class="v llm">&lt;1 GB</span><span class="l">VRAM for TurboVLA vs ~14 GB for OpenVLA FP16</span></div>
+      </div>
+      <div class="note warn"><strong>Open gap</strong> (<span class="mono">research-gaps.md</span>): there is still no standard <em>latency / accuracy / power</em> benchmark for VLAs on embedded hardware (Jetson, NPU, Raspberry Pi). Every paper reports its own hardware and metric.</div>
+    </div>
+  </div>
+  <p class="tiny">Sources: ay-robots.com policy catalogue (Aug 2026) for ACT / SmolVLA / GR00T / π0.5; papers.csv for TurboVLA, ROS2SmolVLA, LiteVLA-Edge, OpenVLA.</p>
+</section>
+<!-- ============ 16 · MATRIX ============ -->
+<section class="slide" data-section="Comparison" data-notes="The reference slide people will photograph. Read it row by row; the rows that really separate the families are output, training data, metric and latency. The rows that are identical — pretraining, reasoning, scaling — explain why the families are nested.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Part 5 · Choosing</span>
+    <h2>The comparison matrix</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="tbl-wrap scroll-y fill">
+    <table class="tbl">
+      <thead><tr>
+        <th style="width:15%">Dimension</th>
+        <th style="width:28%"><span class="badge llm">LLM</span> Large Language Model</th>
+        <th style="width:28%"><span class="badge vlm">VLM</span> Vision-Language Model</th>
+        <th style="width:29%"><span class="badge vla">VLA</span> Vision-Language-Action</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="name">Inputs</td><td>Text (＋tool results)</td><td>Text + images / video frames</td><td>Text + images + proprioception (＋tactile, depth)</td></tr>
+        <tr><td class="name">Output</td><td>Text: answers, plans, code</td><td>Text: captions, boxes, points, plans</td><td><strong>Control commands</strong>: joint / EEF deltas, gripper, whole-body</td></tr>
+        <tr><td class="name">Pretraining data</td><td>Trillions of text tokens</td><td>＋billions of image–text pairs</td><td>＋robot trajectories: OXE (22+ embodiments), AgiBot World, teleoperation, human video</td></tr>
+        <tr><td class="name">Learning signal</td><td>Next-token prediction → RLHF → RL for reasoning</td><td>＋contrastive alignment, VQA, grounding</td><td>＋imitation (behaviour cloning) → optionally RL from experience (RECAP)</td></tr>
+        <tr><td class="name">Typical size</td><td>1B – 500B+ (MoE)</td><td>2B – 235B (e.g. Qwen3-VL 235B-A22B)</td><td>80M (ACT) – 7B (OpenVLA); ~3B is the 2026 sweet spot</td></tr>
+        <tr><td class="name">Decision latency</td><td>0.5 – 30 s (reasoning models longer)</td><td>0.2 – 5 s per query; &lt;50 ms for local small VLMs</td><td>20 ms – 485 ms per action step; 10–50 Hz control via chunking</td></tr>
+        <tr><td class="name">Success metric</td><td>GPQA, SWE-bench, AIME, MMLU-Pro</td><td>MMMU, ERQA, Point-Bench, RefSpatial</td><td><strong>Task success rate</strong>, throughput, collisions; LIBERO, SimplerEnv, RoboArena</td></tr>
+        <tr><td class="name">Role in a robot stack</td><td>Task planner, code generator, dialogue, re-planning</td><td>Semantic perception, grounding, verification, ER orchestrator</td><td>End-to-end manipulation policy; the "hands"</td></tr>
+        <tr><td class="name">Loop</td><td>Open — one plan per request</td><td>Open — one interpretation per frame</td><td><strong>Closed</strong> — re-decides every chunk from fresh observations</td></tr>
+        <tr><td class="name">ROS 2 integration</td><td>Quantised LLM nodes (2025), MCP/tool bridges</td><td>Florence-2 wrapper (<span class="mono">2604.01179</span>), onboard VLM nodes</td><td>ROS2SmolVLA (<span class="mono">2608.23320</span>), LeRobot ↔ ROS 2 bridges</td></tr>
+        <tr><td class="name">Typical failure</td><td>Hallucinated skills, ungrounded plans, no metric sense</td><td>Wrong pointing, hallucinated objects, depth errors</td><td>Out-of-distribution drift, compounding errors, unsafe contact</td></tr>
+        <tr><td class="name">Deployment</td><td>Cloud API or quantised on edge</td><td>Cloud API or local GPU / Jetson</td><td>On-robot GPU (24 GB – 80 GB) or quantised on-device</td></tr>
+        <tr><td class="name">SOTA exemplars<br>(Oct 2026)</td><td>Claude Opus 5.5 · GPT-6 Astra · Gemini 4 Argon · Kimi K3 (open)</td><td>Gemini 3.1 Pro · GPT-5.5 · Qwen3.8 Max · Gemini Robotics-ER 2</td><td>π*0.6 · GR00T N1.7 · Gemini Robotics 2 · OpenVLA-OFT · SmolVLA</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note key"><strong>One-line rule:</strong> choose an <strong>LLM</strong> when the problem is symbolic, a <strong>VLM</strong> when it is perceptual, and a <strong>VLA</strong> when it is <em>sensorimotor</em>. In practice a production stack uses all three at different rates.</div>
+</section>
+<!-- ============ 17 · SAME TASK ============ -->
+<section class="slide" data-section="Comparison" data-notes="The most intuitive slide for a mixed audience. Give all three models the identical instruction and show literally what comes back. The LLM writes a plan it cannot execute; the VLM finds the object but stops there; the VLA moves.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Part 5 · Same task, three models</span>
+    <h2>"Put the red block into the blue box"</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c3 fill">
+    <div class="card llm">
+      <h3><span class="badge llm">LLM</span></h3>
+      <div class="k">Receives</div>
+      <p class="small mono">"Put the red block into the blue box." + robot skill list</p>
+      <div class="k">Returns</div>
+      <p class="small mono" style="background:var(--panel2);padding:.5rem;border-radius:8px">1. detect(red_block)<br>2. grasp(red_block)<br>3. move_to(blue_box)<br>4. release()<br>5. verify_success()</p>
+      <div class="k">Then what?</div>
+      <p class="small">Nothing moves. Each step must be implemented by a perception system and a motion planner. If <span class="mono">detect()</span> does not exist, the plan is fiction.</p>
+      <div class="row"><span class="badge">0 mm moved</span><span class="badge">seconds</span></div>
+    </div>
+    <div class="card vlm">
+      <h3><span class="badge vlm">VLM</span></h3>
+      <div class="k">Receives</div>
+      <p class="small mono">RGB frame + "Where is the red block? Where can I place it?"</p>
+      <div class="k">Returns</div>
+      <p class="small mono" style="background:var(--panel2);padding:.5rem;border-radius:8px">red_block: bbox [412,268,486,341]<br>pick_point: (449, 305) px<br>free_space: (703, 402) px<br>confidence: 0.93<br>"box is empty, no occlusion"</p>
+      <div class="k">Then what?</div>
+      <p class="small">A camera-to-world transform, a grasp planner and MoveIt 2 turn those pixels into motion. The VLM never touches a joint.</p>
+      <div class="row"><span class="badge">0 mm moved</span><span class="badge">&lt;50 ms local</span></div>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">VLA</span></h3>
+      <div class="k">Receives</div>
+      <p class="small mono">2 cameras + proprioception + "put the red block into the blue box"</p>
+      <div class="k">Returns</div>
+      <p class="small mono" style="background:var(--panel2);padding:.5rem;border-radius:8px">chunk[0..15]:<br>&nbsp;Δx +0.031 Δy −0.004 Δz −0.052<br>&nbsp;Δroll 0.00 Δpitch 0.02 Δyaw 0.01<br>&nbsp;gripper 1.0 → 0.0 (close)<br>… 16 steps @ 30 Hz</p>
+      <div class="k">Then what?</div>
+      <p class="small">The arm moves. It re-observes, re-plans mid-motion, recovers from a mis-grasp, and finishes the task — or fails physically.</p>
+      <div class="row"><span class="badge good">task executed</span><span class="badge">20–485 ms/step</span></div>
+    </div>
+  </div>
+  <div class="cols c3">
+    <div class="note llm"><strong>LLM = intention.</strong> Correct sequence, zero embodiment. Needs an affordance check (SayCan) to stop inventing skills.</div>
+    <div class="note vlm"><strong>VLM = perception.</strong> Correct referent, zero actuation. Needs calibration + a planner to become motion.</div>
+    <div class="note key"><strong>VLA = sensorimotor skill.</strong> Closes the loop, but needs ~50 demonstrations of <em>your</em> cell to be reliable, and it cannot explain itself as cleanly.</div>
+  </div>
+</section>
+<!-- ============ 18 · HYBRID STACKS ============ -->
+<section class="slide" data-section="Comparison" data-notes="Nobody serious ships a single model. The canonical 2026 stack is hierarchical: a slow reasoning VLM orchestrates a fast VLA, and a deterministic safety layer wraps both. Rate separation is the design principle — 1 Hz semantics, 30 Hz skill, 500 Hz safety.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Part 5 · How they are actually combined</span>
+    <h2>The hierarchical stack: three rates, one robot</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card tinted">
+        <h3>Canonical agentic stack (2026)</h3>
+        <div class="flow">
+          <div class="node in"><span class="t">Human goal</span><span class="d">"clear the table"</span></div>
+          <div class="arrow">→</div>
+          <div class="node proc"><span class="t">LLM / ER orchestrator</span><span class="d">~0.2–1 Hz · plans, tools, memory, verifies</span></div>
+          <div class="arrow">→</div>
+          <div class="node proc"><span class="t">VLM perception</span><span class="d">grounding, pointing, success check</span></div>
+          <div class="arrow">→</div>
+          <div class="node out"><span class="t">VLA policy</span><span class="d">10–50 Hz · chunks of actions</span></div>
+          <div class="arrow">→</div>
+          <div class="node out"><span class="t">Safety layer</span><span class="d">500 Hz · force limits, workspace, e-stop</span></div>
+        </div>
+        <p class="small">Gemini Robotics 1.5/2 makes this explicit: <strong>ER orchestrates, the VLA acts</strong>, and the report shows the agent with ER 1.5 beating the same agent driven by off-the-shelf Gemini 2.5 Flash on every tested case. GR00T N1.x internalises the same split as System 2 / System 1 inside one model.</p>
+      </div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Your situation</th><th>Use</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td class="name">Structured cell, known SKUs, auditability required</td><td><span class="badge vlm">VLM</span> + MoveIt 2 / Nav2</td><td>Deterministic motion, certifiable, easy to log; semantics from the VLM</td></tr>
+            <tr><td class="name">Dataset quality unproven</td><td>ACT (from-scratch BC)</td><td>Nothing pretrained hides a broken dataset; a failed run costs $1–3</td></tr>
+            <tr><td class="name">Contact-rich, multi-step, language-conditioned</td><td><span class="badge vla">GR00T N1.7</span></td><td>97.0% over four LIBERO suites + relative end-effector action space</td></tr>
+            <tr><td class="name">New objects, new scenes, open world</td><td><span class="badge vla">π0.5 / π*0.6</span></td><td>Built for out-of-distribution behaviour; scaling study across 3 → 104 locations</td></tr>
+            <tr><td class="name">Fast reactive motion, inference at the servos</td><td>ACT or TurboVLA</td><td>20–31 ms; the next fastest option is ~7.6× slower</td></tr>
+            <tr><td class="name">One 24 GB card, still want language conditioning</td><td><span class="badge vla">SmolVLA</span></td><td>450M params, ~30-episode floor, runs locally, async inference</td></tr>
+            <tr><td class="name">Shipping a product</td><td>N1.7 · SmolVLA · ACT</td><td>Licences: N1.5 is non-commercial, π0.5 carries Gemma terms</td></tr>
+            <tr><td class="name">Long-horizon household tasks</td><td>ER orchestrator + VLA</td><td>Think-before-acting improves decomposition and interpretability</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card gold">
+        <div class="k">Design principle</div>
+        <p class="small"><strong>Separate the rates.</strong> Semantics do not need 30 Hz; safety cannot tolerate 500 ms. Putting each model at the rate it is good at is what makes hybrid stacks work.</p>
+      </div>
+      <div class="card warn">
+        <div class="k">Never let the model own safety</div>
+        <ul class="cross">
+          <li>No VLA in 2026 is certified for contact with humans</li>
+          <li>Force envelopes, workspace limits and e-stop stay deterministic</li>
+          <li>Failure detection (SAFE, UQ-VLA, ELLIPSE) is a <em>monitor</em>, not a controller</li>
+        </ul>
+      </div>
+      <div class="note">Testbed in this repo: <span class="mono">burger_delivery</span> (ROS 2 Jazzy + Kinova Gen3 + AprilTags + gemini-robotics) is set up to compare exactly these three configurations — classical baseline, cloud VLM, quantised local VLA.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ 19 · DATA ============ -->
+<section class="slide" data-section="Frontier" data-notes="The single biggest competitive variable of the VLA era. Text and images are free; robot data is not. Every lab answers differently: NVIDIA with human video and simulation, Google with Motion Transfer across embodiments, Physical Intelligence with RL on the robot's own experience.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--accent)"></span> Part 6 · Frontier</span>
+    <h2>The data pyramid: why "A" is the hard part</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card tinted">
+        <h3>Abundance inverts as you add modalities</h3>
+        <div class="bars">
+          <div class="bar-row"><span class="lbl">Text tokens</span><span class="bar-track"><span class="bar-fill" style="--w:100%;--c:var(--llm)"></span></span><span class="val">trillions · free</span></div>
+          <div class="bar-row"><span class="lbl">Image–text pairs</span><span class="bar-track"><span class="bar-fill" style="--w:72%;--c:var(--vlm)"></span></span><span class="val">billions · free</span></div>
+          <div class="bar-row"><span class="lbl">Human egocentric video</span><span class="bar-track"><span class="bar-fill" style="--w:34%;--c:var(--vlm)"></span></span><span class="val">20,000 h (EgoScale)</span></div>
+          <div class="bar-row"><span class="lbl">Tactile + RGB frames</span><span class="bar-track"><span class="bar-fill" style="--w:20%;--c:var(--accent)"></span></span><span class="val">10M + 7.8M (HT-Bench)</span></div>
+          <div class="bar-row"><span class="lbl">Robot trajectories (OXE)</span><span class="bar-track"><span class="bar-fill" style="--w:11%;--c:var(--vla)"></span></span><span class="val">800k+ · 22 robots</span></div>
+          <div class="bar-row"><span class="lbl">One lab's mobile data</span><span class="bar-track"><span class="bar-fill" style="--w:4%;--c:var(--danger)"></span></span><span class="val">~400 h (π0.5)</span></div>
+          <div class="bar-row"><span class="lbl">Your cell, your task</span><span class="bar-track"><span class="bar-fill" style="--w:2%;--c:var(--danger)"></span></span><span class="val">30–50 episodes</span></div>
+        </div>
+        <p class="tiny">Robot manipulation data cannot be scraped. It must be collected in person, substituted with human video, or synthesised in a simulator.</p>
+      </div>
+      <div class="cols c3">
+        <div class="card vla">
+          <div class="k">NVIDIA's answer</div>
+          <p class="small"><strong>Human video + simulation.</strong> 20,000 h of egocentric video (EgoScale) plus Isaac-sim synthetic data; a relative end-effector action space is what makes human video transferable. They report a manipulation <em>scaling law</em>.</p>
+        </div>
+        <div class="card vlm">
+          <div class="k">Google's answer</div>
+          <p class="small"><strong>Motion Transfer.</strong> Map heterogeneous embodiments (ALOHA, Franka, Apollo) into one representation space so every robot's data helps every other robot.</p>
+        </div>
+        <div class="card gold">
+          <div class="k">Physical Intelligence's answer</div>
+          <p class="small"><strong>Experience.</strong> openpi invites the community to contribute robot data, and RECAP turns the deployed robot itself into the largest data source.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card warn">
+        <div class="k">The uncomfortable truth</div>
+        <p class="small">"It is an open secret that <strong>OXE is mostly low-quality data</strong>, yet we still lack good methods to quantify data quality in imitation learning." Data curation remains one of the most crucial unsolved problems — and it is markedly under-represented in 2026 submissions.</p>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v gold">30–50</span><span class="l">episodes to fine-tune a small VLA on your task</span></div>
+        <div class="kpi"><span class="v vla">20,000 h</span><span class="l">human video behind GR00T N1.7</span></div>
+        <div class="kpi"><span class="v vlm">104</span><span class="l">distinct locations in π0.5's generalisation study</span></div>
+        <div class="kpi"><span class="v bad">20,000</span><span class="l">parallel tactile sims on one GPU (Tactile Genesis)</span></div>
+      </div>
+      <div class="note key">Simulation is the multiplier: Isaac Sim / MuJoCo / RoboCasa generate unlimited imperfect data, and Sim2Real techniques (domain randomisation, teacher-student, RMA) are what make it usable. See <span class="mono">research-gaps.md</span> → Sim2Real + safety.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ 20 · BENCHMARKS ============ -->
+<section class="slide" data-section="Frontier" data-notes="Teach the audience to distrust a number. Four questions: what distribution, how many trials, who ran the robot, and is it zero-shot. The RoboArena result is the punchline: on independent real-robot evaluation only one non-Physical-Intelligence model is anywhere near competitive.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--accent)"></span> Part 6 · Evaluation</span>
+    <h2>Benchmarks — and how to read them critically</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Family</th><th>Benchmark</th><th>What it measures</th><th>2026 status</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge llm">LLM</span></td><td class="name">GPQA Diamond</td><td>graduate-level science reasoning</td><td>96.0% top score — near ceiling</td></tr>
+            <tr><td><span class="badge llm">LLM</span></td><td class="name">SWE-bench Verified</td><td>real repository issue fixing</td><td>95.0% — the agentic headline</td></tr>
+            <tr><td><span class="badge llm">LLM</span></td><td class="name">AIME 2025 / MATH-500</td><td>competition mathematics</td><td>100.0% reported — saturated</td></tr>
+            <tr><td><span class="badge vlm">VLM</span></td><td class="name">MMMU / MMMU-Pro</td><td>expert multimodal understanding</td><td>83.8% top, 61.8% average of 87 models</td></tr>
+            <tr><td><span class="badge vlm">VLM</span></td><td class="name">ERQA · Point-Bench · Where2Place · RefSpatial</td><td>embodied reasoning, pointing, free space, spatial referring</td><td>best aggregate 59.6 (GR-ER 1.5); pointing still ~72%</td></tr>
+            <tr><td><span class="badge vla">VLA</span></td><td class="name">LIBERO (4 suites)</td><td>lifelong tabletop manipulation in sim</td><td><strong>saturated</strong>: 96.9–97.5 for four models</td></tr>
+            <tr><td><span class="badge vla">VLA</span></td><td class="name">SimplerEnv (Bridge / Fractal)</td><td>sim proxy for real policies</td><td>useful for ablations, poor proxy for zero-shot</td></tr>
+            <tr><td><span class="badge vla">VLA</span></td><td class="name">Meta-World · RoboCasa · BEHAVIOR</td><td>multi-task, household, long-horizon</td><td>active; RoboCasa scales everyday tasks</td></tr>
+            <tr><td><span class="badge vla">VLA</span></td><td class="name">RoboArena</td><td><strong>distributed real-robot</strong> evaluation by independent operators, zero-shot</td><td>the only credible generalisation signal</td></tr>
+            <tr><td><span class="badge vla">VLA</span></td><td class="name">IDB · GuardianBench · Arena 4.0</td><td>industrial dexterity, safety, ROS 2 navigation</td><td>emerging, hardware-specific</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note warn"><strong>The hidden gap.</strong> Simulation leaderboards hide a frontier-lab vs academic-lab divide that is invisible in papers. On RoboArena, <em>only one non-π model</em> is near-competitive on zero-shot tasks. Sim and local fine-tuning numbers are not a proxy for the thing VLAs are actually for: <strong>robust zero-shot behaviour in messy new environments</strong>.</div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card gold">
+        <div class="k">Four questions before trusting a number</div>
+        <ol class="tight">
+          <li><strong>Distribution:</strong> in-distribution, visual, semantic or action generalisation?</li>
+          <li><strong>Trials:</strong> 20 rollouts or 200? Per suite or averaged?</li>
+          <li><strong>Operator:</strong> the authors, or independent labs (RoboArena)?</li>
+          <li><strong>Zero-shot?</strong> post-pretraining generalisation is the claim that matters</li>
+        </ol>
+      </div>
+      <div class="card tinted">
+        <div class="k">Also check</div>
+        <ul class="tight">
+          <li>Progress score vs binary success — partial credit inflates results</li>
+          <li>Hardware drift: wrist-camera viewpoint shifts and joint wear degrade results over weeks (documented in the OpenVLA-OFT ALOHA study)</li>
+          <li>Whether "thinking" was enabled — for ER models it is worth ~6 aggregate points</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 21 · TRENDS ============ -->
+<section class="slide" data-section="Frontier" data-notes="Where the field is heading, taken from the ICLR 2026 submission slice plus the 2026 arXiv frontier. Eight converging directions — and two conspicuous absences: data quality and in-context learning.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--accent)"></span> Part 6 · Research trends</span>
+    <h2>Where the field is going in 2026</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c4 fill">
+    <div class="card vla">
+      <h3>Discrete diffusion</h3>
+      <p class="small">Denoise <em>tokens</em> instead of vectors: combines the vocabulary reuse of RT-2-style VLAs with the multimodality of diffusion. The strongest converging trend of the 2026 cycle.</p>
+    </div>
+    <div class="card vlm">
+      <h3>Reasoning VLAs &amp; ECoT</h3>
+      <p class="small">Embodied chain-of-thought: the model reasons in language <em>between</em> actions. Gemini Robotics 1.5 interleaves multi-level reasoning with acting; thinking measurably improves multi-step decomposition.</p>
+    </div>
+    <div class="card tinted">
+      <h3>New action tokenizers</h3>
+      <p class="small">Beyond naive 256-bin discretisation: FAST-style DCT compression, BPE over trajectories, learned codebooks. Better tokens = fewer steps = higher control rate.</p>
+    </div>
+    <div class="card tinted">
+      <h3>Efficient VLAs</h3>
+      <p class="small">Distillation (Shallow-π), quantisation (LiteVLA-Edge), pruned backbones, async inference. The goal: 30 Hz on &lt;1 GB VRAM without losing language conditioning.</p>
+    </div>
+    <div class="card gold">
+      <h3>RL for VLAs</h3>
+      <p class="small">From imitation to experience: RECAP, advantage conditioning, offline RL pretraining, residual RL. The only demonstrated route past ~50% reliability toward human throughput.</p>
+    </div>
+    <div class="card tinted">
+      <h3>World models inside VLAs</h3>
+      <p class="small">Cosmos-Predict / Cosmos-Reason folded into GR00T N1.7's backbone; video-prediction objectives co-trained with flow matching (N1.5). Three labs, three hypotheses — still experimentally unresolved.</p>
+    </div>
+    <div class="card warn">
+      <h3>Tactile: VLA → V-T-L-A</h3>
+      <p class="small">Touch observes hidden contact states — force, incipient slip, stability — that vision and language cannot. TouchWorld: <strong>65.0%</strong> on six contact-rich dexterous tasks, <strong>+15.7 pp</strong> over the best baseline; PP-Tac grasps paper-like deformables at 87.5%.</p>
+    </div>
+    <div class="card tinted">
+      <h3>Evaluation &amp; cross-action-space</h3>
+      <p class="small">RoboArena-style distributed real-robot evaluation; policies that transfer across action spaces (joints ↔ EEF ↔ whole-body) so one model serves many robots.</p>
+    </div>
+  </div>
+  <div class="cols c2">
+    <div class="note warn"><strong>Under-represented #1 — data quality.</strong> Critical for VLA performance, yet almost no submissions address collection and curation. We still lack methods to <em>quantify</em> demonstration quality in imitation learning.</div>
+    <div class="note warn"><strong>Under-represented #2 — in-context learning.</strong> LLMs and VLMs got enormous value from it; VLAs have almost none. Language alone is too thin a context channel for complex physical tasks — video demonstrations in context may be the missing mechanism.</div>
+  </div>
+  <p class="tiny">Sources: M. Reuss, "State of VLA Research at ICLR 2026" (Oct 2025); tactile-sota.md in this repository (arXiv queries, 2026-09-05).</p>
+</section>
+<!-- ============ 22 · GAPS ============ -->
+<section class="slide" data-section="Frontier" data-notes="Where the opportunities are — this is the slide that connects the deck back to the repository's own research agenda. Five sublines, each with evidence and an actionable opportunity, all framed around ROS 2 as the production framework.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--danger)"></span> Part 6 · Open problems</span>
+    <h2>Unsolved — and where this repo's gaps live</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="tbl-wrap scroll-y fill">
+    <table class="tbl">
+      <thead><tr><th>Subline</th><th>Gap</th><th>Evidence (2025–2026)</th><th>Opportunity</th><th class="num">Priority</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="name">Multimodal perception</td>
+          <td>No ROS 2 standard for VLMs; real-time 3D grounding; no VLM↔robot calibration</td>
+          <td>Only one ROS 2 VLM wrapper (<span class="mono">2604.01179</span>); VoxPoser latency &gt;500 ms</td>
+          <td><span class="mono">ros2_vlm_msgs</span> standard interfaces; quantised VLM + 3D projection in &lt;100 ms</td><td class="num">🥇</td>
+        </tr>
+        <tr>
+          <td class="name">Semantic planning</td>
+          <td>No standard LLM→ROS 2 bridge; failure <em>recovery</em> (not just detection); no episodic memory</td>
+          <td>SAFE <span class="mono">2506.09937</span>, UQ-VLA <span class="mono">2606.18043</span>, ELLIPSE <span class="mono">2603.04585</span>, attention-head path deviation <span class="mono">2603.13782</span></td>
+          <td>ROS 2 "skill primitives" callable by LLMs; self-diagnosing agent that re-plans</td><td class="num">🥈</td>
+        </tr>
+        <tr>
+          <td class="name">Edge AI / local inference</td>
+          <td>No latency / accuracy / power benchmark for VLAs on embedded hardware</td>
+          <td>TurboVLA <span class="mono">2607.27205</span>, LiteVLA-Edge <span class="mono">2603.03380</span>, ROS2SmolVLA <span class="mono">2608.23320</span> — isolated solutions, own metrics</td>
+          <td>ROS 2 + Jetson Orin reference benchmark; reproducible Edge-VLA harness</td><td class="num">🥇</td>
+        </tr>
+        <tr>
+          <td class="name">Sim2Real + safety</td>
+          <td>No certified manipulation on real hardware; deformable Sim2Real missing; liability unclear</td>
+          <td>Certifiably safe DLO <span class="mono">2505.13889</span> (sim only); GhostTac <span class="mono">2608.20817</span> spoofs tactile via EMI (ACM CCS 2026)</td>
+          <td>Pre-deployment certificates wired into ROS 2; tactile logs as an ISO/TS 15066 audit trail</td><td class="num">🥉</td>
+        </tr>
+        <tr>
+          <td class="name">Industrial dexterity</td>
+          <td>No plant-grade benchmark (cycle time, OEE, scrap rate); force-limited insertion not a standard skill</td>
+          <td>IDB <span class="mono">2607.14021</span> uses purpose-built boards; connector assembly <span class="mono">2602.22100</span> tunes force per geometry</td>
+          <td>Benchmark on a real cell; compliant-insertion skill with force-envelope monitoring</td><td class="num">🥇</td>
+        </tr>
+        <tr>
+          <td class="name">Tactile &amp; manual dexterity</td>
+          <td>No tactile-VLA on a standard framework; touch absent from most VLA pipelines</td>
+          <td>TouchWorld <span class="mono">2607.07287</span> (65.0%, +15.7 pp), TacForcing <span class="mono">2608.25798</span>, HT-Bench <span class="mono">2606.19161</span></td>
+          <td>V-T-L-A ROS 2 node: slow semantics + 1 kHz contact loop</td><td class="num">🥈</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note key"><strong>Experimental proposal</strong> (<span class="mono">research-gaps.md</span>): use <span class="mono">burger_delivery</span> to compare a classical baseline (AprilTags + MoveIt 2 + FSM), a cloud VLM (gemini-robotics API) and a quantised local VLA (SmolVLA / Florence-2 on ROS 2). <strong>Hypothesis:</strong> the local alternative reaches ≥80% of the cloud success rate with &lt;50% of the latency.</div>
+</section>
+<!-- ============ 23 · TAKEAWAYS ============ -->
+<section class="slide" data-section="Close" data-notes="Land these six lines and the deck has done its job. The last one is the call to action: the difference between the families is easy — the difference between a demo and a deployment is the hard part.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Takeaways</span>
+    <h2>Six things to remember</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c2 fill">
+    <div class="card llm">
+      <h3><span class="badge llm">1</span> The difference is the output</h3>
+      <p class="small">LLM → <strong>text</strong>. VLM → <strong>text about a scene</strong>. VLA → <strong>motor commands</strong>. The families are nested: a VLA contains a VLM, which contains an LLM.</p>
+    </div>
+    <div class="card vlm">
+      <h3><span class="badge vlm">2</span> Perception has commoditised; action has not</h3>
+      <p class="small">MMMU's ceiling is 83.8% and a 27B open model sits at 77.6. Meanwhile the best VLA still screws in a bulb only 36% of the time.</p>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">3</span> Reliability came from RL, not scale</h3>
+      <p class="small">π*0.6 + RECAP: demonstrations define behaviour, coaching refines it, autonomous experience perfects it — &gt;2× throughput, ≥2× fewer failures, 18 h of uninterrupted service.</p>
+    </div>
+    <div class="card gold">
+      <h3><span class="badge gold">4</span> Latency and licence decide deployments</h3>
+      <p class="small">LIBERO is saturated at ~97% for everyone. The real axes are 20 ms vs 485 ms, 1 GB vs 80 GB VRAM, and whether the licence lets you ship.</p>
+    </div>
+    <div class="card tinted">
+      <h3><span class="badge">5</span> Production stacks are hierarchical</h3>
+      <p class="small">A slow LLM/VLM orchestrator, a fast VLA policy, and a deterministic safety layer — each running at the rate it is good at. Nobody ships a single model.</p>
+    </div>
+    <div class="card warn">
+      <h3><span class="badge bad">6</span> The bottleneck is data, not architecture</h3>
+      <p class="small">Text and images are free; robot trajectories are not. Data quality, in-context learning, real-robot evaluation and certification are the open problems worth working on.</p>
+    </div>
+  </div>
+  <div class="note key"><strong>Bottom line:</strong> LLMs plan, VLMs perceive, VLAs act — and the 2026 frontier is not "can a robot do the task?" but "can it do it <em>every time</em>, <em>fast</em>, <em>on-device</em>, and <em>provably safely</em>?"</div>
+</section>
+<!-- ============ 24 · SOURCES ============ -->
+<section class="slide" data-section="Close" data-notes="Everything in the deck traces to one of these. Primary sources first — papers, model cards and lab blogs — then leaderboards and catalogues, then this repository's own documents.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Sources</span>
+    <h2>Where every number came from</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c3 fill">
+    <div class="card llm">
+      <div class="k">Primary · VLA</div>
+      <ul class="tight">
+        <li><a href="https://arxiv.org/abs/2510.03342" target="_blank" rel="noopener">Gemini Robotics 1.5 technical report</a> — arXiv:2510.03342 (ER benchmarks, Motion Transfer, thinking ablation)</li>
+        <li><a href="https://deepmind.google/blog/gemini-robotics-15-brings-ai-agents-into-the-physical-world/" target="_blank" rel="noopener">Gemini Robotics 1.5</a> — DeepMind blog, Sep 2025</li>
+        <li><a href="https://deepmind.google/blog/gemini-robotics-2-brings-whole-body-intelligence-to-robots/" target="_blank" rel="noopener">Gemini Robotics 2</a> — DeepMind blog, Jul 2026</li>
+        <li><a href="https://www.physicalintelligence.company/blog/pistar06" target="_blank" rel="noopener">π*0.6: a VLA that Learns from Experience</a> — Physical Intelligence, 2025-11-17 (RECAP)</li>
+        <li><a href="https://openvla-oft.github.io/" target="_blank" rel="noopener">OpenVLA-OFT</a> — arXiv:2502.19645 (97.1% LIBERO, 26× speedup)</li>
+        <li><a href="https://github.com/NVIDIA/Isaac-GR00T" target="_blank" rel="noopener">NVIDIA Isaac GR00T</a> + <span class="mono">nvidia/GR00T-N1.7-3B</span> model card</li>
+        <li><a href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">openpi</a> (π0 / π0.5) · <a href="https://huggingface.co/lerobot/smolvla_base" target="_blank" rel="noopener">SmolVLA</a></li>
+      </ul>
+    </div>
+    <div class="card vlm">
+      <div class="k">Primary · LLM / VLM &amp; analysis</div>
+      <ul class="tight">
+        <li><a href="https://llm-stats.com/leaderboards" target="_blank" rel="noopener">llm-stats.com LLM Leaderboard</a> — 408 models, consulted 2026-10-19</li>
+        <li><a href="https://pricepertoken.com/leaderboards/benchmark/mmmu" target="_blank" rel="noopener">MMMU leaderboard</a> — 87 models, as of 2026-10-18 (LayerLens / Artificial Analysis)</li>
+        <li><a href="https://mbreuss.github.io/blog_post_iclr_26_vla.html" target="_blank" rel="noopener">State of VLA Research at ICLR 2026</a> — M. Reuss, Oct 2025 (trends, benchmark reading, frontier gap)</li>
+        <li><a href="https://www.ay-robots.com/blog/en/which-vla-policy-should-you-train-in-2026" target="_blank" rel="noopener">Which VLA Policy Should You Train in 2026?</a> — AY-Robots, Aug 2026 (latency, params, licences, costs)</li>
+        <li><a href="https://www.ay-robots.com/vla" target="_blank" rel="noopener">AY-Robots VLA Arena</a> — per-model VRAM / latency / benchmark catalogue</li>
+        <li><a href="https://robo-arena.github.io/" target="_blank" rel="noopener">RoboArena</a> — distributed real-robot evaluation</li>
+      </ul>
+    </div>
+    <div class="card vla">
+      <div class="k">This repository</div>
+      <ul class="tight">
+        <li><span class="mono">README.md</span> — evidence map, VLA/Sim2Real/ROS 2 index</li>
+        <li><span class="mono">GLOSSARY.md</span> — LLM/VLM/VLA definitions, latency budget, Gemini Robotics variants</li>
+        <li><span class="mono">papers.csv</span> — 62 papers with latency, hardware, ROS integration, code availability</li>
+        <li><span class="mono">research-gaps.md</span> — four sublines + industrial deployment gaps</li>
+        <li><span class="mono">tactile-sota.md</span> — V-T-L-A frontier, PaXini hardware, ROS 2 ecosystem</li>
+        <li><span class="mono">research-protocol.md</span> — queries, inclusion/exclusion criteria</li>
+      </ul>
+      <div class="k">Key arXiv IDs cited</div>
+      <p class="tiny mono">2406.09246 OpenVLA · 2212.06817 RT-1 · 2307.15818 RT-2 · 2405.12213 Octo · 2310.08864 OXE · 2410.24164 π0 · 2607.27205 TurboVLA · 2608.23320 ROS2SmolVLA · 2603.03380 LiteVLA-Edge · 2604.01179 Florence-2 ROS 2 · 2607.07287 TouchWorld · 2504.16649 PP-Tac</p>
+    </div>
+  </div>
+  <div class="note"><strong>Method &amp; honesty note.</strong> Compiled 2026-10-19. Leaderboard composites and vendor-published success rates are reported as published; first-party internal evaluations (Gemini Robotics 2) are flagged and have no external replication. Where sources disagreed, both values are shown. Hardware vendor specs are lab-claimed, not peer-reviewed.</div>
+</section>
 </main>
 <div id="notes"><h4>Speaker notes</h4><div id="notesBody"></div></div>
 <div id="hud">
@@ -1018,7 +1501,145 @@ kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1
   </div>
 </div>
 <script>
-//JS
+(function () {
+  'use strict';
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var dotsBox = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var sectionTag = document.getElementById('sectionTag');
+  var progress = document.getElementById('progress');
+  var notesBody = document.getElementById('notesBody');
+  var idx = 0, overview = false;
+
+  /* ---- build dots + indices ---- */
+  slides.forEach(function (s, i) {
+    s.setAttribute('data-idx', String(i + 1));
+    var d = document.createElement('i');
+    d.title = 'Slide ' + (i + 1) + ' · ' + (s.getAttribute('data-section') || '');
+    d.addEventListener('click', function () { go(i); });
+    dotsBox.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsBox.children);
+
+  /* ---- navigation ---- */
+  function render() {
+    slides.forEach(function (s, i) {
+      s.classList.toggle('active', i === idx && !overview);
+      s.scrollTop = 0;
+    });
+    dots.forEach(function (d, i) { d.classList.toggle('on', i === idx); });
+    counter.textContent = (idx + 1) + ' / ' + slides.length;
+    sectionTag.textContent = slides[idx].getAttribute('data-section') || '';
+    progress.style.width = (((idx + 1) / slides.length) * 100) + '%';
+    notesBody.textContent = slides[idx].getAttribute('data-notes') || 'No notes for this slide.';
+    if (history.replaceState) history.replaceState(null, '', '#/' + (idx + 1));
+    else location.hash = '#/' + (idx + 1);
+  }
+  function go(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    if (overview) toggleOverview(false);
+    render();
+  }
+  function next() { go(idx + 1); }
+  function prev() { go(idx - 1); }
+
+  function toggleOverview(force) {
+    overview = (typeof force === 'boolean') ? force : !overview;
+    deck.classList.toggle('overview', overview);
+    slides.forEach(function (s, i) {
+      s.classList.toggle('sel', overview && i === idx);
+      s.classList.toggle('active', !overview && i === idx);
+    });
+    if (overview) {
+      var sel = deck.querySelector('.slide.sel');
+      if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: 'nearest' });
+    } else { render(); }
+  }
+  slides.forEach(function (s, i) {
+    s.addEventListener('click', function (e) {
+      if (!overview) return;
+      e.preventDefault(); e.stopPropagation();
+      go(i);
+    });
+  });
+
+  /* ---- theme ---- */
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('deck-theme', t); } catch (e) {}
+  }
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    setTheme(cur);
+  }
+  try {
+    var saved = localStorage.getItem('deck-theme');
+    if (saved) setTheme(saved);
+  } catch (e) {}
+
+  /* ---- keyboard ---- */
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (k === 'Escape') {
+      if (document.body.classList.contains('help-on')) document.body.classList.remove('help-on');
+      else if (overview) toggleOverview(false);
+      return;
+    }
+    if (k === '?' || (k === '/' && e.shiftKey)) {
+      document.body.classList.toggle('help-on'); e.preventDefault(); return;
+    }
+    if (document.body.classList.contains('help-on')) return;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === ' ' || k === 'PageDown') { next(); e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { prev(); e.preventDefault(); }
+    else if (k === 'Home') { go(0); e.preventDefault(); }
+    else if (k === 'End') { go(slides.length - 1); e.preventDefault(); }
+    else if (k === 'o' || k === 'O') { toggleOverview(); }
+    else if (k === 'n' || k === 'N') { document.body.classList.toggle('notes-on'); }
+    else if (k === 't' || k === 'T') { toggleTheme(); }
+    else if (k === 'f' || k === 'F') {
+      if (!document.fullscreenElement) { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
+      else if (document.exitFullscreen) document.exitFullscreen();
+    }
+  });
+
+  /* ---- buttons ---- */
+  document.getElementById('btnNext').addEventListener('click', next);
+  document.getElementById('btnPrev').addEventListener('click', prev);
+  document.getElementById('btnOv').addEventListener('click', function () { toggleOverview(); });
+  document.getElementById('btnNotes').addEventListener('click', function () { document.body.classList.toggle('notes-on'); });
+  document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+  document.getElementById('btnHelp').addEventListener('click', function () { document.body.classList.toggle('help-on'); });
+  document.getElementById('btnFs').addEventListener('click', function () {
+    if (!document.fullscreenElement) { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); }
+    else if (document.exitFullscreen) document.exitFullscreen();
+  });
+  document.getElementById('help').addEventListener('click', function (e) {
+    if (e.target === this) document.body.classList.remove('help-on');
+  });
+
+  /* ---- touch swipe ---- */
+  var tx = null, ty = null;
+  document.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (tx === null || overview) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4) { if (dx < 0) next(); else prev(); }
+    tx = ty = null;
+  }, { passive: true });
+
+  /* ---- deep links ---- */
+  function fromHash() {
+    var m = /^#\/?(\d+)$/.exec(location.hash || '');
+    if (m) go(parseInt(m[1], 10) - 1); else render();
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
 </script>
 </body>
 </html>

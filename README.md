@@ -18,6 +18,7 @@ A curated and reproducible research resource covering **Embodied Artificial Inte
 - [Simulation Environments & Digital Twins](#-simulation-environments--digital-twins)
 - [Sim2Real Transfer & Reinforcement Learning](#-sim2real-transfer--reinforcement-learning)
 - [Robotic Frameworks (ROS 2)](#-robotic-frameworks-ros-2)
+- [Presentations (HTML slide decks)](#-presentations-html-slide-decks)
 - [Featured Case Studies](#-featured-case-studies)
 
 ---
@@ -55,6 +56,7 @@ A curated collection of **62 foundational papers** with structured metadata and 
 | [`papers.csv`](papers.csv) | Structured metadata (62 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
 | [`tactile-sota.md`](tactile-sota.md) | Tactile sensing & manual dexterity SOTA: V-T-L-A frontier, PaXini GEN3/GEN4 hardware, ROS 2 ecosystem |
+| [`presentations/`](presentations/README.md) | Self-contained HTML slide decks — **LLM → VLM → VLA** (24 slides, state of the art Oct 2026) |
 | [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
 | [`CITATION.cff`](CITATION.cff) | Citation metadata (GitHub "Cite this repository") |
@@ -116,6 +118,20 @@ The standard middleware for building scalable robotic applications.
 - [MoveIt 2](https://moveit.ros.org/) - The leading framework for robotic manipulation and motion planning.
 - [Nav2](https://nav2.ros.org/) - The professional standard for autonomous mobile robot navigation.
 - [micro-ROS](https://micro.ros.org/) - ROS 2 for microcontrollers and Edge AI.
+
+## 🎞️ Presentations (HTML slide decks)
+
+Teaching material generated from this collection. Single-file, dependency-free HTML — open in any browser, present with `←`/`→`, press `O` for the overview grid, `N` for speaker notes, `T` to switch theme, and `Ctrl+P` to export one slide per page.
+
+| Deck | Slides | Scope |
+|------|--------|-------|
+| [**LLM → VLM → VLA · From Words to Actions**](presentations/llm-vlm-vla-sota.html) | 24 | The difference between the three families (output modality), architecture anatomy, and a researched **state of the art as of October 2026**: LLM leaderboards (GPQA / SWE-bench), VLM leaderboards (MMMU, Embodied Reasoning), VLA frontier (π*0.6 + RECAP, GR00T N1.7, Gemini Robotics 1.5/2, OpenVLA-OFT, SmolVLA), the latency wall, benchmarks and open gaps |
+
+👉 **How to run & contribute:** [presentations/README.md](presentations/README.md)
+
+```bash
+python3 -m http.server 8000   # → http://localhost:8000/presentations/llm-vlm-vla-sota.html
+```
 
 ## 📚 Featured Case Studies
 
