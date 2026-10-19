@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM → VLM → VLA · From Words to Actions — State of the Art (Oct 2026)</title>
+<meta name="description" content="Interactive HTML presentation: the difference between LLM, VLM and VLA models, with a researched state of the art as of October 2026.">
+<meta name="author" content="roncanciovl — Awesome Embodied AI &amp; Sim2Real">
+<style>
+/* ============================================================
+   LLM → VLM → VLA — self-contained slide deck (no external deps)
+   Keys: ←/→ space PgUp/PgDn Home/End · O overview · T theme
+         F fullscreen · N notes · ? help
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#070b14; --bg2:#0c1322; --panel:rgba(255,255,255,.045);
+  --panel2:rgba(255,255,255,.07); --border:rgba(255,255,255,.11);
+  --text:#e9eefb; --muted:#9db0cf; --faint:#6d7f9e;
+  --llm:#60a5fa; --vlm:#c084fc; --vla:#34d399; --accent:#fbbf24;
+  --danger:#fb7185; --ok:#4ade80;
+  --radius:16px; --radius-sm:10px;
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --shadow:0 24px 60px rgba(0,0,0,.45);
+}
+html[data-theme="light"]{
+  --bg:#f4f7fc; --bg2:#e9eef8; --panel:#ffffff; --panel2:#f2f5fb;
+  --border:rgba(15,23,42,.13); --text:#0d1729; --muted:#48586f; --faint:#7b8aa3;
+  --llm:#2563eb; --vlm:#7c3aed; --vla:#059669; --accent:#b45309;
+  --danger:#e11d48; --ok:#15803d; --shadow:0 18px 40px rgba(15,23,42,.12);
+}
+html,body{height:100%}
+body{margin:0; background:var(--bg); color:var(--text); font-family:var(--font);
+  line-height:1.5; -webkit-font-smoothing:antialiased; overflow:hidden}
+body::before{content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(900px 520px at 12% -8%, color-mix(in srgb,var(--llm) 22%,transparent), transparent 62%),
+    radial-gradient(820px 480px at 88% 6%, color-mix(in srgb,var(--vlm) 20%,transparent), transparent 60%),
+    radial-gradient(1000px 620px at 50% 112%, color-mix(in srgb,var(--vla) 16%,transparent), transparent 62%),
+    linear-gradient(180deg,var(--bg),var(--bg2));}
+html[data-theme="light"] body::before{opacity:.55}
+/* ---------- deck & slides ---------- */
+#deck{position:relative; z-index:1; height:100vh; height:100dvh; width:100%}
+.slide{position:absolute; inset:0; display:none;
+  flex-direction:column; gap:clamp(.5rem,1.1vh,.9rem);
+  padding:clamp(1.1rem,3.1vh,2.4rem) clamp(1.1rem,4.2vw,4.2rem) clamp(3.4rem,7vh,4.6rem);
+  overflow:auto; scrollbar-width:thin; animation:fade .28s ease both}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+.slide::-webkit-scrollbar{width:8px;height:8px}
+.slide::-webkit-scrollbar-thumb{background:var(--border); border-radius:8px}
+h1,h2,h3,h4{margin:0; line-height:1.15; letter-spacing:-.02em; font-weight:750}
+h1{font-size:clamp(1.9rem,4.6vw,3.5rem)}
+h2{font-size:clamp(1.3rem,2.8vw,2.1rem)}
+h3{font-size:clamp(.95rem,1.55vw,1.18rem)}
+p{margin:0}
+.lead{font-size:clamp(.9rem,1.45vw,1.18rem); color:var(--muted); max-width:80ch}
+.small{font-size:clamp(.72rem,1.05vw,.86rem)}
+.tiny{font-size:clamp(.64rem,.9vw,.75rem); color:var(--faint)}
+.mono{font-family:var(--mono)}
+strong{color:var(--text)}
+a{color:var(--llm); text-decoration:none; border-bottom:1px dashed color-mix(in srgb,var(--llm) 45%,transparent)}
+a:hover{border-bottom-style:solid}
+.eyebrow{display:inline-flex; align-items:center; gap:.45rem; width:max-content;
+  font-size:clamp(.6rem,.88vw,.73rem); font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--muted); padding:.3rem .7rem;
+  border:1px solid var(--border); border-radius:999px; background:var(--panel)}
+.eyebrow .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--accent)}
+.slide-head{display:flex; flex-direction:column; gap:.45rem; flex:0 0 auto}
+.slide-head .rule{height:3px; width:clamp(60px,9vw,130px); border-radius:3px;
+  background:linear-gradient(90deg,var(--llm),var(--vlm),var(--vla))}
+/* ---------- layout ---------- */
+.cols{display:grid; gap:clamp(.6rem,1.4vw,1.1rem); align-items:start}
+.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.c-2-1{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr)}
+.c-1-2{grid-template-columns:minmax(0,1fr) minmax(0,1.9fr)}
+@media (max-width:900px){.c2,.c3,.c4,.c-2-1,.c-1-2{grid-template-columns:minmax(0,1fr)}}
+.row{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
+.grow{flex:1 1 auto; min-width:0}
+.center{align-items:center; justify-content:center; text-align:center}
+.fill{flex:1 1 auto; min-height:0}
+/* ---------- cards ---------- */
+.card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:clamp(.65rem,1.4vw,1rem); display:flex; flex-direction:column; gap:.45rem; min-width:0}
+.card.tinted{background:var(--panel2)}
+.card h3{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
+.card .k{font-size:clamp(.64rem,.92vw,.76rem); color:var(--faint);
+  text-transform:uppercase; letter-spacing:.1em; font-weight:700}
+.card.llm{border-top:3px solid var(--llm)}
+.card.vlm{border-top:3px solid var(--vlm)}
+.card.vla{border-top:3px solid var(--vla)}
+.card.warn{border-top:3px solid var(--danger)}
+.card.gold{border-top:3px solid var(--accent)}
+.badge{display:inline-flex; align-items:center; gap:.3rem; padding:.16rem .5rem;
+  border-radius:999px; font-size:clamp(.58rem,.83vw,.71rem); font-weight:700;
+  border:1px solid var(--border); background:var(--panel2); color:var(--muted); white-space:nowrap}
+.badge.llm{color:var(--llm); border-color:color-mix(in srgb,var(--llm) 40%,transparent)}
+.badge.vlm{color:var(--vlm); border-color:color-mix(in srgb,var(--vlm) 40%,transparent)}
+.badge.vla{color:var(--vla); border-color:color-mix(in srgb,var(--vla) 40%,transparent)}
+.badge.gold{color:var(--accent); border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.badge.bad{color:var(--danger); border-color:color-mix(in srgb,var(--danger) 40%,transparent)}
+.badge.good{color:var(--ok); border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+ul,ol{margin:0; padding-left:1.05rem; display:flex; flex-direction:column; gap:.3rem}
+li{font-size:clamp(.74rem,1.1vw,.92rem); color:var(--muted)}
+li::marker{color:var(--faint)}
+li strong{color:var(--text)}
+ul.tight{gap:.18rem}
+ul.checks,ul.cross{list-style:none; padding-left:0}
+ul.checks li,ul.cross li{padding-left:1.3rem; position:relative}
+ul.checks li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--ok); font-weight:800; font-size:.85em}
+ul.cross li::before{content:"✕"; position:absolute; left:0; top:0; color:var(--danger); font-weight:800; font-size:.85em}
+/* ---------- tables ---------- */
+.tbl{width:100%; border-collapse:collapse; font-size:clamp(.64rem,.98vw,.83rem)}
+.tbl th,.tbl td{padding:.4rem .55rem; text-align:left; border-bottom:1px solid var(--border); vertical-align:top}
+.tbl thead th{font-size:clamp(.58rem,.83vw,.71rem); text-transform:uppercase; letter-spacing:.09em;
+  color:var(--faint); font-weight:750; position:sticky; top:0; background:var(--bg2); z-index:2}
+html[data-theme="light"] .tbl thead th{background:var(--panel2)}
+.tbl tbody tr:hover{background:var(--panel)}
+.tbl td.num,.tbl th.num{text-align:right; font-family:var(--mono); white-space:nowrap}
+.tbl .name{font-weight:700; color:var(--text)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow:auto; border:1px solid var(--border); border-radius:var(--radius-sm);
+  background:var(--panel); min-height:0}
+.scroll-y{overflow-y:auto; min-height:0}
+/* ---------- bar charts ---------- */
+.bars{display:flex; flex-direction:column; gap:.32rem}
+.bar-row{display:grid; grid-template-columns:minmax(84px,16ch) 1fr auto; gap:.55rem;
+  align-items:center; font-size:clamp(.64rem,.95vw,.8rem)}
+.bar-row .lbl{color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.bar-track{height:.6rem; border-radius:99px; background:var(--panel2);
+  border:1px solid var(--border); overflow:hidden}
+.bar-fill{height:100%; border-radius:99px; width:0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c,var(--llm)) 50%,transparent),var(--c,var(--llm)));
+  transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.slide.active .bar-fill{width:var(--w)}
+.bar-row .val{font-family:var(--mono); color:var(--text); font-weight:700; white-space:nowrap}
+/* ---------- kpi ---------- */
+.kpis{display:grid; gap:clamp(.45rem,1vw,.8rem);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,148px),1fr))}
+.kpi{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:.55rem .7rem; display:flex; flex-direction:column; gap:.1rem}
+.kpi .v{font-size:clamp(1rem,2vw,1.55rem); font-weight:800; font-family:var(--mono);
+  letter-spacing:-.03em; color:var(--text)}
+.kpi .v.llm{color:var(--llm)} .kpi .v.vlm{color:var(--vlm)}
+.kpi .v.vla{color:var(--vla)} .kpi .v.gold{color:var(--accent)} .kpi .v.bad{color:var(--danger)}
+.kpi .l{font-size:clamp(.58rem,.86vw,.72rem); color:var(--faint); line-height:1.3}
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--accent); background:var(--panel);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:.5rem .75rem;
+  font-size:clamp(.7rem,1.02vw,.86rem); color:var(--muted)}
+.note strong{color:var(--text)}
+.note.key{border-left-color:var(--vla)}
+.note.warn{border-left-color:var(--danger)}
+.note.llm{border-left-color:var(--llm)}
+.note.vlm{border-left-color:var(--vlm)}
+.quote{font-size:clamp(.82rem,1.35vw,1.02rem); color:var(--text); font-style:italic;
+  border-left:3px solid var(--vlm); padding-left:.8rem}
+/* ---------- pipeline ---------- */
+.flow{display:flex; align-items:stretch; gap:.35rem; flex-wrap:wrap}
+.node{flex:1 1 110px; min-width:0; border:1px solid var(--border); border-radius:var(--radius-sm);
+  background:var(--panel); padding:.45rem .6rem; display:flex; flex-direction:column; gap:.12rem}
+.node .t{font-size:clamp(.64rem,.93vw,.79rem); font-weight:750; color:var(--text)}
+.node .d{font-size:clamp(.58rem,.83vw,.71rem); color:var(--faint)}
+.node.in{border-color:color-mix(in srgb,var(--llm) 45%,transparent)}
+.node.proc{border-color:color-mix(in srgb,var(--vlm) 45%,transparent)}
+.node.out{border-color:color-mix(in srgb,var(--vla) 55%,transparent);
+  background:color-mix(in srgb,var(--vla) 10%,var(--panel))}
+.node.txt{border-color:color-mix(in srgb,var(--llm) 55%,transparent);
+  background:color-mix(in srgb,var(--llm) 10%,var(--panel))}
+.arrow{align-self:center; color:var(--faint); font-size:clamp(.78rem,1.25vw,1rem); flex:0 0 auto}
+/* ---------- timeline ---------- */
+.tl{display:flex; flex-direction:column; gap:.35rem}
+.tl-row{display:grid; grid-template-columns:minmax(50px,7ch) 1fr; gap:.6rem; align-items:start}
+.tl-yr{font-family:var(--mono); font-weight:800; color:var(--accent); font-size:clamp(.68rem,1.02vw,.84rem)}
+.tl-body{border-left:2px solid var(--border); padding-left:.7rem}
+.tl-body .ev{font-size:clamp(.68rem,1.02vw,.84rem); color:var(--muted)}
+.tl-body .ev strong{color:var(--text)}
+/* ---------- ladder (title) ---------- */
+.ladder{display:flex; gap:.5rem; flex-wrap:wrap; align-items:stretch}
+.step{flex:1 1 170px; border:1px solid var(--border); border-radius:var(--radius);
+  padding:.7rem .8rem; background:var(--panel); display:flex; flex-direction:column; gap:.28rem;
+  position:relative; overflow:hidden}
+.step::after{content:""; position:absolute; left:0; right:0; bottom:0; height:4px; background:var(--c)}
+.step .abbr{font-family:var(--mono); font-size:clamp(1.15rem,2.5vw,1.85rem); font-weight:800;
+  color:var(--c); letter-spacing:-.04em}
+.step .full{font-size:clamp(.66rem,.98vw,.8rem); color:var(--text); font-weight:650}
+.step .io{font-size:clamp(.6rem,.88vw,.72rem); color:var(--faint); font-family:var(--mono)}
+.step .desc{font-size:clamp(.66rem,.98vw,.79rem); color:var(--muted)}
+/* ---------- HUD ---------- */
+#hud{position:fixed; z-index:20; left:0; right:0; bottom:0; display:flex; align-items:center;
+  gap:.55rem; padding:.45rem clamp(.7rem,2.5vw,1.6rem);
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--bg) 90%,transparent) 45%);
+  font-size:clamp(.6rem,.88vw,.74rem); color:var(--faint)}
+#hud .sp{flex:1 1 auto}
+#hud button{font:inherit; color:var(--muted); background:var(--panel); border:1px solid var(--border);
+  border-radius:999px; padding:.26rem .62rem; cursor:pointer; transition:.15s}
+#hud button:hover{color:var(--text); border-color:color-mix(in srgb,var(--llm) 50%,transparent)}
+#counter{font-family:var(--mono); color:var(--muted); white-space:nowrap}
+#sectionTag{font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.1em;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:26vw}
+#progress{position:fixed; z-index:21; top:0; left:0; height:3px; width:0;
+  background:linear-gradient(90deg,var(--llm),var(--vlm),var(--vla)); transition:width .25s ease}
+#dots{display:flex; gap:.22rem; flex-wrap:wrap; max-width:34vw}
+#dots i{width:.4rem; height:.4rem; border-radius:50%; background:var(--border); cursor:pointer; transition:.15s}
+#dots i:hover{transform:scale(1.5)}
+#dots i.on{background:var(--accent); transform:scale(1.35)}
+@media (max-width:760px){#dots,#sectionTag{display:none}}
+/* ---------- overview ---------- */
+#deck.overview{height:100dvh; overflow:auto; display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(228px,1fr)); gap:.7rem;
+  padding:2.4rem clamp(.7rem,2.5vw,1.6rem) 3.4rem; align-content:start}
+#deck.overview .slide{position:relative; inset:auto; display:flex; height:186px;
+  border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden;
+  padding:.6rem; cursor:pointer; animation:none; background:var(--bg2)}
+#deck.overview .slide *{font-size:5.2px !important; line-height:1.35 !important}
+#deck.overview .slide h1{font-size:11px !important}
+#deck.overview .slide h2{font-size:9px !important}
+#deck.overview .slide::after{content:attr(data-idx); position:absolute; right:.35rem; bottom:.2rem;
+  font-family:var(--mono); font-size:8px; color:var(--faint)}
+#deck.overview .slide.sel{border-color:var(--accent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+#deck.overview .bar-fill{transition:none}
+/* ---------- notes & help ---------- */
+#notes{position:fixed; z-index:22; left:0; right:0; bottom:0; display:none; max-height:36vh;
+  overflow:auto; padding:.65rem clamp(.7rem,2.5vw,1.6rem) 2.8rem;
+  background:color-mix(in srgb,var(--bg) 96%,transparent); border-top:1px solid var(--border);
+  font-size:clamp(.7rem,1.02vw,.86rem); color:var(--muted)}
+body.notes-on #notes{display:block}
+#notes h4{color:var(--accent); font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; margin:0 0 .25rem}
+#help{position:fixed; z-index:30; inset:0; display:none; place-items:center;
+  background:color-mix(in srgb,var(--bg) 82%,transparent); backdrop-filter:blur(6px); padding:1rem}
+body.help-on #help{display:grid}
+#help .card{max-width:560px; width:100%; box-shadow:var(--shadow)}
+kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1px solid var(--border);
+  border-bottom-width:2px; border-radius:6px; padding:.1rem .33rem; color:var(--text)}
+/* ---------- print ---------- */
+@media print{
+  body{overflow:visible; background:#fff}
+  body::before,#hud,#progress,#notes,#help{display:none !important}
+  #deck{height:auto; overflow:visible}
+  .slide{position:relative; inset:auto; display:flex !important; height:auto; min-height:100vh;
+    page-break-after:always; break-after:page; animation:none; overflow:visible}
+  .bar-fill{width:var(--w) !important; transition:none}
+  a{color:#000; border:0}
+}
+@media (prefers-reduced-motion:reduce){.slide{animation:none} .bar-fill{transition:none}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<main id="deck">
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" data-section="Start" data-notes="Welcome. This deck answers one question: what actually separates an LLM, a VLM and a VLA — and what is the state of the art of each family as of October 2026. It is built as a companion to the Awesome Embodied AI &amp; Sim2Real collection in this repository.">
+  <div class="title-wrap">
+    <div class="row">
+      <span class="eyebrow"><span class="dot"></span> Awesome Embodied AI &amp; Sim2Real · Slide deck</span>
+      <span class="badge gold">State of the art · October 2026</span>
+    </div>
+    <h1>From words to actions<br><span style="color:var(--llm)">LLM</span> → <span style="color:var(--vlm)">VLM</span> → <span style="color:var(--vla)">VLA</span></h1>
+    <p class="lead">Three families of foundation models, one difference that matters: <strong>what comes out of the model</strong>. Text, understanding of a scene, or motor commands that move a robot — plus a researched survey of the frontier of each family.</p>
+    <div class="ladder">
+      <div class="step" style="--c:var(--llm)">
+        <span class="abbr">LLM</span>
+        <span class="full">Large Language Model</span>
+        <span class="io">text in → text out</span>
+        <span class="desc">Knows and reasons. Plans tasks, writes code, explains.</span>
+      </div>
+      <div class="arrow">＋👁</div>
+      <div class="step" style="--c:var(--vlm)">
+        <span class="abbr">VLM</span>
+        <span class="full">Vision-Language Model</span>
+        <span class="io">image + text in → text out</span>
+        <span class="desc">Sees and understands. Locates, describes, points.</span>
+      </div>
+      <div class="arrow">＋🦾</div>
+      <div class="step" style="--c:var(--vla)">
+        <span class="abbr">VLA</span>
+        <span class="full">Vision-Language-Action</span>
+        <span class="io">image + text + state in → actions out</span>
+        <span class="desc">Sees, understands <em>and acts</em>. Closes the loop with the physical world.</span>
+      </div>
+    </div>
+    <div class="row tiny">
+      <span>📅 Compiled 2026-10-19</span><span>·</span>
+      <span>🔗 Companion to <span class="mono">README.md</span>, <span class="mono">GLOSSARY.md</span>, <span class="mono">research-gaps.md</span></span><span>·</span>
+      <span>⌨ Press <kbd>?</kbd> for controls</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · ONE-SLIDE ANSWER ============ -->
+<section class="slide" data-section="Foundations" data-notes="If the audience remembers only one slide, make it this one. The families are nested: every VLA contains a VLM, and every VLM contains an LLM. What changes is the output head and the training data.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> The one-slide answer</span>
+    <h2>Nested capabilities, not competing technologies</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c3 fill">
+    <div class="card llm">
+      <h3><span class="badge llm">LLM</span></h3>
+      <p class="small"><strong>Large Language Model.</strong> Transformer trained on trillions of text tokens to predict the next token.</p>
+      <div class="k">Output</div>
+      <p class="small mono">"pick → place → verify"</p>
+      <div class="k">Role in robotics</div>
+      <ul class="tight">
+        <li><strong>Task planner</strong>: goal → ordered sub-goals</li>
+        <li><strong>Code generator</strong>: Code as Policies</li>
+        <li><strong>Symbolic bridge</strong>: NL → PDDL (LLM+P)</li>
+      </ul>
+      <div class="k">Blind spot</div>
+      <p class="small">No eyes, no physics, no closed loop. Cannot see the cup it is talking about.</p>
+    </div>
+    <div class="card vlm">
+      <h3><span class="badge vlm">VLM</span></h3>
+      <p class="small"><strong>Vision-Language Model.</strong> An LLM plus a vision encoder and alignment training on image–text pairs.</p>
+      <div class="k">Output</div>
+      <p class="small mono">"red cube at (0.42, 0.18, 0.05) m"</p>
+      <div class="k">Role in robotics</div>
+      <ul class="tight">
+        <li><strong>Semantic perception</strong>: what &amp; where</li>
+        <li><strong>Grounding / pointing</strong>: language → pixels → 3D</li>
+        <li><strong>Failure diagnosis</strong>: why did it fail?</li>
+      </ul>
+      <div class="k">Blind spot</div>
+      <p class="small">Still answers with <em>text</em>. Needs a classical controller (MoveIt 2, Nav2) to move.</p>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">VLA</span></h3>
+      <p class="small"><strong>Vision-Language-Action.</strong> A VLM backbone plus an <em>action head</em> trained on robot trajectories.</p>
+      <div class="k">Output</div>
+      <p class="small mono">Δx, Δy, Δz, Δrpy, gripper @ 10–50 Hz</p>
+      <div class="k">Role in robotics</div>
+      <ul class="tight">
+        <li><strong>End-to-end policy</strong>: perception → control</li>
+        <li><strong>Closed loop</strong>: re-decides every frame</li>
+        <li><strong>Cross-embodiment</strong>: one model, many robots</li>
+      </ul>
+      <div class="k">Blind spot</div>
+      <p class="small">Data-hungry (teleoperation), latency-bound, hard to certify and to audit.</p>
+    </div>
+  </div>
+  <div class="note key"><strong>Key difference:</strong> a VLM responds with <em>text</em>; a VLA responds with <em>physical actions</em>. An LLM responds with text and has never seen an image. Everything else — scale, pretraining, reasoning — is shared inheritance.</div>
+</section>
+<!-- ============ 3 · AGENDA ============ -->
+<section class="slide" data-section="Foundations" data-notes="Roadmap: foundations first, then one block per family with its own state of the art, then the comparison, and finally the frontier — data, benchmarks, trends and open problems.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Roadmap</span>
+    <h2>What this deck covers</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c3 fill">
+    <div class="card tinted">
+      <div class="k">Part 1 · Foundations</div>
+      <ul class="tight">
+        <li>The nested definition: output modality</li>
+        <li>Anatomy of each architecture</li>
+        <li>What each family <em>cannot</em> do</li>
+      </ul>
+    </div>
+    <div class="card llm">
+      <div class="k">Part 2 · LLM</div>
+      <ul class="tight">
+        <li>How they work, the reasoning era</li>
+        <li>SOTA Oct 2026: GPQA, SWE-bench, context</li>
+        <li>Role in robotics: planners &amp; code</li>
+      </ul>
+    </div>
+    <div class="card vlm">
+      <div class="k">Part 3 · VLM</div>
+      <ul class="tight">
+        <li>Vision encoder + projector + LLM</li>
+        <li>SOTA Oct 2026: MMMU leaderboard</li>
+        <li>Embodied Reasoning: ER 1.5 → ER 2</li>
+      </ul>
+    </div>
+    <div class="card vla">
+      <div class="k">Part 4 · VLA</div>
+      <ul class="tight">
+        <li>Action heads: tokens, flow, diffusion</li>
+        <li>SOTA: π*0.6, GR00T N1.7, Gemini Robotics 2</li>
+        <li>Latency wall, edge AI, open weights</li>
+      </ul>
+    </div>
+    <div class="card gold">
+      <div class="k">Part 5 · Choosing</div>
+      <ul class="tight">
+        <li>Side-by-side comparison matrix</li>
+        <li>Same task, three models</li>
+        <li>Hybrid stacks &amp; decision guide</li>
+      </ul>
+    </div>
+    <div class="card warn">
+      <div class="k">Part 6 · Frontier</div>
+      <ul class="tight">
+        <li>The data bottleneck &amp; scaling</li>
+        <li>Benchmarks and how to read them</li>
+        <li>2026 trends, gaps, takeaways</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">All numbers were collected in <strong>October 2026</strong> from primary sources (papers, model cards, official lab blogs) and public leaderboards. Sources are listed on the last slide; vendor-reported numbers are flagged as such.</div>
+</section>
+<!-- ============ 4 · ANATOMY ============ -->
+<section class="slide" data-section="Foundations" data-notes="Walk the three pipelines. The first two stages are identical in VLM and VLA; the divergence is the head at the end plus the data used to train it. A VLA is literally a VLM with a different output layer, post-trained on robot trajectories.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot"></span> Anatomy</span>
+    <h2>Same trunk, different head</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols fill" style="gap:.7rem">
+    <div class="card llm">
+      <h3><span class="badge llm">LLM</span> text → text</h3>
+      <div class="flow">
+        <div class="node in"><span class="t">Text prompt</span><span class="d">tokens</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Tokenizer</span><span class="d">BPE</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Decoder-only Transformer</span><span class="d">self-attention stack</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Reasoning trace</span><span class="d">test-time compute</span></div>
+        <div class="arrow">→</div>
+        <div class="node txt"><span class="t">Text out</span><span class="d">plan · code · answer</span></div>
+      </div>
+      <p class="tiny">Training: next-token prediction on web text → SFT → RLHF → RL for reasoning. Objective <span class="mono">max P(tokenₜ | token&lt;ₜ)</span>.</p>
+    </div>
+    <div class="card vlm">
+      <h3><span class="badge vlm">VLM</span> image + text → text</h3>
+      <div class="flow">
+        <div class="node in"><span class="t">Image(s)</span><span class="d">RGB frames</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Vision encoder</span><span class="d">ViT / SigLIP patches</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Projector</span><span class="d">visual → LLM space</span></div>
+        <div class="arrow">＋</div>
+        <div class="node proc"><span class="t">LLM backbone</span><span class="d">fused context</span></div>
+        <div class="arrow">→</div>
+        <div class="node txt"><span class="t">Text out</span><span class="d">caption · box · point</span></div>
+      </div>
+      <p class="tiny">Training: image–text contrastive alignment + caption/VQA, then instruction tuning. Adds <em>grounding</em>: language ↔ pixels. It can output coordinates — but still as text.</p>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">VLA</span> image + text + state → actions</h3>
+      <div class="flow">
+        <div class="node in"><span class="t">Cameras + instruction</span><span class="d">+ proprioception</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">VLM backbone</span><span class="d">internet-scale pretrained</span></div>
+        <div class="arrow">→</div>
+        <div class="node proc"><span class="t">Action head</span><span class="d">AR tokens · flow · diffusion</span></div>
+        <div class="arrow">→</div>
+        <div class="node out"><span class="t">Action chunk</span><span class="d">k future steps</span></div>
+        <div class="arrow">→</div>
+        <div class="node out"><span class="t">Robot</span><span class="d">joints / EEF / gripper</span></div>
+      </div>
+      <p class="tiny">Post-training on robot trajectories (imitation, optionally + RL). Two extra ingredients vs. a VLM: an <strong>action representation</strong> and a <strong>control-frequency</strong> budget in Hz.</p>
+    </div>
+  </div>
+  <div class="note key">Working definition used in the field (Reuss, <em>State of VLA Research at ICLR 2026</em>): a VLA is a model with a <strong>vision-language internet-scale pretrained backbone</strong>, subsequently trained to emit control commands. Without that pretraining it is "only" a multimodal policy.</div>
+</section>
+<!-- ============ 5 · LLM 1 ============ -->
+<section class="slide" data-section="LLM" data-notes="LLMs are the mature layer. Stress the shift from 'chat' to 'agent': reasoning models spend compute at inference time, tool calling is standard, and context windows now reach millions of tokens. Then stress the limits for robotics — the reason VLAs exist.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--llm)"></span> Part 2 · Large Language Models</span>
+    <h2><span style="color:var(--llm)">LLM</span> — the reasoning layer</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card llm">
+        <h3>What changed by 2026</h3>
+        <ul class="tight">
+          <li><strong>Reasoning models are the default.</strong> A model can spend thousands of "thinking" tokens before answering; test-time compute is now a tunable knob, not a curiosity.</li>
+          <li><strong>Agentic behaviour.</strong> Tool calling, multi-step loops, self-verification and long-horizon coding agents (SWE-bench-style) are the headline benchmark, not chat quality.</li>
+          <li><strong>Context at million-token scale.</strong> 1M-token windows are common in the top tier; the largest published window is <strong>2M tokens</strong> (Grok-4.1 Fast).</li>
+          <li><strong>Open weights closed the gap.</strong> Kimi K3, GLM-5.3 and Qwen3.8 Max sit inside the frontier band on reasoning benchmarks at a fraction of the price.</li>
+          <li><strong>Price collapse.</strong> Frontier-class reasoning is now available from <strong>$0.02 / 1M input tokens</strong> (Gemma 4 E4B) to ~$12 / 1M for the top closed models.</li>
+        </ul>
+      </div>
+      <div class="card tinted">
+        <h3>What an LLM is <em>not</em></h3>
+        <ul class="cross">
+          <li><strong>Not grounded.</strong> It has never observed the scene; it reasons about a description of it.</li>
+          <li><strong>Not physical.</strong> No dynamics, no friction, no contact — it cannot predict whether a grasp will slip.</li>
+          <li><strong>Not real-time.</strong> Seconds per answer (more with thinking) vs. milliseconds required by a control loop.</li>
+          <li><strong>Not closed-loop.</strong> It emits a plan once; it does not re-decide at 30 Hz as the world changes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card gold">
+        <div class="k">Mental model</div>
+        <p class="small">An LLM is a <strong>symbolic engine</strong>: it manipulates descriptions of the world extremely well, and it is the best available <em>task decomposer</em> and <em>code writer</em> for robotics.</p>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v llm">96.0%</span><span class="l">best GPQA Diamond score (GPT-6 Astra)</span></div>
+        <div class="kpi"><span class="v llm">95.0%</span><span class="l">best SWE-bench Verified (Claude Fable 5)</span></div>
+        <div class="kpi"><span class="v llm">2M</span><span class="l">largest context window in tokens</span></div>
+        <div class="kpi"><span class="v llm">408</span><span class="l">canonical models tracked on public leaderboards</span></div>
+      </div>
+      <div class="note llm">In this repository's vocabulary (<span class="mono">GLOSSARY.md</span>): an LLM in robotics is used for <strong>task planning</strong> and <strong>control-code generation</strong> — never for direct actuation.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ 6 · LLM SOTA ============ -->
+<section class="slide" data-section="LLM" data-notes="Composite leaderboard, October 2026. The important reading: leadership is per axis, not global. Reasoning: GPT-6 Astra on GPQA. Coding: Claude Opus 5 / Fable 5. Open weights: Kimi K3 at 93.5% GPQA is inside the frontier band at a fraction of the cost.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--llm)"></span> Part 2 · LLM state of the art</span>
+    <h2>Frontier LLMs — October 2026</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="tbl-wrap scroll-y">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>Model</th><th>Lab</th><th class="num">Composite</th>
+          <th class="num">Reason.</th><th class="num">Coding</th><th class="num">Context</th>
+          <th class="num">$/1M</th><th>Weights</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="name">Claude Opus 5.5</td><td>Anthropic</td><td class="num">60.7</td><td class="num">59.4</td><td class="num">50.5</td><td class="num">1.0M</td><td class="num">4.76</td><td>closed</td></tr>
+          <tr><td>2</td><td class="name">Claude Sonnet 5.5</td><td>Anthropic</td><td class="num">58.7</td><td class="num">57.2</td><td class="num">48.3</td><td class="num">1.0M</td><td class="num">2.38</td><td>closed</td></tr>
+          <tr><td>3</td><td class="name">GPT-6 Astra</td><td>OpenAI</td><td class="num">58.5</td><td class="num">57.3</td><td class="num">47.1</td><td class="num">1.1M</td><td class="num">11.90</td><td>closed</td></tr>
+          <tr><td>4</td><td class="name">Gemini 4 Argon</td><td>Google</td><td class="num">55.4</td><td class="num">53.3</td><td class="num">43.0</td><td class="num">—</td><td class="num">—</td><td>closed</td></tr>
+          <tr><td>6</td><td class="name">Claude Opus 5</td><td>Anthropic</td><td class="num">54.1</td><td class="num">54.2</td><td class="num">39.2</td><td class="num">1.0M</td><td class="num">5.95</td><td>closed</td></tr>
+          <tr><td>7</td><td class="name">GPT-6.1 Sol</td><td>OpenAI</td><td class="num">54.0</td><td class="num">51.7</td><td class="num">39.7</td><td class="num">1.1M</td><td class="num">2.38</td><td>closed</td></tr>
+          <tr><td>9</td><td class="name">GPT-5.6 Sol</td><td>OpenAI</td><td class="num">53.5</td><td class="num">52.7</td><td class="num">43.3</td><td class="num">1.1M</td><td class="num">6.19</td><td>closed</td></tr>
+          <tr><td>10</td><td class="name">Claude Fable 5</td><td>Anthropic</td><td class="num">53.3</td><td class="num">51.1</td><td class="num">43.3</td><td class="num">1.0M</td><td class="num">11.90</td><td>closed</td></tr>
+          <tr><td>11</td><td class="name">Muse Spark 1.3</td><td>Meta</td><td class="num">52.4</td><td class="num">51.1</td><td class="num">38.5</td><td class="num">1.0M</td><td class="num">1.39</td><td>closed</td></tr>
+          <tr><td>12</td><td class="name">Kimi K3</td><td>Moonshot AI</td><td class="num">52.2</td><td class="num">51.4</td><td class="num">40.8</td><td class="num">1.0M</td><td class="num">3.39</td><td><span class="badge good">open</span></td></tr>
+          <tr><td>14</td><td class="name">GLM-5.3</td><td>Zhipu AI</td><td class="num">51.3</td><td class="num">51.0</td><td class="num">40.1</td><td class="num">1.0M</td><td class="num">1.33</td><td><span class="badge good">open</span></td></tr>
+          <tr><td>15</td><td class="name">Qwen3.8 Max</td><td>Alibaba / Qwen</td><td class="num">51.0</td><td class="num">49.9</td><td class="num">37.6</td><td class="num">1.0M</td><td class="num">1.81</td><td><span class="badge good">open</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card tinted">
+        <div class="k">Leader per axis</div>
+        <ul class="tight">
+          <li><strong>GPQA Diamond:</strong> GPT-6 Astra — <span class="mono">96.0%</span></li>
+          <li><strong>SWE-bench Verified:</strong> Claude Fable 5 — <span class="mono">95.0%</span></li>
+          <li><strong>AIME 2025:</strong> GPT-5.2 Pro — <span class="mono">100.0%</span></li>
+          <li><strong>Coding arena:</strong> Claude Opus 5</li>
+          <li><strong>Context window:</strong> Grok-4.1 Fast — <span class="mono">2.0M</span> tokens</li>
+          <li><strong>Open weights:</strong> Kimi K3 — <span class="mono">93.5%</span> GPQA</li>
+          <li><strong>Cheapest frontier:</strong> Gemma 4 E4B — <span class="mono">$0.02/1M</span> input</li>
+        </ul>
+      </div>
+      <div class="card llm">
+        <div class="k">Composite score · top of the table</div>
+        <div class="bars">
+          <div class="bar-row"><span class="lbl">Opus 5.5</span><span class="bar-track"><span class="bar-fill" style="--w:100%;--c:var(--llm)"></span></span><span class="val">60.7</span></div>
+          <div class="bar-row"><span class="lbl">Sonnet 5.5</span><span class="bar-track"><span class="bar-fill" style="--w:96.7%;--c:var(--llm)"></span></span><span class="val">58.7</span></div>
+          <div class="bar-row"><span class="lbl">GPT-6 Astra</span><span class="bar-track"><span class="bar-fill" style="--w:96.4%;--c:var(--llm)"></span></span><span class="val">58.5</span></div>
+          <div class="bar-row"><span class="lbl">Gemini 4 Argon</span><span class="bar-track"><span class="bar-fill" style="--w:91.3%;--c:var(--llm)"></span></span><span class="val">55.4</span></div>
+          <div class="bar-row"><span class="lbl">Kimi K3 · open</span><span class="bar-track"><span class="bar-fill" style="--w:86%;--c:var(--vla)"></span></span><span class="val">52.2</span></div>
+          <div class="bar-row"><span class="lbl">GLM-5.3 · open</span><span class="bar-track"><span class="bar-fill" style="--w:84.5%;--c:var(--vla)"></span></span><span class="val">51.3</span></div>
+        </div>
+      </div>
+      <div class="note warn"><strong>Read with care:</strong> composite scores aggregate heterogeneous benchmarks plus live API metrics — a market map, not a scientific ranking. No model wins every axis.</div>
+    </div>
+  </div>
+  <p class="tiny">Source: llm-stats.com LLM Leaderboard, consulted 2026-10-19 (408 canonical models tracked; ranks 5 and 13 omitted). Composite = "LLM Stats Score", an aggregate of public benchmarks plus live API speed and pricing.</p>
+</section>
+<!-- ============ 7 · LLM IN ROBOTICS ============ -->
+<section class="slide" data-section="LLM" data-notes="This is the LLM's real job in a robot stack: the top of the hierarchy. SayCan grounds language in affordances, Code as Policies emits executable code, LLM+P delegates to a classical planner. Note that in all of them the low level stays classical — MoveIt 2, Nav2, PID.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--llm)"></span> Part 2 · LLMs in a robot stack</span>
+    <h2>The planner, not the pilot</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Pattern</th><th>Representative work</th><th>What the LLM emits</th><th>What executes it</th></tr></thead>
+          <tbody>
+            <tr><td class="name">Affordance-grounded planning</td><td>SayCan (2022)</td><td>scored sub-goal sequence</td><td>skill library + value functions</td></tr>
+            <tr><td class="name">Code generation</td><td>Code as Policies (2022)</td><td>Python calling perception &amp; motion APIs</td><td>interpreter → MoveIt 2 / APIs</td></tr>
+            <tr><td class="name">Symbolic hand-off</td><td>LLM+P (2023)</td><td>PDDL problem file</td><td>classical planner (optimal)</td></tr>
+            <tr><td class="name">3D scene graphs</td><td>SayPlan (2023)</td><td>grounded plan over a scene graph</td><td>robot task executor</td></tr>
+            <tr><td class="name">Closed-loop commentary</td><td>Inner Monologue (2022)</td><td>re-planning from success/failure text</td><td>low-level policies</td></tr>
+            <tr><td class="name">Spatial value maps</td><td>VoxPoser (2023)</td><td>3D affordance + constraint maps</td><td>trajectory optimiser</td></tr>
+            <tr><td class="name">Personalisation</td><td>TidyBot (2023)</td><td>user-specific tidy rules</td><td>mobile manipulator stack</td></tr>
+            <tr><td class="name">Edge NLP on the robot</td><td>Quantized LLMs in ROS 2 (2025)</td><td>instructions parsed on-device</td><td>ROS 2 nodes, no cloud</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note llm"><strong>The constant:</strong> in every one of these patterns the LLM sits <em>above</em> the control loop. The 50–500 Hz servo, the collision checking and the force limits are still classical, deterministic software.</div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card llm">
+        <h3>Why it works</h3>
+        <ul class="checks">
+          <li>Open-vocabulary task decomposition, zero shot</li>
+          <li>Common-sense priors humans take for granted</li>
+          <li>Explains its own plan — auditable dialogue</li>
+          <li>Re-plans from text feedback cheaply</li>
+        </ul>
+      </div>
+      <div class="card warn">
+        <h3>Where it breaks</h3>
+        <ul class="cross">
+          <li>Hallucinated capabilities: plans skills the robot does not have</li>
+          <li>No metric grounding: "the red cup" → which pixel, which 3D point?</li>
+          <li>Latency: seconds per decision, worse with reasoning enabled</li>
+          <li>Uncertainty is poorly calibrated for safety-critical gating</li>
+        </ul>
+      </div>
+      <div class="note"><strong>2026 status:</strong> closed-loop LLM planners now ship with uncertainty-based failure detection (see <span class="mono">2405.xxxx</span> UQ for planners in <span class="mono">papers.csv</span>), but <em>recovery</em> — not just detection — remains an open gap in <span class="mono">research-gaps.md</span>.</div>
+    </div>
+  </div>
+</section>
+<!--SLIDES-->
+</main>
+<div id="notes"><h4>Speaker notes</h4><div id="notesBody"></div></div>
+<div id="hud">
+  <span id="sectionTag">—</span>
+  <span id="counter">1 / 1</span>
+  <div id="dots" aria-label="Slide navigation"></div>
+  <span class="sp"></span>
+  <button id="btnPrev" title="Previous slide (←)">← Prev</button>
+  <button id="btnNext" title="Next slide (→)">Next →</button>
+  <button id="btnOv" title="Overview grid (O)">Overview</button>
+  <button id="btnNotes" title="Speaker notes (N)">Notes</button>
+  <button id="btnTheme" title="Toggle theme (T)">Theme</button>
+  <button id="btnFs" title="Fullscreen (F)">⛶</button>
+  <button id="btnHelp" title="Keyboard help (?)">?</button>
+</div>
+<div id="help">
+  <div class="card">
+    <h3>Keyboard &amp; touch controls</h3>
+    <ul>
+      <li><kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> <kbd>PgUp</kbd> <kbd>PgDn</kbd> — navigate slides</li>
+      <li><kbd>Home</kbd> / <kbd>End</kbd> — first / last slide</li>
+      <li><kbd>O</kbd> — overview grid (click a thumbnail to jump)</li>
+      <li><kbd>N</kbd> — speaker notes · <kbd>T</kbd> — dark/light theme</li>
+      <li><kbd>F</kbd> — fullscreen · <kbd>?</kbd> — this help · <kbd>Esc</kbd> — close overlays</li>
+      <li>Swipe left/right on touch · click dots in the bottom bar</li>
+      <li>Permalinks: <span class="mono">#/12</span> · Ctrl+P exports one slide per page</li>
+    </ul>
+  </div>
+</div>
+<script>
+//JS
+</script>
+</body>
+</html>
