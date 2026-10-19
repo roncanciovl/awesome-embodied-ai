@@ -612,6 +612,381 @@ kbd{font-family:var(--mono); font-size:.78em; background:var(--panel2); border:1
     </div>
   </div>
 </section>
+<!-- ============ 8 · VLM 1 ============ -->
+<section class="slide" data-section="VLM" data-notes="A VLM is an LLM that has been given eyes. The critical nuance for robotics: it can output coordinates and boxes, but as text — it does not close the loop. That single fact is the boundary between a VLM and a VLA.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vlm)"></span> Part 3 · Vision-Language Models</span>
+    <h2><span style="color:var(--vlm)">VLM</span> — the perception layer</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card vlm">
+        <h3>What a VLM adds over an LLM</h3>
+        <ul class="tight">
+          <li><strong>Grounding.</strong> "The mug left of the laptop" resolves to a specific region — bounding boxes, points, masks.</li>
+          <li><strong>Scene semantics.</strong> Objects, states (open/closed, full/empty), relations, occlusion, human activity.</li>
+          <li><strong>Document &amp; OCR fluency.</strong> Labels, screens, warning signs, serial numbers — useful in industrial cells.</li>
+          <li><strong>Spatial reasoning.</strong> Depth ordering, relative position, free-space for placement; still the weakest axis in 2026.</li>
+          <li><strong>Visual verification.</strong> "Did the grasp succeed?" answered from a post-action image.</li>
+        </ul>
+      </div>
+      <div class="card tinted">
+        <h3>Three ways to build one</h3>
+        <ul class="tight">
+          <li><strong>Encoder + projector + frozen/finetuned LLM</strong> — the classic recipe (LLaVA-style, Florence-2, Qwen-VL family).</li>
+          <li><strong>Natively multimodal</strong> — vision tokens are part of pretraining from the start (Gemini, GPT-5.x, Claude).</li>
+          <li><strong>Contrastive dual-encoder</strong> — CLIP-style embeddings; no generation, but excellent retrieval and zero-shot classification.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card warn">
+        <h3>What a VLM still cannot do</h3>
+        <ul class="cross">
+          <li><strong>Emit motor commands.</strong> Output is text; a controller must convert it into motion.</li>
+          <li><strong>Guarantee metric accuracy.</strong> Pointing is good, not metrology; depth is inferred, not measured.</li>
+          <li><strong>Feel contact.</strong> Force, slip and friction are invisible to cameras — the case for tactile (V-T-L-A).</li>
+          <li><strong>Run at control rate.</strong> Even "flash" tiers answer in hundreds of milliseconds.</li>
+        </ul>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v vlm">83.8%</span><span class="l">best MMMU score (Gemini 3.1 Pro Preview)</span></div>
+        <div class="kpi"><span class="v vlm">61.8%</span><span class="l">average MMMU across 87 evaluated models</span></div>
+        <div class="kpi"><span class="v vlm">87</span><span class="l">models with a published MMMU number</span></div>
+      </div>
+      <div class="note vlm">In <span class="mono">burger_delivery</span> (this repo's case study) <span class="mono">gemini-robotics</span> is used for <em>semantic scene processing</em>: that is the <strong>ER / VLM mode</strong> — MoveIt 2 still executes the motion. Not end-to-end VLA control.</div>
+    </div>
+  </div>
+</section>
+<!-- ============ 9 · VLM SOTA ============ -->
+<section class="slide" data-section="VLM" data-notes="MMMU is the standard expert-level multimodal benchmark. Two readings matter: the ceiling moved only a few points in a year, and cheap models now sit within a few points of the frontier — which is exactly what makes on-robot VLM perception viable.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vlm)"></span> Part 3 · VLM state of the art</span>
+    <h2>Multimodal frontier — MMMU, October 2026</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card vlm">
+        <div class="k">MMMU (expert multimodal understanding) · top of 87 models</div>
+        <div class="bars">
+          <div class="bar-row"><span class="lbl">Gemini 3.1 Pro Prev.</span><span class="bar-track"><span class="bar-fill" style="--w:100%;--c:var(--vlm)"></span></span><span class="val">83.8</span></div>
+          <div class="bar-row"><span class="lbl">GPT-5.5</span><span class="bar-track"><span class="bar-fill" style="--w:99%;--c:var(--vlm)"></span></span><span class="val">83.0</span></div>
+          <div class="bar-row"><span class="lbl">Gemini 3.5 Flash</span><span class="bar-track"><span class="bar-fill" style="--w:99%;--c:var(--vlm)"></span></span><span class="val">83.0</span></div>
+          <div class="bar-row"><span class="lbl">Gemini 3.6 Flash</span><span class="bar-track"><span class="bar-fill" style="--w:98.9%;--c:var(--vlm)"></span></span><span class="val">82.9</span></div>
+          <div class="bar-row"><span class="lbl">Qwen3.8 Max</span><span class="bar-track"><span class="bar-fill" style="--w:97.4%;--c:var(--vla)"></span></span><span class="val">81.6</span></div>
+          <div class="bar-row"><span class="lbl">GLM-5.3 Flash</span><span class="bar-track"><span class="bar-fill" style="--w:97.1%;--c:var(--vla)"></span></span><span class="val">81.4</span></div>
+          <div class="bar-row"><span class="lbl">Kimi K2.5 Thinking</span><span class="bar-track"><span class="bar-fill" style="--w:94.6%;--c:var(--vla)"></span></span><span class="val">79.3</span></div>
+          <div class="bar-row"><span class="lbl">MiniMax M3</span><span class="bar-track"><span class="bar-fill" style="--w:94.6%;--c:var(--vla)"></span></span><span class="val">79.3</span></div>
+          <div class="bar-row"><span class="lbl">GPT-5</span><span class="bar-track"><span class="bar-fill" style="--w:94.4%;--c:var(--vlm)"></span></span><span class="val">79.1</span></div>
+          <div class="bar-row"><span class="lbl">Qwen3.5-122B-A10B</span><span class="bar-track"><span class="bar-fill" style="--w:93.2%;--c:var(--vla)"></span></span><span class="val">78.1</span></div>
+          <div class="bar-row"><span class="lbl">Qwen3.5-27B</span><span class="bar-track"><span class="bar-fill" style="--w:92.6%;--c:var(--vla)"></span></span><span class="val">77.6</span></div>
+          <div class="bar-row"><span class="lbl">Claude Opus 4.6</span><span class="bar-track"><span class="bar-fill" style="--w:92.2%;--c:var(--vlm)"></span></span><span class="val">77.3</span></div>
+          <div class="bar-row"><span class="lbl">Qwen3-VL 235B</span><span class="bar-track"><span class="bar-fill" style="--w:81.4%;--c:var(--vla)"></span></span><span class="val">68.2</span></div>
+        </div>
+        <p class="tiny">Green bars = open-weight or low-cost tiers. Average across the 87 evaluated models: <strong>61.8</strong> (σ = 20.4).</p>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card tinted">
+        <div class="k">What the table says</div>
+        <ul class="tight">
+          <li><strong>Google holds the ceiling</strong> on MMMU, and its <em>Flash</em> tier matches its <em>Pro</em> tier — perception has commoditised.</li>
+          <li><strong>A 27B open model at 77.6</strong> (Qwen3.5-27B, $0.195 / 1M input) is within ~6 points of the best proprietary model.</li>
+          <li><strong>Cost per point collapsed:</strong> MiniMax M3 reaches 79.3 at $0.224 / 1M input.</li>
+          <li><strong>MMMU is saturating</strong> as a discriminator — the field is moving to embodied and agentic evaluations.</li>
+        </ul>
+      </div>
+      <div class="card vlm">
+        <div class="k">Why this matters for robotics</div>
+        <ul class="checks">
+          <li>Near-frontier perception now fits on a workstation GPU → local ROS 2 nodes</li>
+          <li>Open weights allow fine-tuning on your cell, your camera pose, your SKUs</li>
+          <li>Quantisation (INT8/INT4) brings these tiers to Jetson-class edge devices</li>
+        </ul>
+      </div>
+      <div class="note warn"><strong>Caveat:</strong> MMMU measures <em>understanding of static expert images</em>. It does not measure pointing accuracy, metric depth, or closed-loop usefulness — see the next slide for embodied-reasoning benchmarks.</div>
+    </div>
+  </div>
+  <p class="tiny">Source: MMMU leaderboard (LayerLens / Artificial Analysis data via pricepertoken.com), as of 2026-10-18; pricing from OpenRouter. Scores are val-split percentages.</p>
+</section>
+<!-- ============ 10 · EMBODIED REASONING ============ -->
+<section class="slide" data-section="VLM" data-notes="This is the bridge slide: a special class of VLM built for robots. Gemini Robotics-ER 1.5 does not move anything — it points, plans and orchestrates. Note the honest detail: it loses to GPT-5 on ERQA and to its own predecessor on Point-Bench, and turning thinking off costs six aggregate points.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vlm)"></span> Part 3 · VLMs built for robots</span>
+    <h2>Embodied Reasoning (ER): the VLM that orchestrates a VLA</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Embodied-reasoning benchmark</th><th class="num">GR-ER 1.5</th><th class="num">GPT-5</th><th class="num">Gemini 2.5 Pro</th><th>Reads as</th></tr></thead>
+          <tbody>
+            <tr><td class="name">ER Score (aggregate, 15 benchmarks)</td><td class="num">59.6</td><td class="num">51.1</td><td class="num">51.7</td><td>clear ER 1.5 lead</td></tr>
+            <tr><td class="name">Overall average (15 benchmarks)</td><td class="num">62.8</td><td class="num">60.6</td><td class="num">59.3</td><td>narrow lead</td></tr>
+            <tr><td class="name">Where2Place (free-space pointing)</td><td class="num">59.0</td><td class="num">37.0</td><td class="num">37.0</td><td>+22 points</td></tr>
+            <tr><td class="name">RefSpatial (spatial referring)</td><td class="num">48.5</td><td class="num">23.5</td><td class="num">—</td><td>2× the baseline</td></tr>
+            <tr><td class="name">Point-Bench (pointing)</td><td class="num">71.6</td><td class="num">43.6</td><td class="num">—</td><td>ER 1.0 was better: 75.7</td></tr>
+            <tr><td class="name">ERQA (400 MCQ, thinking on)</td><td class="num">54.8</td><td class="num">59.0</td><td class="num">56.0</td><td>GPT-5 still leads</td></tr>
+            <tr><td class="name">ERQA (thinking off)</td><td class="num">47.0</td><td class="num">—</td><td class="num">—</td><td>thinking is load-bearing</td></tr>
+            <tr><td class="name">Overall average (thinking off)</td><td class="num">56.7</td><td class="num">—</td><td class="num">—</td><td>−6.1 points</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note vlm"><strong>Architecture note:</strong> GR-ER 1.5 has <em>no action head</em>. It outputs text, points, plans, progress estimates and tool calls (including web search), and acts as the <strong>orchestrator</strong> for Gemini Robotics 1.5 — the VLA that actually moves the robot. This two-model split is the canonical 2025–2026 agentic pattern.</div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card vlm">
+        <div class="k">Family timeline</div>
+        <div class="tl">
+          <div class="tl-row"><span class="tl-yr">Mar 25</span><div class="tl-body"><div class="ev"><strong>Gemini Robotics + ER</strong> — first VLA/ER split</div></div></div>
+          <div class="tl-row"><span class="tl-yr">Jun 25</span><div class="tl-body"><div class="ev"><strong>On-Device</strong> — quantised, runs on the robot</div></div></div>
+          <div class="tl-row"><span class="tl-yr">Sep 25</span><div class="tl-body"><div class="ev"><strong>1.5 + ER 1.5</strong> — Motion Transfer, "think before acting"; ER 1.5 first exposed via public API</div></div></div>
+          <div class="tl-row"><span class="tl-yr">Apr 26</span><div class="tl-body"><div class="ev"><strong>ER 1.6</strong> (now deprecating)</div></div></div>
+          <div class="tl-row"><span class="tl-yr">Jul 26</span><div class="tl-body"><div class="ev"><strong>Gemini Robotics 2 + ER 2 + On-Device 2</strong> — ER 2 built on Gemini 3.5 Flash</div></div></div>
+        </div>
+      </div>
+      <div class="card tinted">
+        <div class="k">Open alternatives you can self-host</div>
+        <ul class="tight">
+          <li><strong>Florence-2 ROS 2 wrapper</strong> (2026, <span class="mono">2604.01179</span>): multi-mode local VLM inference, <span class="mono">&lt;50 ms</span>, native ROS 2 node</li>
+          <li><strong>Onboard VLM multi-robot control</strong> (2026, <span class="mono">Rachwał et al.</span>)</li>
+          <li><strong>Qwen3.5-27B / GLM-4.6V class</strong> open weights on a workstation GPU</li>
+          <li><strong>Cosmos-Reason2-2B</strong> (NVIDIA) — physics-aware VLM, now the GR00T N1.7 backbone</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <p class="tiny">Source: Gemini Robotics 1.5 technical report, Table 19 (arXiv:2510.03342); baselines accessed 1–20 Sep 2025 with default thinking budgets, no tool use. ER 2 / Robotics 2 announced July 2026 (DeepMind blog).</p>
+</section>
+<!-- ============ 11 · VLA 1 ============ -->
+<section class="slide" data-section="VLA" data-notes="The core of the deck. A VLA = VLM backbone + action head + robot data. The three design decisions that define every VLA: action representation, decoding strategy, and control frequency. Everything else follows from those.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vla)"></span> Part 4 · Vision-Language-Action</span>
+    <h2><span style="color:var(--vla)">VLA</span> — the layer that moves the robot</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c3 fill">
+    <div class="card vla">
+      <h3><span class="badge vla">1</span> Action representation</h3>
+      <ul class="tight">
+        <li><strong>Discrete tokens</strong> — bin each dimension into 256 buckets and reuse the LLM vocabulary (RT-2, OpenVLA). Simple, but slow and lossy.</li>
+        <li><strong>Continuous chunks</strong> — regress k future steps directly (OpenVLA-OFT with L1, Diffusion Policy, ACT). Fast, precise.</li>
+        <li><strong>Diffusion / flow matching</strong> — denoise a trajectory from noise conditioned on the VLM embedding (π0, π0.5, GR00T N1.x, RDT). Multimodal action distributions.</li>
+        <li><strong>Discrete diffusion</strong> — the 2026 research favourite: denoise <em>tokens</em>, not vectors.</li>
+        <li><strong>Latent actions</strong> — learn an action space from video, no teleoperation labels needed.</li>
+      </ul>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">2</span> Decoding &amp; frequency</h3>
+      <ul class="tight">
+        <li><strong>Action chunking</strong>: predict k steps per inference, execute open-loop for a few of them → amortises latency.</li>
+        <li><strong>Parallel decoding</strong>: emit the whole chunk at once instead of token by token (26× faster action generation in OFT).</li>
+        <li><strong>Dual-system</strong>: a slow VLM (System 2, ~1–5 Hz) steers a fast reactive policy (System 1, 20–50 Hz) — GR00T N1.x, Gemini Robotics 1.5.</li>
+        <li><strong>Async inference</strong>: the policy keeps acting on the previous chunk while the next one is computed (SmolVLA).</li>
+      </ul>
+      <div class="k">Budget</div>
+      <p class="small">&lt;10 ms reactive · 10–50 ms standard control · 50–200 ms acceptable planning · &gt;200 ms only non-urgent decisions.</p>
+    </div>
+    <div class="card vla">
+      <h3><span class="badge vla">3</span> Where the knowledge comes from</h3>
+      <ul class="tight">
+        <li><strong>Internet-scale VLM pretraining</strong> — inherited semantics and reasoning (the definitional ingredient).</li>
+        <li><strong>Cross-embodiment robot data</strong> — Open X-Embodiment (22+ robots), AgiBot World, lab-collected teleoperation.</li>
+        <li><strong>Human video</strong> — GR00T N1.7 uses <strong>20,000 h</strong> of egocentric human video (EgoScale) plus simulator data.</li>
+        <li><strong>Motion Transfer</strong> — Gemini Robotics 1.5 maps heterogeneous embodiments into one representation space.</li>
+        <li><strong>RL from the robot's own experience</strong> — π*0.6 / RECAP (2025-11).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note key"><strong>Three consequences of adding "A":</strong> (1) the metric becomes <em>success rate</em> on a physical task, not perplexity; (2) latency becomes a <em>design constraint</em>, not an afterthought; (3) the training data becomes <em>scarce and expensive</em> — you cannot scrape robot trajectories from the internet.</div>
+</section>
+<!-- ============ 12 · VLA SOTA ============ -->
+<section class="slide" data-section="VLA" data-notes="Flagship VLAs. Three things to point at: LIBERO is saturated around 97% for every serious model, so it no longer discriminates; the real differences are generalisation, latency and licence; and the frontier has moved from 'picks up a cup' to 'works a shift' — espresso for 18 hours, 59 boxes in a real factory.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vla)"></span> Part 4 · VLA state of the art</span>
+    <h2>Flagship VLA models — 2025 → 2026</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="tbl-wrap scroll-y fill">
+    <table class="tbl">
+      <thead><tr>
+        <th>Model</th><th>Lab · release</th><th>Architecture</th><th class="num">Params</th>
+        <th>Action head</th><th class="num">LIBERO</th><th class="num">Latency</th><th>Access</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="name">π*0.6 <span class="badge gold">RL</span></td><td>Physical Intelligence · Nov 2025</td>
+          <td>VLA + RECAP (advantage-conditioned RL on experience &amp; corrections)</td><td class="num">~3B</td>
+          <td>flow matching + offline RL + SFT</td><td class="num">&gt;90% per stage on real tasks</td><td class="num">—</td>
+          <td>closed model, public paper</td>
+        </tr>
+        <tr>
+          <td class="name">π0.5</td><td>Physical Intelligence · Apr 2025</td>
+          <td>2B VLM (PaliGemma) + 300M action expert; co-training on ~400 h mobile manipulation</td><td class="num">~3B</td>
+          <td>flow matching, 50 Hz control</td><td class="num">96.9–97.5</td><td class="num">485 ms</td>
+          <td><span class="badge good">openpi</span> (Gemma terms)</td>
+        </tr>
+        <tr>
+          <td class="name">GR00T N1.7</td><td>NVIDIA · 2026 (GA)</td>
+          <td>System 2 / System 1; Cosmos-Reason2-2B backbone (Qwen3-VL); 20,000 h EgoScale human video + Isaac sim</td><td class="num">~3B<br>(~40M tuned)</td>
+          <td>diffusion DiT (16 layers), action horizon 40, relative EEF space</td><td class="num">97.0</td><td class="num">152 ms</td>
+          <td><span class="badge good">NVIDIA Open Model License</span></td>
+        </tr>
+        <tr>
+          <td class="name">Gemini Robotics 1.5</td><td>Google DeepMind · Sep 2025</td>
+          <td>Multi-embodiment VLA + <strong>Motion Transfer</strong>; interleaves actions with natural-language reasoning ("think before acting")</td><td class="num">n/p</td>
+          <td>VLA action decoder + ER 1.5 orchestrator</td><td class="num">—</td><td class="num">n/p</td>
+          <td>closed · partner programme</td>
+        </tr>
+        <tr>
+          <td class="name">Gemini Robotics 2</td><td>Google DeepMind · Jul 2026</td>
+          <td><strong>Whole-body</strong> policy: legs, torso, arms and multi-finger hands in one model; ER 2 on Gemini 3.5 Flash</td><td class="num">n/p</td>
+          <td>whole-body motor control, 22-DoF hands</td><td class="num">—</td><td class="num">n/p</td>
+          <td>closed · waitlist</td>
+        </tr>
+        <tr>
+          <td class="name">OpenVLA-OFT</td><td>Stanford · Feb 2025</td>
+          <td>7B OpenVLA + Optimized Fine-Tuning recipe (parallel decoding, chunking, continuous actions, L1)</td><td class="num">7B</td>
+          <td>L1 regression, 26× faster generation, 3× lower latency</td><td class="num">97.1</td><td class="num">~16 GB VRAM infer.</td>
+          <td><span class="badge good">open source</span></td>
+        </tr>
+        <tr>
+          <td class="name">GR00T N1.5</td><td>NVIDIA · Jun 2025</td>
+          <td>Eagle-2 VLM + SigLIP2 + T5; the reference 2025 open humanoid VLA</td><td class="num">~3B</td>
+          <td>flow-matching DiT</td><td class="num">≈97</td><td class="num">165 ms</td>
+          <td><span class="badge bad">non-commercial</span></td>
+        </tr>
+        <tr>
+          <td class="name">RT-2 → Octo → OpenVLA</td><td>2023 – 2024</td>
+          <td>The lineage: web knowledge → control tokens (RT-2), open generalist policy (Octo), open 7B VLA (OpenVLA)</td><td class="num">7B</td>
+          <td>discrete action tokens, autoregressive</td><td class="num">—</td><td class="num">~100 ms</td>
+          <td><span class="badge good">open source</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cols c2">
+    <div class="note key"><strong>LIBERO is saturated.</strong> Four independent models land between <strong>96.85 and 97.5</strong> on the same four suites. A half-point difference there is not a reason to choose a model — generalisation, latency, licence and support are.</div>
+    <div class="note warn"><strong>"n/p" = not published.</strong> Closed labs report first-party internal success rates with no technical report and no external replication. Treat those numbers as evidence, not as a ranking.</div>
+  </div>
+</section>
+<!-- ============ 13 · RECAP ============ -->
+<section class="slide" data-section="VLA" data-notes="The most important 2025-2026 result for practitioners: imitation learning alone gets you to ~50% success; getting to 100% at human throughput needs RL on the robot's own experience. RECAP = demonstrations + coaching + practice, exactly how a human learns a trade.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vla)"></span> Part 4 · The reliability jump</span>
+    <h2>π*0.6 &amp; RECAP: imitation is not enough</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card vla">
+        <h3>RECAP — RL with Experience &amp; Corrections via Advantage-conditioned Policies</h3>
+        <div class="flow">
+          <div class="node in"><span class="t">1 · Demonstrations</span><span class="d">teleoperation → defines new behaviour</span></div>
+          <div class="arrow">→</div>
+          <div class="node proc"><span class="t">2 · Offline RL</span><span class="d">value pretraining on all collected data</span></div>
+          <div class="arrow">→</div>
+          <div class="node proc"><span class="t">3 · Corrections</span><span class="d">an expert coaches mid-episode</span></div>
+          <div class="arrow">→</div>
+          <div class="node out"><span class="t">4 · Autonomous experience</span><span class="d">the robot practises; advantage conditions the policy</span></div>
+        </div>
+        <p class="small">The policy is conditioned on an <strong>advantage estimate</strong>, so at deployment it can be told "behave like the best version of yourself" — and it keeps improving as it accumulates its own rollouts.</p>
+      </div>
+      <div class="cols c3">
+        <div class="card tinted">
+          <div class="k">Espresso</div>
+          <p class="small">Made drinks continuously from <strong>5:30 am to 11:30 pm</strong> — long horizon, pouring liquids, waiting for the grinder, cleaning the machine with a cloth.</p>
+        </div>
+        <div class="card tinted">
+          <div class="k">Laundry</div>
+          <p class="small">Folded <strong>50 novel items</strong> in a <em>new home</em>, for hours without interruption — different garments, different fabric dynamics.</p>
+        </div>
+        <div class="card tinted">
+          <div class="k">Factory boxes</div>
+          <p class="small">Assembled and labelled <strong>59 boxes</strong> used for real chocolate packaging, handling stuck blanks and re-folding mistakes.</p>
+        </div>
+      </div>
+      <div class="note key">Reported effect of RECAP over the π0.6 pretrain baseline: <strong>more than 2× throughput</strong> on the hardest tasks and <strong>failure rates reduced 2× or more</strong>, with <strong>&gt;90% success</strong> on each stage of the espresso task. Ablations show offline RL alone, or offline RL + SFT, do not reach the same level.</div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="kpis">
+        <div class="kpi"><span class="v vla">&gt;2×</span><span class="l">throughput on the hardest tasks</span></div>
+        <div class="kpi"><span class="v vla">≥2×</span><span class="l">reduction in failure rate</span></div>
+        <div class="kpi"><span class="v vla">18 h</span><span class="l">uninterrupted espresso service</span></div>
+        <div class="kpi"><span class="v vla">59</span><span class="l">real packaging boxes assembled</span></div>
+      </div>
+      <div class="card warn">
+        <div class="k">Why imitation stalls</div>
+        <p class="small">A behaviour-cloned policy inherits the demonstrator's distribution. Its own small errors push it <em>out of distribution</em>, where it has no supervision — compounding failure. This is the classic covariate-shift problem; RECAP fixes it by training on the policy's own states.</p>
+      </div>
+      <div class="card gold">
+        <div class="k">The strategic claim</div>
+        <p class="small">Demonstrations <em>define</em> behaviour, coaching <em>refines</em> strategy, autonomous experience <em>perfects</em> it — and experience may become the largest data source, potentially enabling <strong>superhuman</strong> speed. This is the 2026 answer to the data bottleneck.</p>
+      </div>
+    </div>
+  </div>
+  <p class="tiny">Source: Physical Intelligence, "π*0.6: a VLA that Learns from Experience", published 2025-11-17 (physicalintelligence.company/blog/pistar06).</p>
+</section>
+<!-- ============ 14 · WHOLE BODY ============ -->
+<section class="slide" data-section="VLA" data-notes="The July 2026 frontier: one policy for legs, torso, arms and 22-DoF fingers. But read the failures — they are the most informative numbers in the deck. Unscrewing 92% vs screwing 36% shows dexterity is still asymmetric; floor pick 45.7% shows balance-critical manipulation is unsolved.">
+  <div class="slide-head">
+    <span class="eyebrow"><span class="dot" style="background:var(--vla)"></span> Part 4 · Whole-body intelligence</span>
+    <h2>Gemini Robotics 2 (Jul 2026) — and what still fails</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="cols c-2-1 fill">
+    <div class="cols" style="gap:.6rem">
+      <div class="card vla">
+        <h3>First-party success rates</h3>
+        <div class="bars">
+          <div class="bar-row"><span class="lbl">Unscrew bulb</span><span class="bar-track"><span class="bar-fill" style="--w:92%;--c:var(--ok)"></span></span><span class="val">92.0%</span></div>
+          <div class="bar-row"><span class="lbl">Precise insertion</span><span class="bar-track"><span class="bar-fill" style="--w:89.6%;--c:var(--ok)"></span></span><span class="val">89.6%</span></div>
+          <div class="bar-row"><span class="lbl">Diverse tool kitting</span><span class="bar-track"><span class="bar-fill" style="--w:78.9%;--c:var(--vla)"></span></span><span class="val">78.9%</span></div>
+          <div class="bar-row"><span class="lbl">Pick from shelf</span><span class="bar-track"><span class="bar-fill" style="--w:76.3%;--c:var(--vla)"></span></span><span class="val">76.3%</span></div>
+          <div class="bar-row"><span class="lbl">Tie a trash bag</span><span class="bar-track"><span class="bar-fill" style="--w:44%;--c:var(--accent)"></span></span><span class="val">44.0%</span></div>
+          <div class="bar-row"><span class="lbl">Pick from floor</span><span class="bar-track"><span class="bar-fill" style="--w:45.7%;--c:var(--accent)"></span></span><span class="val">45.7%</span></div>
+          <div class="bar-row"><span class="lbl">Screw bulb</span><span class="bar-track"><span class="bar-fill" style="--w:36%;--c:var(--danger)"></span></span><span class="val">36.0%</span></div>
+        </div>
+        <p class="tiny">Apollo 2 humanoid (Inspire / SharpaWave 22-DoF hands) and Franka Duo. Google DeepMind internal evaluations, no technical report published, no external replication.</p>
+      </div>
+      <div class="cols c2">
+        <div class="card tinted">
+          <div class="k">What is new</div>
+          <ul class="checks">
+            <li><strong>One policy for the whole body</strong>: legs, torso, arms, multi-finger hands</li>
+            <li><strong>22-DoF five-finger hands</strong> — beyond the parallel grippers of earlier generations</li>
+            <li><strong>Embodiment range</strong>: from SO-101 tabletop arms to humanoids</li>
+            <li>Demonstrated walking to a table, picking a watering can, stepping to a shelf and placing it</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <div class="k">What the failures reveal</div>
+          <ul class="cross">
+            <li><strong>Asymmetric dexterity:</strong> unscrewing 92% vs screwing 36% — the "easy" direction is learned, the precision one is not</li>
+            <li><strong>Balance-critical manipulation:</strong> floor pick 45.7% because it requires squatting and balance recovery</li>
+            <li><strong>Deformables &amp; bimanual coordination:</strong> trash bag 44%</li>
+            <li>Closed weights, waitlist access, no published params / latency / control frequency</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="cols" style="gap:.6rem">
+      <div class="card gold">
+        <div class="k">The honest reading</div>
+        <p class="small">Whole-body control is now <em>demonstrated</em>, not <em>solved</em>. The gap between 92% and 36% on the same object, in opposite directions, is the clearest available measure of where dexterity stands in 2026.</p>
+      </div>
+      <div class="card tinted">
+        <div class="k">Partners named</div>
+        <p class="small">Apptronik (Apollo 2), Franka (Duo), Agile Robots — plus Trossen / Dexmate / SO-101 class hardware for the low end of the embodiment range.</p>
+      </div>
+      <div class="note">Compare with the open ecosystem: NVIDIA GR00T N1.7 ships whole-upper-body humanoid control under an open licence with published benchmarks — the openness gap, not the capability gap, is what most teams should weigh.</div>
+    </div>
+  </div>
+  <p class="tiny">Source: DeepMind blog "Gemini Robotics 2 brings whole-body intelligence to robots" (Jul 2026) and model pages, as catalogued by ay-robots.com (entry checked 2026-08-11).</p>
+</section>
 <!--SLIDES-->
 </main>
 <div id="notes"><h4>Speaker notes</h4><div id="notesBody"></div></div>
