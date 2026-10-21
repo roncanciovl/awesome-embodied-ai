@@ -386,7 +386,23 @@ import json; items = json.loads(resp.text)   # guaranteed shape
 
 ## 7️⃣ Recipe book — copy, adapt, ship
 
-All recipes target `gemini-robotics-er-2-preview` unless noted. Runnable versions of R1, R5 and R7 are in [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py) (`--dry-run` prints exact payloads without an API key).
+All recipes target `gemini-robotics-er-2-preview` unless noted. Runnable versions of R1, R5, R6 and R7 are in [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py):
+
+```bash
+# offline — prints the exact request payloads and simulates the robot; no API key
+python scripts/gemini_er_demo.py --dry-run --mode point --image scene.jpg
+python scripts/gemini_er_demo.py --dry-run --mode orchestrate
+python scripts/gemini_er_demo.py --dry-run --mode success --task "put the spoon in the compost bin"
+
+# live — needs: pip install google-genai && export GEMINI_API_KEY=... (restricted key)
+python scripts/gemini_er_demo.py --mode point --image scene.jpg --query "the red block" \
+       --thinking low --width 1280 --height 720 --fx 900 --fy 900 --cx 640 --cy 360 --plane-z 0.5
+python scripts/gemini_er_demo.py --mode orchestrate --image scene.jpg \
+       --task "Pick up the blue block and place it in the orange bowl. Use the robot API." \
+       --max-steps 15
+```
+
+It implements the safeguards from this guide: pinned model string, hard timeout, `max_steps`, argument validation with a rejecting safety layer, honest function results, and per-call token/cost metering.
 
 ### R1 · Grounded multi-step plan with points
 
@@ -736,4 +752,422 @@ p_base = T_base_cam @ np.append(p_cam, 1.0)      # 4x4 homogeneous
 
 > 📌 **Design rule:** make ER's output **semantic targets**, not trajectories. "Point at the red block" → you compute the grasp pose with your own planner (collision-aware, force-limited, certifiable). Let the model choose *what*, let your stack decide *how*.
 
-<!--GUIDE9-->
+---
+
+## 9️⃣ ROS 2 integration
+
+This is the gap flagged in [`research-gaps.md`](research-gaps.md) → *Multimodal perception*: there is **no ROS 2 standard for VLMs**, and only one published wrapper (Florence-2, `2604.01179`). The design below is what a production-grade ER node looks like.
+
+### 9.1 Rate separation — where ER belongs
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ 0.2–1 Hz  │ /er_planner   (Gemini Robotics-ER, cloud)                  │
+│           │   task decomposition, pointing, success detection          │
+├────────────────────────────────────────────────────────────────────────┤
+│ 10–50 Hz  │ /vla_policy   (SmolVLA · π0.5 · GR00T N1.7)  or MoveIt 2   │
+│           │   skill execution, closed loop                             │
+├────────────────────────────────────────────────────────────────────────┤
+│ 100–1 kHz │ safety layer  (deterministic, no ML)                       │
+│           │   force envelope, workspace limits, e-stop, ISO/TS 15066   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+ER must **never** sit inside the servo loop. It publishes *intent*; something local converts intent into motion.
+
+### 9.2 Interfaces
+
+```text
+# interfaces/srv/ErPointAt.srv
+string query                 # "the red block"
+string frame_id              # target frame, e.g. "kinova_base"
+uint8  max_points
+---
+bool   ok
+string label
+geometry_msgs/PointStamped point   # already transformed into frame_id
+float32 confidence
+string raw_text                    # kept for audit / debugging
+```
+
+Topic layout (raw model output published separately, for observability):
+
+| Topic | Type | QoS |
+|---|---|---|
+| `/er/points` | `geometry_msgs/PointStamped` (or custom array) | RELIABLE, `transient_local`, depth 1 |
+| `/er/plan` | `std_msgs/String` (JSON) | RELIABLE, `transient_local` |
+| `/er/success` | `std_msgs/Bool` | RELIABLE, depth 1 |
+| `/er/diagnostics` | custom (latency, tokens, cost, error code) | BEST_EFFORT, depth 10 |
+
+Use `qos_profile_sensor_data` (best-effort, depth 1) for camera inputs so a dropped frame never stalls the queue, and `transient_local` for plans so a late-joining executor still receives the last one.
+
+### 9.3 Node skeleton (`rclpy`)
+
+```python
+#!/usr/bin/env python3
+"""Gemini Robotics-ER node: semantic perception & orchestration for ROS 2."""
+import re, threading, time
+import cv2, rclpy
+from rclpy.node import Node
+from rclpy.qos import (qos_profile_sensor_data, QoSProfile,
+                       ReliabilityPolicy, DurabilityPolicy)
+from cv_bridge import CvBridge
+from google import genai
+from google.genai import types
+from sensor_msgs.msg import CameraInfo, Image
+from geometry_msgs.msg import PointStamped
+from example_interfaces.srv import SetBool      # stand-in for your ErPointAt.srv
+
+MODEL = "gemini-robotics-er-2-preview"
+TIMEOUT_MS = 8_000        # hard ceiling: never block a robot on a cloud call
+POINT_RE = re.compile(
+    r'"point"\s*:\s*\[\s*(\d+)\s*,\s*(\d+)\s*\][^}]*?"label"\s*:\s*"([^"]+)"')
+
+
+class GeminiErNode(Node):
+    def __init__(self):
+        super().__init__("gemini_er_node")
+        self.declare_parameter("thinking_level", "low")
+        self.declare_parameter("target_frame", "kinova_base")
+        self.thinking = self.get_parameter("thinking_level").value
+        self.frame = self.get_parameter("target_frame").value
+        self.client, self.bridge = genai.Client(), CvBridge()
+        self._img, self._lock = None, threading.Lock()
+
+        self.create_subscription(Image, "/camera/color/image_raw",
+                                 self._on_image, qos_profile_sensor_data)
+        pub_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                             durability=DurabilityPolicy.TRANSIENT_LOCAL)
+        self.pub = self.create_publisher(PointStamped, "/er/points", pub_qos)
+        self.create_service(SetBool, "/er/point_at", self._on_request)
+        self.get_logger().info(f"{MODEL} ready (thinking={self.thinking})")
+
+    def _on_image(self, msg):
+        with self._lock:
+            self._img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+
+    def _on_request(self, req, resp):
+        with self._lock:
+            frame = None if self._img is None else self._img.copy()
+        if frame is None:
+            resp.success, resp.message = False, "no frame received yet"
+            return resp
+        t0 = time.perf_counter()
+        try:
+            h, w = frame.shape[:2]
+            if max(h, w) > 1024:                    # keep the upload small
+                s = 1024.0 / max(h, w)
+                frame = cv2.resize(frame, (int(w * s), int(h * s)))
+            ok, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            text = self._call_er(buf.tobytes(), "the red block")
+            pts = [(int(y), int(x), l) for y, x, l in POINT_RE.findall(text)]
+            for y, x, _ in pts:
+                self.pub.publish(self._to_point_stamped(x, y, frame.shape))
+            resp.success = bool(pts)
+            resp.message = f"{len(pts)} point(s): " + ", ".join(l for _, _, l in pts)
+        except Exception as exc:                     # noqa: BLE001
+            self.get_logger().error(f"ER call failed: {exc}")
+            resp.success, resp.message = False, str(exc)
+        finally:
+            self.get_logger().info(f"ER latency {time.perf_counter() - t0:.2f}s")
+        return resp
+
+    def _call_er(self, jpg_bytes, query):
+        prompt = (f'Point to "{query}". Reply ONLY JSON: '
+                  '[{"point":[y,x],"label":"..."}] normalized 0-1000.')
+        r = self.client.models.generate_content(
+            model=MODEL,
+            contents=[types.Part.from_bytes(data=jpg_bytes, mime_type="image/jpeg"),
+                      prompt],
+            config=types.GenerateContentConfig(
+                thinking_config=types.ThinkingConfig(thinking_level=self.thinking),
+                http_options=types.HttpOptions(timeout=TIMEOUT_MS)))
+        return r.text
+
+    def _to_point_stamped(self, x_norm, y_norm, shape):
+        """0-1000 → pixel → 3D. Wire your depth/plane solve in here (see §8)."""
+        h, w = shape[:2]
+        ps = PointStamped()
+        ps.header.stamp = self.get_clock().now().to_msg()
+        ps.header.frame_id = self.frame
+        ps.point.x = (x_norm / 1000.0) * w / 1000.0     # placeholder: metres
+        ps.point.y = (y_norm / 1000.0) * h / 1000.0
+        return ps
+
+
+def main():
+    rclpy.init(); node = GeminiErNode()
+    try:
+        rclpy.spin(node)          # use MultiThreadedExecutor in production
+    finally:
+        node.destroy_node(); rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+> ⚠️ **Before this touches hardware:** (1) use a `MultiThreadedExecutor` with a `ReentrantCallbackGroup` so a slow cloud call never blocks your 30 Hz control subscriptions; (2) replace the placeholder maths in `_to_point_stamped` with the real pixel→camera→base chain from §8; (3) add retry with jittered backoff on 429/5xx.
+
+### 9.4 Latency budget (measure, don't guess)
+
+| Stage | Typical | Note |
+|---|---|---|
+| Frame grab + encode | 10–40 ms | JPEG q80 at ≤1024 px — never PNG 4K |
+| **Upload** | **50–800 ms** | usually the dominant term; depends on your uplink |
+| ER inference, `thinking=low` | 300–900 ms | pointing, detection |
+| ER inference, `thinking=high` | 1–4 s | counting, estimation, multi-step planning |
+| Parse + transform + publish | <5 ms | |
+
+Corollaries: call ER **only at decision points**, not per frame; cache the plan; and always keep a **local fallback** for when the call times out.
+
+### 9.5 Graceful degradation ladder
+
+1. **ER healthy** → semantic pointing + orchestration.
+2. **ER slow / failed** → last cached plan + local detector (Florence-2 or YOLO on GPU).
+3. **No network** → classical pipeline only (AprilTags + MoveIt 2); the robot continues in an explicitly announced reduced mode.
+4. **Any anomaly** → the deterministic safety layer stops motion. ER is never in that path.
+
+---
+
+## 🔟 Orchestrating a VLA with ER
+
+This is the architecture Google ships: **ER 1.5/2 thinks, Gemini Robotics (VLA) acts.** The tech report shows the ER-orchestrated agent beating the same agent driven by off-the-shelf Gemini 2.5 Flash on every tested case — same tools, same VLA, better brain.
+
+### Three ways to build it with hardware you can actually buy
+
+| Pattern | Orchestrator | Executor | When |
+|---|---|---|---|
+| **A · Google stack** | Gemini Robotics-ER 2 | Gemini Robotics 1.5/2 (Trusted Tester) | You have partner access; ALOHA 2 / Apollo / Franka |
+| **B · ER + open VLA** ⭐ | Gemini Robotics-ER 2 (cloud) | π0.5 via `openpi`, GR00T N1.7, or SmolVLA via LeRobot | **The practical 2026 recipe** for a lab or pilot cell |
+| **C · ER + classical** | Gemini Robotics-ER 2 | MoveIt 2 + your skill library | Auditability and certification matter most; this is what `burger_delivery` does |
+
+### Pattern B wiring (ER → your VLA)
+
+Declare your VLA as a single tool and let ER sequence it — mirroring the Safari SDK's `run_instruction_until_done`:
+
+```python
+vla_tool = {
+    "type": "function",
+    "name": "run_instruction_until_done",
+    "description": "Send an ATOMIC natural-language instruction to the robot policy "
+                   "(pick/place/push/open/close/fold). Blocks until the policy "
+                   "reports completion or timeout. One instruction at a time.",
+    "parameters": {"type": "object", "properties": {
+        "instruction": {"type": "string",
+                        "description": "specific and atomic, e.g. 'put the red dice "
+                                       "in the green tray'"}},
+        "required": ["instruction"]},
+}
+```
+
+Your side of the call runs the VLA (LeRobot/openpi inference server, or a ROS 2 action), then answers with a **truthful** result — ideally from a second ER call using the R7 success-detection prompt on the post-action video:
+
+```python
+{"status": "success"}                             # or
+{"status": "failed", "reason": "grasp slipped, object on floor at [y,x]"}
+```
+
+**Instruction-writing rules from Google's own ALOHA system prompt** (they matter more than any hyper-parameter):
+
+- Instructions must be **atomic**: a single low-level action — grab/hold, pick, place, move, push/pull, open/close gripper, wipe, stack, zip, fold.
+- Instructions must name a **specific object and a concrete destination**: "place the red cup on the white bowl", not "clean up".
+- **Decompose complex requests yourself** in the system prompt; prefer *not* to ask the user for clarification.
+- **One function at a time** (`ONLY RUN A SINGLE FUNCTION AT A TIME`).
+- Always **cancel an in-flight instruction** if the user asks to stop, reset, or switch tasks.
+- If the request is already satisfied by visual reasoning, **announce it and stop** — don't act for the sake of acting.
+
+### Why this beats a monolithic VLA (and when it doesn't)
+
+| | ER + VLA (hierarchical) | Monolithic VLA |
+|---|---|---|
+| Long-horizon tasks | ✅ explicit decomposition, re-planning | ⚠️ degrades with horizon |
+| Interpretability | ✅ text plan + tool-call log | ❌ opaque action chunks |
+| External knowledge (local rules, manuals) | ✅ Search / URL / file-search tools | ❌ none |
+| Success detection & recovery | ✅ built-in loop | ⚠️ needs an external monitor (SAFE, UQ-VLA) |
+| Latency per skill | ⚠️ +300 ms–4 s per decision point | ✅ no cloud hop |
+| Offline operation | ❌ | ✅ (with on-device VLA) |
+
+Rule of thumb: **hierarchical when the task is long and semantic; monolithic when it is short and reactive.** Most real cells want both, at different rates (§9.1).
+
+---
+
+## 1️⃣1️⃣ Safety, limits and failure modes
+
+### What Google built in
+
+| Mechanism | What it does |
+|---|---|
+| **Semantic safety** | understands and refuses plans for dangerous or harmful tasks; evaluated against the **ASIMOV benchmark** (including ASIMOV-2.0 physical-safety splits: latent risk, risk severity, action effect, activated risk) |
+| **Physical-constraint awareness** | significantly better at recognising when a request would violate a constraint **you define** — payload capacity, workspace limits |
+| **Auto-red-teaming (ART)** | Attacker / Target / AutoRater game: prompt attacks, scene attacks (corrupted images), environment attacks (moving obstacles). Used to find ER hallucinations — e.g. asking it to point at an entity that does not exist |
+| **Safety Council + responsible deployment** | standard DeepMind review for the Robotics family |
+
+### What Google explicitly says is *your* job
+
+> *"These model-level safeguards are not a substitute for the rigorous safety engineering required for physical systems. We advocate a 'Swiss cheese approach' to safety, where multiple layers of protection work together. Developers are responsible for implementing standard robotics safety best practices, including emergency stops, collision avoidance, and thorough risk assessments."*
+
+Concretely, your layers:
+
+1. **Deterministic safety PLC / controller** — force and speed limits per ISO/TS 15066, protected workspace, e-stop. No ML in this path.
+2. **Argument validation** — bounds, joint limits, payload, singularity and reachability checks before executing any ER-requested motion.
+3. **Allowlisted tools** — ER can only call functions you expose; no arbitrary code execution against your robot.
+4. **Human-in-the-loop gates** for irreversible or contact-rich steps.
+5. **Audit trail** — persist prompt, image hash, raw model text, tool calls, arguments, results, latency and cost. This is what makes a post-incident analysis possible (and it is the same "tactile/telemetry as evidence" argument in [`tactile-sota.md`](tactile-sota.md) §8).
+
+### Known failure modes and mitigations
+
+| Failure mode | Evidence / mechanism | Mitigation |
+|---|---|---|
+| **Hallucinated pointing** — points at an object that isn't there | discovered by Google's own auto-red-teaming on ER | ask for a confidence + reason; verify with a second view or a local detector before acting |
+| **Reasoning collapse when thinking is off** | ERQA 54.8 → 47.0; aggregate 62.8 → 56.7 | never set budget to 0; use `low` instead |
+| **Regression vs predecessor on a specific skill** | Point-Bench: ER 1.0 **75.7** > ER 1.5 **71.6** | benchmark *your* skill per model version before migrating (§13) |
+| **Loses on general embodied QA** | ERQA: GPT-5 **59.0** > ER 1.5 **54.8** | don't assume "robotics model" wins every multimodal task |
+| **Network latency / outage** | cloud-only | timeout, cached plan, degradation ladder (§9.5) |
+| **Runaway agentic loop** | model keeps calling tools | `max_steps`, per-call cost budget, kill switch |
+| **Prompt injection via the scene** | text in the image ("ignore previous instructions…") can steer a VLM | strip/ignore scene text for safety-critical prompts; validate every tool argument; keep the allowlist narrow |
+| **Context overflow on ER 2** | input limit dropped 1,048,576 → **131,072** vs ER 1.5 | trim video, downscale images, summarise history |
+| **Preview instability** | all ER models are `-preview` | pin the model string, keep a rollback path, isolate the client behind your own interface |
+| **Privacy / GDPR** | robot video may capture identifiable people | data minimisation *before* the call: crop to the task, blur faces, drop audio, don't retain raw streams; note free-tier content **is** used to improve Google products |
+
+---
+
+## 1️⃣2️⃣ Migration & deprecations
+
+| Change | Date | Action |
+|---|---|---|
+| ER 1.5 GA in the Gemini API | Sep 2025 | first broadly available Gemini Robotics model |
+| ER 1.6 released | Dec 2025 (upd. Apr 2026) | added caching, computer use, file search, Maps grounding, Batch |
+| **ER 1.6 deprecated** | **2026-08-31** | move to ER 2 |
+| ER 2 + ER 2 Streaming + On-Device 2 + Gemini Robotics 2 | Jul 2026 | ER 2 built on Gemini 3.5 Flash |
+| ER 1.5 deprecation | *planned soon* (flagged on the model card) | do not start new work here |
+| Generate Content API → **Interactions API** | breaking changes May 2026 | robotics doc pages for spatial/agentic are marked *Legacy*; orchestration docs already use `client.interactions` |
+
+**Migration is a behaviour change, not a string replacement.** When you swap `er-1.5-preview` → `er-2-preview`:
+
+1. Inventory every hardcoded model ID (config, notebooks, CI, containers).
+2. Re-run your **representative** images/videos — your camera placement, your lighting, your SKUs.
+3. Measure: task completion, pointing error in mm, false tool calls, plan validity.
+4. Compare **standard vs streaming** latency for your call pattern.
+5. Verify real token cost with real prompts (thinking tokens are billed as output).
+6. Keep a rollback path and isolate the Gemini client behind an interface so a future model change never reaches robot-control code directly.
+7. Re-check the context window (1M → 131k) — this silently breaks long-video workflows.
+
+---
+
+## 1️⃣3️⃣ Evaluate ER on *your* cell before you trust it
+
+Published benchmarks say nothing about your camera placement, lighting or SKUs. A one-day harness:
+
+| Axis | Test | Metric | Suggested pass bar |
+|---|---|---|---|
+| **Pointing** | 30 images × 5 known objects, ground-truth pixel centres | mean pixel error, % within 20 px | ≥90% within 20 px at your resolution |
+| **Metric accuracy** | after the §8 transform, verify with calipers | mean absolute error in mm | ≤3 mm for grasp-critical parts |
+| **Free-space** | 20 cluttered scenes, human-annotated valid placements | % valid | ≥85% |
+| **Plan validity** | 20 tasks; is every step executable and correctly ordered? | % valid plans, hallucinated skills | ≥90% valid, **0** hallucinated skills |
+| **Success detection** | 40 clips (20 success / 20 failure) | accuracy, false-negative rate | FN ≤10% (a missed success retries a done action) |
+| **Tool-call correctness** | 20 orchestration runs | % correct first call, mean steps to goal, out-of-bounds args | **0** out-of-bounds args accepted |
+| **Latency & cost** | 100 calls per thinking level | p50/p95 seconds, $/task | p95 inside your decision budget |
+| **Robustness** | vary lighting, viewpoint ±15°, 25% occlusion | Δ accuracy | degradation <10 pp |
+
+Store every raw response. Two axes — pointing error in **mm** and hallucinated skills — are the ones that predict field behaviour; the rest explain *why*.
+
+> 📌 This harness is also the missing artefact named in [`research-gaps.md`](research-gaps.md): *"Semantic calibration — no papers on VLM-robot calibration → metric-semantic grounding benchmark."* Publishing yours would be a real contribution.
+
+---
+
+## 1️⃣4️⃣ Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `403 PERMISSION_DENIED` on every call | unrestricted API key (rejected for robotics) | restrict the key to the Generative Language API; right project; billing on |
+| Model not found / not listed | preview access, wrong project, deprecated ID | `client.models.list()` filtered on `robotics-er`; use `gemini-robotics-er-2-preview` |
+| Points look transposed | `[y, x]` read as `[x, y]` | swap; render an overlay to confirm |
+| Points scaled wrong | normalised to 0–1/0–100 instead of 0–1000, or image resized after the call | resize **before** sending; assert `0 ≤ v ≤ 1000` |
+| Markdown fences break the parser | JSON wrapped in ```json | add R2's `system_instruction`, or use `response_mime_type="application/json"` |
+| Very slow responses | `thinking_level="high"` on a simple spatial task | drop to `low`; keep `high` for counting/estimation |
+| Bill higher than expected | thinking tokens billed as output at $5/1M | log `thoughts_token_count`; cap the level; cache repeated scenes |
+| Streaming model looks frozen | heartbeat fired during generation → barge-in cancelled reasoning | await `turn_complete` before the next heartbeat (R8) |
+| Agentic loop never ends | no step cap, or results always "success" | `max_steps`, honest results, cost ceiling |
+| Context errors on long video | ER 2 limit is 131,072 tokens | sample frames, shorten clips, lower resolution |
+| Answers vary run to run | preview model + sampling | pin the model ID, fix the prompt, lower temperature, average over N runs |
+
+---
+
+## 1️⃣5️⃣ Production checklist
+
+**Before you write code**
+- [ ] Pinned `gemini-robotics-er-2-preview` (not `latest`, not 1.5/1.6)
+- [ ] Restricted API key, billing enabled, rate limits checked in AI Studio
+- [ ] Chose standard vs streaming endpoint per call pattern
+- [ ] Confirmed the cloud dependency is acceptable (otherwise use a local VLM)
+
+**Per prompt**
+- [ ] Coordinates specified as `[y, x]` normalised 0–1000 (boxes `[ymin,xmin,ymax,xmax]`)
+- [ ] Output format fixed; `system_instruction` says "ONLY that JSON"
+- [ ] Physical constraints stated (payload, reach, keep-out zones, object sizes)
+- [ ] Thinking level chosen per task type, not left at default
+
+**Per call**
+- [ ] Timeout set; retry with jittered backoff on 429/5xx
+- [ ] Latency, token counts, cost and raw text logged with a correlation ID
+- [ ] Images downscaled/compressed; PII minimised *before* upload
+
+**Per tool call**
+- [ ] Allowlisted function set; every argument validated and bounds-checked
+- [ ] `max_steps` and a cost ceiling on every agentic loop
+- [ ] Truthful function results returned, so the model can recover
+- [ ] Cancellation path for in-flight instructions
+
+**System level**
+- [ ] Deterministic safety layer independent of ER (ISO/TS 15066, e-stop, force envelope)
+- [ ] Degradation ladder implemented and tested *by unplugging the network*
+- [ ] Evaluation harness (§13) re-run for every model-version change
+- [ ] Audit trail sufficient for post-incident analysis
+- [ ] Rollback path to the previous model version
+
+---
+
+## 📚 References
+
+**Official documentation (consulted 2026-10-21)**
+1. Gemini Robotics ER — overview & model cards: <https://ai.google.dev/gemini-api/docs/robotics-overview>
+2. ER 1.5 model card: <https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-1.5-preview>
+3. ER 2 model card: <https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-preview>
+4. Spatial reasoning (points, boxes, tracking, trajectories): <https://ai.google.dev/gemini-api/docs/generate-content/robotics-spatial>
+5. Agentic vision (code execution, instruments, annotation): <https://ai.google.dev/gemini-api/docs/generate-content/robotics-agentic>
+6. Task orchestration (agentic loop with a custom robot API): <https://ai.google.dev/gemini-api/docs/robotics-orchestration>
+7. Robotics with streaming (Live API): <https://ai.google.dev/gemini-api/docs/robotics-streaming>
+8. Pricing: <https://ai.google.dev/gemini-api/docs/pricing> · Rate limits: <https://ai.google.dev/gemini-api/docs/rate-limits>
+9. Interactions API migration (breaking changes, May 2026): <https://ai.google.dev/gemini-api/docs/migrate-interactions>
+
+**Official announcements & research**
+10. *Building the Next Generation of Physical Agents with Gemini Robotics-ER 1.5* — Google Developers Blog, 2025-09-25: <https://developers.googleblog.com/en/building-the-next-generation-of-physical-agents-with-gemini-robotics-er-15/>
+11. *Gemini Robotics 1.5: Pushing the Frontier of Generalist Robots with Advanced Embodied Reasoning, Thinking, and Motion Transfer* — [arXiv:2510.03342](https://arxiv.org/abs/2510.03342) (ER benchmarks in **Table 19**; agentic evaluation; ASIMOV-2.0; auto-red-teaming)
+12. *Gemini Robotics 1.5 brings AI agents into the physical world* — DeepMind blog, Sep 2025
+13. Safari SDK (`google-deepmind/gemini-robotics-sdk`) — agent framework, `success_detection`, `run_instruction_until_done`, ALOHA `simple_agent.py` system prompt: <https://github.com/google-deepmind/gemini-robotics-sdk>
+14. Gemini API Cookbook: <https://github.com/google-gemini/cookbook>
+
+**Third-party price & version tracking (cross-checked against Google's pages)**
+15. Physical AI Lab, *Gemini Robotics ER 2 Pricing and API Access* (checked 2026-08-06, updated 2026-10-13 — ER 1.6 deprecation date)
+16. Bertrande price ledger for `gemini-robotics-er-2-preview` (observed 2026-10-17; 2027-01-01 increase announced)
+
+**This repository**
+17. [`GLOSSARY.md`](GLOSSARY.md) — LLM/VLM/VLA definitions and the Gemini Robotics variant table
+18. [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html) — slides 10 (ER benchmarks), 18 (hierarchical stack), 22 (perception gaps)
+19. [`research-gaps.md`](research-gaps.md) — *Multimodal perception*, *Semantic planning*, *Edge AI*
+20. [`papers.csv`](papers.csv) — `2604.01179` Florence-2 ROS 2 wrapper · `2506.09937` SAFE · `2606.18043` UQ-VLA · `2603.04585` ELLIPSE
+
+---
+
+## 🔗 Cross references
+
+- Slide deck: [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html)
+- Runnable demo: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py)
+- Glossary: [`GLOSSARY.md`](GLOSSARY.md)
+- Gaps: [`research-gaps.md`](research-gaps.md)
+- Tactile & dexterity SOTA: [`tactile-sota.md`](tactile-sota.md)
+
+---
+
+*Created 2026-10-21. Living document — every ER model version and every published price has an expiry date; re-verify before relying on it. Vendor-claimed numbers are flagged as such throughout.*

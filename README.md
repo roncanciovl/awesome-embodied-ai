@@ -56,6 +56,7 @@ A curated collection of **62 foundational papers** with structured metadata and 
 | [`papers.csv`](papers.csv) | Structured metadata (62 rows): arXiv, year, robot type, model, ROS integration, latency, code availability |
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
 | [`tactile-sota.md`](tactile-sota.md) | Tactile sensing & manual dexterity SOTA: V-T-L-A frontier, PaXini GEN3/GEN4 hardware, ROS 2 ecosystem |
+| [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) | **Deep guide to Gemini Robotics-ER (the VLM)**: all versions, benchmarks, pricing, 10 API recipes, coordinate maths, ROS 2 node, VLA orchestration, safety & migration |
 | [`presentations/`](presentations/README.md) | Self-contained HTML slide decks — **LLM → VLM → VLA** (24 slides, state of the art Oct 2026) |
 | [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |
@@ -84,6 +85,8 @@ A comprehensive glossary of terms used in this collection and the embodied AI li
 | **Gemini Robotics On-Device** | ✅ **VLA (quantized)** | Yes — runs locally on robot (Jetson) | Edge AI, offline robots |
 
 > 📌 **In `burger_delivery`:** `gemini-robotics` is used for *semantic scene processing* → this is the **ER (VLM)** mode: the scene is interpreted semantically, and actions are executed by MoveIt 2. It is NOT end-to-end VLA control.
+
+🧭 **Deep dive on the ER (VLM) branch:** [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) — every published version (`er-1.5` → `er-1.6` → **`er-2-preview`**, July 2026), measured benchmarks, pricing, 10 copy-paste API recipes, the normalized-`[y,x]`-0–1000 → robot-frame maths, a ROS 2 node skeleton, how to orchestrate an open VLA with it, plus safety and migration checklists. Runnable companion: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py) (`--dry-run` needs no API key).
 
 📖 **Full glossary:** [`GLOSSARY.md`](GLOSSARY.md) (covers Sim2Real, ROS 2, Edge AI, datasets, and key systems)
 

@@ -169,6 +169,17 @@ Main metric: % of episodes where the robot completes the task. Complemented by: 
 >
 > 📌 **Gemini Robotics On-Device** is especially relevant to the *Edge AI* subline of [`research-gaps.md`](research-gaps.md): it is the commercial analog of what ROS2SmolVLA / LiteVLA-Edge propose in research.
 
+### Gemini Robotics-ER versions (the VLM branch)
+
+| Model code | Released | Built on | Status (Oct 2026) |
+|------------|----------|----------|-------------------|
+| `gemini-robotics-er-1.5-preview` | Sep 2025 | Gemini 2.5 generation | ⚠️ deprecation planned |
+| `gemini-robotics-er-1.6-preview` | Dec 2025 | Gemini 2.5 generation | 🛑 deprecated 2026-08-31 |
+| **`gemini-robotics-er-2-preview`** | Jul 2026 | Gemini 3.5 Flash | ✅ current — video progress, multi-robot orchestration |
+| `gemini-robotics-er-2-streaming-preview` | Jul 2026 | Gemini 3.5 Flash | ✅ Live API, real-time supervision |
+
+> 🧭 **Full guide:** [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) — capabilities, benchmarks (ER Score, ERQA, Point-Bench, Where2Place, RefSpatial), pricing, 10 API recipes, the normalized `[y, x]` 0–1000 → robot-frame maths, a ROS 2 node skeleton, ER→VLA orchestration, safety and migration checklists. Runnable demo: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py).
+
 ---
 
 ## 🏢 Mentioned Groups and Systems
@@ -192,7 +203,9 @@ Main metric: % of episodes where the robot completes the task. Complemented by: 
 - Paper index: [`papers/PAPERS.md`](papers/PAPERS.md)
 - Protocol: [`research-protocol.md`](research-protocol.md)
 - Gaps: [`research-gaps.md`](research-gaps.md)
+- Gemini Robotics-ER deep guide: [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md)
+- Slide deck (LLM → VLM → VLA): [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html)
 
 ---
 
-*Last updated: 2026-08-30. Term suggestions: open an issue with label `glossary`.*
+*Last updated: 2026-10-21. Term suggestions: open an issue with label `glossary`.*
