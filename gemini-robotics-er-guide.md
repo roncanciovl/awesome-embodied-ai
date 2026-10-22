@@ -4,7 +4,7 @@
 **Scope:** What Gemini Robotics-ER is, what it is *not*, every published version, its measured capabilities, and how to actually use it — API, prompts, coordinate maths, ROS 2 integration, VLA orchestration, safety and migration.
 **Method:** Google AI for Developers docs (robotics overview, model cards, spatial reasoning, agentic vision, task orchestration, streaming, pricing, rate limits), the Gemini Robotics 1.5 technical report (arXiv:2510.03342), the Google Developers Blog ER 1.5 launch post, and the `google-deepmind/gemini-robotics-sdk` (Safari SDK) source code — all consulted 2026-10-21.
 **Companion script:** [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py) (runnable; `--dry-run` needs no API key)
-**Related:** [`GLOSSARY.md`](GLOSSARY.md) → *Gemini Robotics* · [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html) slide 10 · [`research-gaps.md`](research-gaps.md) → *Multimodal perception*
+**Related:** [`GLOSSARY.md`](GLOSSARY.md) → *Gemini Robotics* · [`open-vlm-er-sota.md`](open-vlm-er-sota.md) (**open-source ER alternatives**: Molmo2-ER, RoboBrain 2.5, Cosmos Reason) · [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html) slide 10 · [`research-gaps.md`](research-gaps.md) → *Multimodal perception*
 
 ---
 
@@ -221,6 +221,8 @@ The tech report's agentic evaluation is more relevant than any static benchmark:
 | **Safari SDK** (`google-deepmind/gemini-robotics-sdk`, `pip install safari-sdk`) | full lifecycle for **Gemini Robotics models**: access checkpoint, serve, evaluate on robot & in sim, upload data, **fine-tune**, download checkpoint; plus an **agent framework** (agents, embodiments, tools, event bus) | **Trusted Tester Program** members — mostly for the VLA, not the public ER API |
 
 > 📌 The Safari SDK is *not* an officially supported Google product, and most of its functionality requires the Trusted Tester Program. For pure ER work you only need `pip install google-genai`.
+
+> 🔓 **Need something self-hostable, fine-tunable or air-gapped?** ER is cloud-only and prompt-only. See [`open-vlm-er-sota.md`](open-vlm-er-sota.md) for the open-weight embodied-reasoning landscape — **Molmo2-ER** (Apache-2.0, claims to beat ER-1.5 on 13 ER benchmarks), **RoboBrain 2.5** (metric 3D traces + dense reward model), **Cosmos Reason2 / Cosmos 3** (NVIDIA, the backbone of GR00T N1.7) — with a swap-in adapter pattern that keeps the ROS 2 design in §9 unchanged.
 
 ### Pricing (Gemini API, paid tier, per 1M tokens)
 
@@ -1163,6 +1165,7 @@ Store every raw response. Two axes — pointing error in **mm** and hallucinated
 ## 🔗 Cross references
 
 - Slide deck: [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html)
+- **Open-source ER alternatives:** [`open-vlm-er-sota.md`](open-vlm-er-sota.md)
 - Runnable demo: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py)
 - Glossary: [`GLOSSARY.md`](GLOSSARY.md)
 - Gaps: [`research-gaps.md`](research-gaps.md)

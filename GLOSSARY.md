@@ -179,6 +179,8 @@ Main metric: % of episodes where the robot completes the task. Complemented by: 
 | `gemini-robotics-er-2-streaming-preview` | Jul 2026 | Gemini 3.5 Flash | ✅ Live API, real-time supervision |
 
 > 🧭 **Full guide:** [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) — capabilities, benchmarks (ER Score, ERQA, Point-Bench, Where2Place, RefSpatial), pricing, 10 API recipes, the normalized `[y, x]` 0–1000 → robot-frame maths, a ROS 2 node skeleton, ER→VLA orchestration, safety and migration checklists. Runnable demo: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py).
+>
+> 🔓 **Open-source alternatives to ER** (self-hostable, fine-tunable): [`open-vlm-er-sota.md`](open-vlm-er-sota.md) — **Molmo2-ER** (Ai2, Apache-2.0), **RoboBrain 2.5** (BAAI, 3D traces + dense reward), **Cosmos Reason2 / Cosmos 3** (NVIDIA, GR00T N1.7's own backbone), plus Vesta, ABot-ER, RoboPoint, RoboSpatial and the edge tier.
 
 ---
 
@@ -204,6 +206,7 @@ Main metric: % of episodes where the robot completes the task. Complemented by: 
 - Protocol: [`research-protocol.md`](research-protocol.md)
 - Gaps: [`research-gaps.md`](research-gaps.md)
 - Gemini Robotics-ER deep guide: [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md)
+- Open-source embodied-reasoning VLMs: [`open-vlm-er-sota.md`](open-vlm-er-sota.md)
 - Slide deck (LLM → VLM → VLA): [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html)
 
 ---

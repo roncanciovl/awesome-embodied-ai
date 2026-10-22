@@ -57,6 +57,7 @@ A curated collection of **62 foundational papers** with structured metadata and 
 | [`research-gaps.md`](research-gaps.md) | Identified gaps in 4 sublines: perception, planning, Edge AI, Sim2Real |
 | [`tactile-sota.md`](tactile-sota.md) | Tactile sensing & manual dexterity SOTA: V-T-L-A frontier, PaXini GEN3/GEN4 hardware, ROS 2 ecosystem |
 | [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) | **Deep guide to Gemini Robotics-ER (the VLM)**: all versions, benchmarks, pricing, 10 API recipes, coordinate maths, ROS 2 node, VLA orchestration, safety & migration |
+| [`open-vlm-er-sota.md`](open-vlm-er-sota.md) | **Open-source embodied-reasoning VLMs SOTA**: Molmo2-ER, RoboBrain 2.5, Cosmos Reason/3, Vesta, ABot-ER + datasets, benchmarks, selection guide, swap-in integration & new research gaps |
 | [`presentations/`](presentations/README.md) | Self-contained HTML slide decks — **LLM → VLM → VLA** (24 slides, state of the art Oct 2026) |
 | [`GLOSSARY.md`](GLOSSARY.md) | Glossary: VLA/VLM/LLM, Sim2Real, ROS 2, Edge AI, Gemini Robotics and key systems |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines and metadata quality control |

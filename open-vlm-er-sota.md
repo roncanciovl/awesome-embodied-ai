@@ -308,7 +308,264 @@ cosmos-reason2-inference online -v --port 8000 \
 ❌ Your primary need is precise pointing/spatial referring (→ RoboBrain 2.5 or Molmo2-ER).
 ❌ You require Apache-2.0 (→ Molmo2-ER, Qwen3-VL).
 
-<!--DOC7-->
+---
+
+## 7️⃣ The wider open ecosystem (specialists, datasets, general tier)
+
+### 7.1 New unified ER models (2026) — watch these
+
+| Model | arXiv | Date | Claim | Openness |
+|---|---|---|---|---|
+| **Vesta** — *A Generalist Embodied Reasoning Model* (NVIDIA: Bjorck, …, Birchfield, Blukis, Tremblay, Zhu, **Jim Fan**, Kautz) | [2606.20905](https://arxiv.org/abs/2606.20905) | 2026-06-18 | One model unifying **localisation + spatial reasoning + navigation + long-horizon planning**; curated spatial-grounding corpus + a **multimodal memory harness**. Beats individual SOTA baselines by **>20 %** on average, an *ensemble of per-category-best* baselines by **>10 %**, and improves **real-world task success by >35 %** on memory-and-reasoning tasks 🟡 | ⚠️ not stated in the abstract — verify before assuming weights |
+| **ABot-ER** — *Unified Embodied Reasoning through Agentic Data-Model Co-Evolution* | [2610.18355](https://arxiv.org/abs/2610.18355) | 2026-10-13 | Single model with specialist depth in **perception** (spatial/scene/temporal), **planning** (long-horizon action organisation) and **execution** (point grounding, affordance). Uses an *Agentic Data-Model Self-Evolution Engine* and **task tokens that activate low-rank residuals** over a shared backbone. SOTA overall on **12 benchmarks** 🟡 | ⚠️ not stated in the abstract — verify |
+
+Both are significant because they argue the same thesis this repo needs: **a single generalist ER model beats a stack of specialists** (Vesta) and **breadth and depth can coexist** via task-conditioned adapters (ABot-ER) — the latter being a directly reusable architecture idea for a multi-skill ROS 2 perception node.
+
+### 7.2 Spatial specialists & open datasets (the raw material)
+
+| Artefact | arXiv | What it gives you |
+|---|---|---|
+| **RoboPoint** | [2406.10721](https://arxiv.org/abs/2406.10721) | VLM for **spatial affordance prediction** — instruction-tuned to output point sets for placement/grasp; the reference work for "point where to put it" |
+| **RoboSpatial** (CVPR 2025 **Oral**) | [2411.16537](https://arxiv.org/abs/2411.16537) | **1 M images, 5 k 3D scans, 3 M annotated spatial relations**, 2D- and 3D-ready; explicitly teaches **reference-frame comprehension** (ego- vs world- vs object-centric). Models trained on it beat baselines on affordance, relation prediction and manipulation |
+| **SpatialLM** | [2506.07491](https://arxiv.org/abs/2506.07491) | LLM over **3D point clouds** → structured scene output (walls, doors, windows, oriented object boxes + semantics); fine-tuned from open LLMs; trained on **12,328 synthetic indoor scenes / 54,778 rooms**; SOTA layout estimation |
+| **XVR — Cross-View Relations** (CVPR 2026) | [2603.27967](https://arxiv.org/abs/2603.27967) | **100 K VQA** from 18 K 3D scenes + **70 K manipulation trajectories**; correspondence / verification / localisation. Fine-tuned VLMs improve on **MindCube** and **RoboSpatial**, and as **VLA backbones improve RoboCasa success** |
+| **VeBrain-8B / Magma-8B** | (in RoboBrain Table 2) | Earlier embodied VLMs; both score ~70–80 on BLINK/CV-Bench but **collapse on RefSpatial** (0.30 / 4.50) — evidence that generic embodied pretraining ≠ spatial referring |
+
+> 📌 **Highest-leverage insight for a small lab:** you do not need to build an ER model. **RoboSpatial + XVR + PixMo-Points are open datasets**; post-training an existing open VLM (Qwen3-VL, Molmo2) on them is the cheap route, and the ECCV-2026 spatial-adaptation literature reports **+30.4 % on RoboSpatial and +9.3 % on ERQA** *without* hurting general capability (**+15.9 % V\*Bench, 88.9 % BLINK**). That mirrors Molmo2-ER's own *specialize-then-rehearse* finding.
+
+### 7.3 General-purpose open VLMs (usable, not specialised)
+
+| Model | Sizes | Licence | ER-relevant strength | Gap |
+|---|---|---|---|---|
+| **Qwen3-VL** | 4B … 235B-A22B (MoE) | Apache-2.0 | strong grounding + agentic tool use; the base of **Cosmos-Reason2** | no affordance/trajectory/reward heads |
+| **InternVL3 / 3.5** | 1B – 78B | open (per checkpoint) | solid general multimodal, cheap tiers | not embodied-tuned |
+| **GLM-4.6V / GLM-5.3 Flash** | — | open | MMMU 71.1 / 81.4 — strong general perception | no pointing specialisation |
+| **Llama-3.2-Vision** | 11B, 90B | Llama licence | broad ecosystem, tool use | weak spatial referring |
+| **Gemma 4** | 26B-A4B, 31B | open | cheap frontier-adjacent (MMMU ~74) | not embodied |
+
+Use these when you need **one model for perception + dialogue + planning** and can accept prompt-engineered pointing; choose a dedicated ER model when **spatial accuracy is the product**.
+
+### 7.4 The edge tier (Jetson / workstation, ROS 2-ready)
+
+| Model | Params | VRAM class | Notes |
+|---|---|---|---|
+| **Florence-2** | 0.23 B / 0.77 B | <4 GB | already wrapped as a **ROS 2 native node** — [`papers.csv`](papers.csv) `2604.01179`, <50 ms, multi-mode (caption, OD, grounding) |
+| **SmolVLM2** | 0.5 – 2.2 B | 4–8 GB | Apache-2.0, LeRobot-native, good pointing for size |
+| **Molmo2-ER / Molmo2-4B** | 4.85 B | ~16 GB | Apache-2.0 ER specialist |
+| **RoboBrain2.5-4B** | 4 B | ~16 GB | full ER task surface at small size |
+| **Cosmos-Reason2-2B** | 2 B | **24 GB** (vendor min) | physics CoT; vLLM-servable |
+| **Cosmos3-Edge** | 4 B | Jetson AGX Orin/Thor | on-device real-time tier |
+| **Qwen3-VL-4B** | 4 B | ~12 GB | generalist fallback with tool use |
+
+This tier is exactly what [`research-gaps.md`](research-gaps.md) asks for under *Edge AI / local inference*: an open, quantisable ER model that fits the robot instead of the datacentre.
+
+---
+
+## 8️⃣ Benchmark landscape — what to run, and what it proves
+
+| Benchmark | Layer (§2) | What it measures | Open? |
+|---|---|---|---|
+| **ERQA** | E3/E6 | 400 multiple-choice embodied-reasoning questions | ✅ |
+| **ERQA-Plus** ([2606.17639](https://arxiv.org/abs/2606.17639), 2026-06) | E3/E6 | **diagnostic** version with explicit control over *which* reasoning dependency is tested (spatial relations, actions, procedures, intentions, constraints, consequences) | ✅ |
+| **Point-Bench** | E2 | pointing accuracy | ✅ |
+| **PIO / Point-It-Out** ([2509.25794](https://arxiv.org/abs/2509.25794)) | E2 | **multi-stage visual grounding** — pointing, not MCQ; explicitly criticises MCQ-only ER evaluation | ✅ |
+| **Where2Place** | E3 | free-space pointing for placement | ✅ |
+| **RefSpatial-Bench** | E3 | spatial referring | ✅ |
+| **RoboSpatial** | E3 | spatial relations + affordance, 2D & 3D | ✅ |
+| **BLINK** (Depth/Spatial), **CV-Bench**, **EmbSpatial**, **SAT**, **VSI-Bench**, **MindCube** | E1/E3 | depth, spatial relations, video-space understanding | ✅ |
+| **EgoPlan2**, **Multi-Robot-Plan**, **RoboBench** | E6 | long-horizon and multi-agent planning | ✅ |
+| **ShareRobot-Bench** | E6 | robot-task reasoning | ✅ |
+| **KinDER** ([2604.25788](https://arxiv.org/abs/2604.25788), **RSS 2026**) | physics | **kinematic & dynamic** embodied reasoning: 25 procedural environments, Gymnasium-compatible, 13 baselines (TAMP, IL, RL, foundation models), real-to-sim-to-real on a mobile manipulator | ✅ fully open |
+| **FlagEvalMM** / **Cosmos Evaluator** | — | evaluation *frameworks* (BAAI / NVIDIA) | ✅ |
+
+**KinDER's headline finding is the one to quote in a proposal:** *"existing methods struggle to solve many of the environments, indicating substantial gaps in current approaches to physical reasoning."* Spatial benchmarks are saturating; **kinematic/dynamic** reasoning is not.
+
+> ⚠️ **Comparability warning.** RoboBrain's numbers come from FlagEvalMM, Molmo's from its own 13-benchmark suite, Cosmos's from NVIDIA's, and ER's from DeepMind's Table 19. Prompt formats for pointing differ (normalisation range, axis order, JSON shape). **Never compare two families' published numbers directly — re-run both on your data.** This is the same discipline the [slide deck](presentations/llm-vlm-vla-sota.html) applies to VLA leaderboards (slide 20).
+
+---
+
+## 9️⃣ Selection guide
+
+### By requirement
+
+| If you need… | Pick | Why |
+|---|---|---|
+| The closest **drop-in open ER replacement** (pointing + affordance + trajectory + planning) | **RoboBrain 2.5-8B** | one `UnifiedInference` API, task-switched, mirrors ER's surface |
+| **Apache-2.0** certainty + reproducible training | **Molmo2-ER (4.85 B)** | weights + code + data; specialize-then-rehearse recipe published |
+| Best published **spatial referring / free space** | **RoboBrain-32B-2.0** | RefSpatial 54.0 vs Gemini-2.5-Pro 38.16, GPT-4o 8.78 |
+| **Metric 3D** traces, not 2D pixels | **RoboBrain 2.5** | `(x, y, depth)` keypoint sequences + absolute constraints ("1–5 cm above") |
+| **Dense reward / progress** to train or evaluate a VLA | **RoboBrain 2.5 + Robo-Dopamine** | GRM: step-aware progress, execution-state, RL rewards |
+| **Physics common sense**, video plausibility, safety monitoring | **Cosmos-Reason2 / Cosmos 3 Reasoner** | SFT+RL on physical common sense; video critic lineage |
+| **Jetson / on-device** | **Cosmos3-Edge 4B**, **RoboBrain2.5-4B**, **Molmo2-4B**, **Florence-2** | vendor-validated edge tiers; Florence-2 already has a ROS 2 node |
+| Shared lineage with your **VLA** | GR00T N1.7 → **Cosmos-Reason2**; MolmoAct2 → **Molmo2-ER** | same backbone family as the policy |
+| **Multi-robot** coordination with memory | **RoboOS-Next** (+ any ER model) | lifelong, memory-based, scalable collaboration framework |
+| Cheapest path: **fine-tune your own ER** | **Qwen3-VL / Molmo2** + **RoboSpatial + XVR + PixMo-Points** | open datasets, LoRA-scale compute, general ability preserved |
+| Web-search grounding, code execution, managed agent loop | ⚠️ **Gemini Robotics-ER 2** (closed) | no open model ships this turnkey — you build it (§10) |
+
+### By constraint
+
+| Constraint | Recommendation |
+|---|---|
+| **Air-gapped / field robot** | any open model; ER is cloud-only and disqualified |
+| **Must fine-tune on your cell** | Molmo2-ER (Apache-2.0) or RoboBrain 2.5; Cosmos via Cosmos Framework / TRL |
+| **Commercial product, strict legal** | Apache-2.0 only → **Molmo2-ER**, Qwen3-VL, SmolVLM2. Verify RoboBrain per-checkpoint; NVIDIA Open Model License / OpenMDW-1.1 need review |
+| **24 GB single GPU** | Molmo2-ER, RoboBrain2.5-4B/8B, Cosmos-Reason2-2B |
+| **Need <100 ms locally** | Florence-2 (<50 ms, ROS 2 native), SmolVLM2, or quantised 4B tier |
+| **Research paper / reproducibility** | Molmo2-ER (data + code) or RoboBrain (FlagEvalMM + benchmark released) |
+
+---
+
+## 🔟 Integration: swapping Gemini Robotics-ER for an open model
+
+The architecture in [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) §9–§10 does not change. Only the **backend** does.
+
+### 10.1 Put an adapter between your robot and the model
+
+```python
+# er_backend.py — one interface, swappable implementations
+from dataclasses import dataclass
+from typing import Protocol
+
+@dataclass
+class Point:
+    y_norm: float      # ALWAYS 0-1000, y first — normalising is the adapter's job
+    x_norm: float
+    label: str
+    depth_m: float | None = None    # only RoboBrain 2.5 / MolmoAct2-Think give this
+
+class ErBackend(Protocol):
+    def point(self, image, query: str, max_points: int = 10) -> list[Point]: ...
+    def boxes(self, image, query: str) -> list[tuple[float, float, float, float]]: ...
+    def plan(self, image, task: str) -> list[str]: ...
+    def progress(self, frames, task: str) -> tuple[float, bool, str]: ...  # (0-1, ok, why)
+
+# Implementations:
+#   GeminiErBackend   → google-genai, model="gemini-robotics-er-2-preview"   (cloud)
+#   RoboBrainBackend  → UnifiedInference(task="pointing"/"grounding"/"trajectory")
+#   MolmoErBackend    → transformers, style-tagged prompt parts ("pointing: …")
+#   CosmosBackend     → OpenAI-compatible HTTP to a local vLLM server
+#   Florence2Backend  → the published ROS 2 node (2604.01179)
+```
+
+**Why this matters:** every family uses a *different* output convention — ER returns `[y, x]` in 0–1000; RoboBrain returns per-task structures (and `(x, y, depth)` tuples for trajectories); Molmo2-ER uses **style-tagged** prompt parts (`pointing:`, `point_count:`, `video_point_track_per_frame:`, `multi_image_point_then_count:`, …) declared in its chat template; the Qwen-VL family tends toward absolute pixels. Normalise **once**, in the adapter, with **one unit test per backend** — that eliminates the most common class of silent robot bug (see the symptom table in the ER guide §8).
+
+### 10.2 Serve locally, then point ROS 2 at localhost
+
+```bash
+# Cosmos-Reason2 behind an OpenAI-compatible endpoint
+vllm serve nvidia/Cosmos-Reason2-2B --max-model-len 16384 \
+  --reasoning-parser qwen3 --port 8000
+
+# Qwen3-VL / Molmo2 / RoboBrain: same pattern (vLLM, SGLang, TensorRT-LLM or NIM)
+```
+
+Your `gemini_er_node` (ER guide §9.3) then swaps `genai.Client()` for an HTTP client to `http://localhost:8000/v1` — **topics, QoS, safety layer and degradation ladder stay identical**. The upload term disappears from the latency budget, and that term is usually the dominant one (50–800 ms).
+
+### 10.3 What ER gave you for free — and how to rebuild it
+
+| ER feature | Open-model replacement | Effort |
+|---|---|---|
+| **Managed agentic loop** (`interactions.create` + `previous_interaction_id`) | Your own loop: any tool-calling VLM + the `while step < max_steps` pattern from the ER guide §7 R5, with your own conversation state | ~100 lines |
+| **Success / progress detection** | **RoboBrain 2.5 GRM** (dense, step-aware) or the guided-thinking prompt (ER guide R7) on any video-capable open VLM | low — and *better* if you need dense reward |
+| **Web-search grounding** | Any search API exposed as a tool (self-hosted SearXNG keeps it air-gapped) | low |
+| **Code execution** (crop/zoom, gauges, annotation) | Run the model's Python in *your* sandbox, or pre-crop tiles and re-query | medium — you own the sandboxing |
+| **Streaming supervision** | vLLM streaming + your own ~1 Hz heartbeat with turn-completion gating | medium |
+| **Multi-robot orchestration** | **RoboOS-Next** ([2510.26536](https://arxiv.org/abs/2510.26536)) | medium — a real framework, not a shim |
+
+### 10.4 Compute & quantisation reality check
+
+| Model | Min VRAM | Quantisation route |
+|---|---|---|
+| Cosmos-Reason2-2B / 8B | **24 GB / 32 GB** (vendor-stated) | `llmcompressor` FP8 / W8A8 recipe shipped in-repo |
+| RoboBrain 2.5-4B / 8B | ~16 / 24 GB (estimated at bf16) | **INT8 weights + FP16 activations**, vision encoder full precision → **~30 % latency reduction** (reported for 2.0) |
+| Molmo2-ER (4.85 B) | ~16 GB (estimated at bf16; 19.4 GB on disk) | AWQ/GPTQ via standard tooling |
+| Florence-2 (0.77 B) | <4 GB | already <50 ms on a local GPU |
+
+Estimated figures are marked as such — **measure on your hardware** and log tokens/s, p50/p95 latency and peak VRAM per backend, the same way the ER demo script meters cost.
+
+---
+
+## 1️⃣1️⃣ Gaps & research opportunities
+
+Mapped onto [`research-gaps.md`](research-gaps.md). ⭐ = newly created, or newly *closable* because these models exist.
+
+| # | Gap | Evidence | Opportunity |
+|---|---|---|---|
+| 1 ⭐ | **No standard ROS 2 interface for ER models** | ≥5 viable open backends, each with a different output convention; still only one published ROS 2 VLM wrapper (`2604.01179`) | Define `ros2_er_msgs` (Point / Box / Trace / Progress / Plan) + an adapter **conformance test suite**. Small, high-impact, publishable |
+| 2 ⭐ | **No independent replication of any ER claim** | Molmo2-ER "beats ER-1.5 on 13 benchmarks" 🟡; RoboBrain SOTA 🟡; Vesta "+35 % real-world" 🟡 — all author-reported | An **ER-Arena**: neutral cross-family evaluation on shared hardware with shared prompts (the RoboArena idea, applied to ER) |
+| 3 ⭐ | **Kinematic/dynamic reasoning is unsolved** | KinDER (RSS 2026): 13 baselines, *"existing methods struggle"*; spatial benchmarks saturate while physics ones do not | Physics-grounded post-training; add force/tactile channels (see [`tactile-sota.md`](tactile-sota.md) V-T-L-A) |
+| 4 ⭐ | **Reward models are not wired into deployed VLA loops** | Robo-Dopamine GRM exists; SAFE (`2506.09937`), UQ-VLA (`2606.18043`), ELLIPSE (`2603.04585`) detect failure; nothing integrates detection + dense reward + recovery | A ROS 2 **self-improving cell**: ER progress/reward → failure detection → re-plan → experience replay (an open analogue of RECAP) |
+| 5 | **No edge-ER latency/accuracy/power benchmark** | 4 B tiers now exist (Cosmos3-Edge, RoboBrain2.5-4B, Molmo2-4B) but no published Jetson Orin numbers | The exact benchmark [`research-gaps.md`](research-gaps.md) asks for — now finally runnable |
+| 6 | **Licence fragmentation** | Apache-2.0 (Molmo2-ER) vs NVIDIA Open Model License / OpenMDW-1.1 (Cosmos) vs per-checkpoint HF licences (RoboBrain) | A maintained licence matrix + legal-review checklist for embodied-AI models |
+| 7 | **Orchestration ergonomics** | ER ships a managed loop; open models ship weights | An open **ER-orchestrator service**: tool registry, step budget, cost/latency metering, audit log, cancel semantics — built on RoboOS-Next |
+| 8 | **Episodic memory** | Vesta's memory harness; RoboBrain's real-time structured memory; RoboOS-Next's lifelong memory | Persistent cross-session memory in ROS 2 (a named gap since `Inner Monologue`) |
+
+**Concrete first experiment for this repo** (extends the `burger_delivery` proposal in [`research-gaps.md`](research-gaps.md)): run the *same* 30 pointing images and the *same* 20 success-detection clips through **Gemini Robotics-ER 2**, **RoboBrain2.5-8B**, **Molmo2-ER** and **Florence-2**, measuring pointing error in mm, verdict accuracy, p95 latency and peak VRAM. That single table would be the first neutral ER comparison in the open literature — and it is a weekend of work with hardware this repo's community already has.
+
+---
+
+## 1️⃣2️⃣ References
+
+All consulted **2026-10-22**. 🟢 primary source · 🟡 author-reported claim, not independently replicated.
+
+**Ai2 — Molmo / MolmoAct2**
+1. 🟢 *MolmoAct2: Action Reasoning Models for Real-world Deployment* — [arXiv:2605.02881](https://arxiv.org/abs/2605.02881) (2026-05-04, v2 05-08), Fang, Duan, Clay, Wang, … Krishna. Source of the Molmo2-ER 3.3 M corpus, *specialize-then-rehearse* recipe, OpenFAST, MolmoThink, per-layer KV conditioning, and the *"surpasses GPT-5 and Gemini Robotics ER-1.5 across 13 embodied-reasoning benchmarks"* claim.
+2. 🟢 [`allenai/Molmo2-ER`](https://huggingface.co/allenai/Molmo2-ER) — 4,850,869,200 params, base `Molmo2-4B`, **Apache-2.0**, tags `embodied-reasoning` / `spatial-reasoning`; chat-template demo styles (`pointing`, `point_count`, `video_point_track_*`, `multi_image_*`).
+3. 🟢 [`allenai/molmoact2`](https://github.com/allenai/molmoact2) ⭐817 — checkpoints (base, Think, Pretrain, DROID, BimanualYAM, SO100_101, LIBERO), datasets, LeRobot integration, FastAPI inference servers, sim-eval.
+4. 🟢 [Ai2 blog: *MolmoAct 2 — an open foundation for robots that work in the real world*](https://allenai.org/blog/molmoact2) (2026-05-05, updated 05-28) — 720 h BimanualYAM, 37× speedup, reference hardware (2× YAM + D435 + 2× D405), Stanford Cong Lab wetlab pilot, **and the authors' own stated limitations**.
+5. 🟢 *Molmo: a family of open VLMs* — [arXiv:2409.17146](https://arxiv.org/abs/2409.17146); **PixMo** datasets incl. **PixMo-Points** (referring expressions + annotated points). Molmo 2 family: 4B / 8B / O-7B (+ Olmo backbone).
+
+**BAAI — RoboBrain**
+6. 🟢 *RoboBrain 2.5: Depth in Sight, Time in Mind* — [arXiv:2601.14352](https://arxiv.org/abs/2601.14352) (2026-01-20), Tan, Zhou, Li, … Huang (37 pp).
+7. 🟢 *RoboBrain 2.0 Technical Report* — [arXiv:2507.02029](https://arxiv.org/abs/2507.02029) (v5, 2025-09-14). **Source of the spatial-reasoning table reproduced in §5.**
+8. 🟢 *RoboBrain: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete* — [arXiv:2502.21257](https://arxiv.org/abs/2502.21257), **CVPR 2025**.
+9. 🟢 [`FlagOpen/RoboBrain2.5`](https://github.com/FlagOpen/RoboBrain2.5) ⭐1.1 k — `UnifiedInference` API (`general` / `grounding` / `pointing` / `trajectory`), model zoo (2.0-3B/7B/32B; 2.5-4B/8B-NV/8B-MT), INT8-weight + FP16-activation inference (~30 % latency cut), FlagScale training / FlagEvalMM evaluation.
+10. 🟢 *Robo-Dopamine: General Process Reward Modeling for High-Precision Robotic Manipulation* — [arXiv:2512.23703](https://arxiv.org/abs/2512.23703).
+11. 🟢 *RoboTracer: Mastering Spatial Trace with Reasoning in VLMs for Robotics* — [arXiv:2512.13660](https://arxiv.org/abs/2512.13660).
+12. 🟢 *RoboOS-Next: A Unified Memory-Based Framework for Lifelong, Scalable and Robust Multi-Robot Collaboration* — [arXiv:2510.26536](https://arxiv.org/abs/2510.26536).
+13. 🟢 *Reason-RFT: Reinforcement Fine-Tuning for Visual Reasoning* — [arXiv:2503.20752](https://arxiv.org/abs/2503.20752). Project page: <https://superrobobrain.github.io/>
+
+**NVIDIA — Cosmos Reason / Cosmos 3**
+14. 🟢 [`nvidia-cosmos/cosmos-reason2`](https://github.com/nvidia-cosmos/cosmos-reason2) ⭐457 — 2B/8B/32B, **Qwen3-VL** base, min 24/32 GB, `transformers>=4.57`, vLLM ≥0.11, `--reasoning-parser qwen3`, `prompts/embodied_reasoning.yaml`, llmcompressor quantisation, TRL + Cosmos-RL post-training. Code **Apache-2.0**; models **NVIDIA Open Model License**.
+15. 🟢 [`nvidia-cosmos/cosmos-reason1`](https://github.com/nvidia-cosmos/cosmos-reason1) ⭐961 — 7B, **Qwen2.5-VL** base, FP8/W8A8 PTQ, video physical-plausibility critic, spatial-temporal reasoning for city/industrial operations.
+16. 🟢 [`NVIDIA/Cosmos`](https://github.com/NVIDIA/Cosmos) — **Cosmos 3** (May 2026): omnimodal world models, unified Mixture-of-Transformers, **Reasoner** + **Generator** towers, **Cosmos3-Edge 4B** (Jul 2026; Jetson AGX Orin/Thor, RTX Pro 6000), policy checkpoints (`Cosmos3-Nano-Policy-DROID`, `Cosmos3-Edge-Policy-DROID`, `Cosmos3-Nano-Sim-Bimanual`), plus Cosmos Framework / Curator / Evaluator. Source and models under **OpenMDW-1.1**. Technical report: *Cosmos 3: Omnimodal World Models for Physical AI* (2026).
+
+**Other ER models, datasets and benchmarks**
+17. 🟢 *Vesta: A Generalist Embodied Reasoning Model* — [arXiv:2606.20905](https://arxiv.org/abs/2606.20905) (2026-06-18), Bjorck et al. (NVIDIA).
+18. 🟢 *ABot-ER: Unified Embodied Reasoning through Agentic Data-Model Co-Evolution* — [arXiv:2610.18355](https://arxiv.org/abs/2610.18355) (2026-10-13, v2 10-14).
+19. 🟢 *RoboSpatial: Teaching Spatial Understanding to 2D and 3D VLMs for Robotics* — [arXiv:2411.16537](https://arxiv.org/abs/2411.16537), **CVPR 2025 Oral** (Song, Blukis, Tremblay, Tyree, Su, Birchfield).
+20. 🟢 *RoboPoint: A VLM for Spatial Affordance Prediction for Robotics* — [arXiv:2406.10721](https://arxiv.org/abs/2406.10721).
+21. 🟢 *SpatialLM: Training LLMs for Structured Indoor Modeling* — [arXiv:2506.07491](https://arxiv.org/abs/2506.07491).
+22. 🟢 *Learning Multi-View Spatial Reasoning from Cross-View Relations (XVR)* — [arXiv:2603.27967](https://arxiv.org/abs/2603.27967), **CVPR 2026**.
+23. 🟢 *KinDER: A Physical Reasoning Benchmark for Robot Learning and Planning* — [arXiv:2604.25788](https://arxiv.org/abs/2604.25788), **RSS 2026**, fully open-sourced (<https://prpl-group.com/kinder-site/>).
+24. 🟢 *Point-It-Out (PIO): Benchmarking Embodied Reasoning for VLMs in Multi-Stage Visual Grounding* — [arXiv:2509.25794](https://arxiv.org/abs/2509.25794).
+25. 🟢 *ERQA-Plus: A Diagnostic Benchmark for Reasoning in Embodied AI* — [arXiv:2606.17639](https://arxiv.org/abs/2606.17639).
+26. 🟡 ECCV-2026 spatial-adaptation study (Xi et al., submitted 2026-09-22): **+30.4 % RoboSpatial, +9.3 % ERQA**, alongside **+15.9 % V\*Bench and 88.9 % BLINK** — spatial specialisation without general-capability loss.
+27. 🟢 *Gemini Robotics 1.5* technical report — [arXiv:2510.03342](https://arxiv.org/abs/2510.03342), **Table 19** (ER 1.5 vs GPT-5 vs Gemini 2.5 Pro: ER Score, ERQA, Point-Bench, Where2Place, RefSpatial) — the closed baseline this document compares against.
+
+**This repository**
+28. [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md) — the closed-model guide (architecture, recipes, coordinate maths, ROS 2 node, orchestration, safety).
+29. [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html) — slides 10 (ER benchmarks), 18 (hierarchical stack), 22 (perception gaps).
+30. [`research-gaps.md`](research-gaps.md) · [`tactile-sota.md`](tactile-sota.md) · [`GLOSSARY.md`](GLOSSARY.md) · [`papers.csv`](papers.csv) (`2604.01179` Florence-2 ROS 2 wrapper).
+
+---
+
+## 🔗 Cross references
+
+- Closed reference implementation: [`gemini-robotics-er-guide.md`](gemini-robotics-er-guide.md)
+- Runnable ER demo: [`scripts/gemini_er_demo.py`](scripts/gemini_er_demo.py)
+- Slide deck: [`presentations/llm-vlm-vla-sota.html`](presentations/llm-vlm-vla-sota.html)
+- Gaps & opportunities: [`research-gaps.md`](research-gaps.md)
+- Protocol & inclusion criteria: [`research-protocol.md`](research-protocol.md)
+
+---
+
+*Created 2026-10-22. Living document — this space moved three times in twelve months (Cosmos Reason1 → Reason2 → Cosmos 3; RoboBrain 2.0 → 2.5; MolmoAct → MolmoAct2). Re-verify versions, licences and VRAM figures before committing to a stack. Items marked 🟡 are author-reported and not independently replicated.*
+
+
+
+
+
 
 
 
