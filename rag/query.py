@@ -12,6 +12,14 @@ Ejemplos:
     rag\\.venv\\Scripts\\python.exe rag\\query.py "tactile sensing dexterity" --category VLA_Models
     rag\\.venv\\Scripts\\python.exe rag\\query.py "failure detection VLA" --prompt --export ctx.md
     rag\\.venv\\Scripts\\python.exe rag\\query.py "quantization edge" --json
+
+Modo marco teórico (evidencia por secciones + BibTeX, para redactar un paper):
+    rag\\.venv\\Scripts\\python.exe rag\\query.py "VLA models for ROS 2 manipulation" --marco
+    rag\\.venv\\Scripts\\python.exe rag\\query.py "sim2real safety" --marco --json --export marco.json
+
+Modo verificación de citas (guardarrail anti-alucinación; NO carga Chroma):
+    rag\\.venv\\Scripts\\python.exe rag\\query.py "OpenVLA: An Open-Source VLA Model" --verify
+    rag\\.venv\\Scripts\\python.exe rag\\query.py "Kim et al. 2024" --verify
 """
 
 from __future__ import annotations
@@ -85,6 +93,17 @@ def run_query(collection, query: str, args: argparse.Namespace) -> list[dict[str
     return hits
 
 
+def emit(output: str, export: str | None) -> None:
+    """Imprime o guarda: el mismo camino de salida para todos los modos."""
+    if export:
+        target = Path(export)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(output, encoding="utf-8")
+        print(f"Escrito en {target} ({len(output)} chars)")
+    else:
+        print(output)
+
+
 def main(argv: list[str] | None = None) -> int:
     R.force_utf8_stdout()
     parser = argparse.ArgumentParser(description="Consulta RAG sobre awesome-embodied-ai")
@@ -106,8 +125,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="salida JSON")
     parser.add_argument("--prompt", action="store_true",
                         help="emite el bloque de contexto listo para pegar en un LLM")
+    parser.add_argument("--marco", action="store_true",
+                        help="ensambla la evidencia como secciones de marco teórico "
+                             "(estado del arte, limitaciones, vacíos, BibTeX)")
+    parser.add_argument("--per-section", type=int, default=3,
+                        help="fragmentos curados por sección con --marco (default 3)")
+    parser.add_argument("--verify", action="store_true",
+                        help="trata el argumento como referencia bibliográfica y "
+                             "comprueba si existe en el corpus (anti-alucinación)")
     parser.add_argument("--export", default=None, help="guarda la salida en un archivo")
     args = parser.parse_args(argv)
+
+    # La verificación solo necesita papers.csv: se resuelve SIN cargar Chroma,
+    # así que responde en milisegundos en vez de los 15-25 s del arranque.
+    if args.verify:
+        import marco as M  # import tardío: marco importa query en cabeza de módulo
+
+        result = M.verify_citation(args.query, limit=max(3, int(args.k)))
+        output = (json.dumps(result, ensure_ascii=False, indent=2) if args.json
+                  else M.render_verify(result))
+        emit(output, args.export)
+        return 0 if result["in_corpus"] else 1
 
     client = R.get_client()
     try:
@@ -116,6 +154,21 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[error] La colección '{R.COLLECTION_NAME}' no existe todavía: {exc}")
         print("Constrúyela con: rag\\.venv\\Scripts\\python.exe rag\\build_index.py")
         return 2
+
+    # --marco va antes que la búsqueda simple: organiza la evidencia por
+    # secciones y hace su propia recuperación (PDFs + docs curados).
+    if args.marco:
+        import marco as M  # import tardío: marco importa query en cabeza de módulo
+
+        data = M.build_marco(
+            collection, args.query, k=args.k, min_sim=args.min_sim,
+            per_section=args.per_section, include_retired=args.include_retired,
+            category=args.category, folder=args.folder,
+        )
+        output = (json.dumps(data, ensure_ascii=False, indent=2) if args.json
+                  else M.render_marco(data))
+        emit(output, args.export)
+        return 0
 
     hits = run_query(collection, args.query, args)
     if not hits:
@@ -137,13 +190,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         output = f"{header}\n\n{body}\n"
 
-    if args.export:
-        target = Path(args.export)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(output, encoding="utf-8")
-        print(f"Escrito en {target} ({len(output)} chars)")
-    else:
-        print(output)
+    emit(output, args.export)
     return 0
 
 

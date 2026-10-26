@@ -14,7 +14,8 @@ Arranque (desde la raíz del repo):
 Por qué stdlib y no Flask/FastAPI:
     Esta carpeta se sincroniza con OneDrive. Un framework web sumaría
     dependencias pesadas al venv y superficie de actualización sin aportar nada:
-    la UI necesita cuatro endpoints de lectura. `http.server` ya está instalado.
+    la UI y los agentes necesitan seis endpoints de lectura. `http.server` ya
+    está instalado.
 
 Seguridad (deliberada):
     * Escucha SOLO en 127.0.0.1: el índice no es accesible desde la LAN.
@@ -38,6 +39,7 @@ from urllib.parse import parse_qs, urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import marco as M  # noqa: E402  (marco teórico + verificación de citas)
 import raglib as R  # noqa: E402
 from query import build_where, run_query  # noqa: E402  (reuso, no duplico)
 
@@ -190,6 +192,52 @@ def api_stats() -> dict[str, Any]:
 
 
 # ── Handler HTTP ─────────────────────────────────────────────────────────────
+def api_marco(params: dict[str, list[str]]) -> dict[str, Any]:
+    """
+    Evidencia organizada por secciones de marco teórico.
+
+    Pensado para agentes de IA que redactan un paper: en vez de un ranking plano
+    de fragmentos devuelve estado del arte, limitaciones documentadas, vacíos,
+    bases teóricas, comparativa cuantitativa y BibTeX.
+    """
+    query = first(params, "q")
+    if not query:
+        return {"error": "Falta el parámetro q."}
+    args = args_from_params(params)
+    per_section = int(to_number(first(params, "per_section"), 3))
+    return M.build_marco(
+        STATE["collection"], query,
+        k=min(args.k, MAX_K),
+        min_sim=args.min_sim,
+        per_section=min(max(per_section, 1), 10),
+        include_retired=args.include_retired,
+        category=args.category,
+        folder=args.folder,
+    )
+
+
+def api_verify(params: dict[str, list[str]]) -> dict[str, Any]:
+    """
+    ¿Existe esta referencia en el corpus? Guardarrail anti-alucinación.
+
+    Acepta `ref` (repetible) o `refs` (varias separadas por `|`). A diferencia de
+    `many()`, aquí NO se parte por comas: una referencia legítima las lleva
+    ("Kim et al., 2024"). Solo lee papers.csv, no toca Chroma.
+    """
+    refs = [str(v).strip() for v in (params.get("ref") or []) if str(v).strip()]
+    bulk = first(params, "refs")
+    if bulk:
+        refs.extend(p.strip() for p in bulk.split("|") if p.strip())
+    if not refs:
+        return {"error": "Falta el parámetro ref (repetible) o refs (separadas por |)."}
+    limit = min(max(int(to_number(first(params, "limit"), 3)), 1), 10)
+    records = M.load_paper_records()
+    if len(refs) == 1:
+        return M.verify_citation(refs[0], records, limit)
+    return M.verify_many(refs, records, limit)
+
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "awesome-embodied-rag/1.0"
     protocol_version = "HTTP/1.1"  # exige Content-Length exacto (se envía siempre)
@@ -244,6 +292,8 @@ class Handler(BaseHTTPRequestHandler):
         try:
             routes = {"/api/search": lambda: api_search(params),
                       "/api/prompt": lambda: api_prompt(params),
+                      "/api/marco": lambda: api_marco(params),
+                      "/api/verify": lambda: api_verify(params),
                       "/api/facets": api_facets,
                       "/api/stats": api_stats}
             handler = routes.get(route)
