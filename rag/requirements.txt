@@ -1,0 +1,6 @@
+# RAG local para awesome-embodied-ai (sin API keys: embeddings ONNX locales)
+# Instalar en el venv de esta carpeta:
+#   py -3.14 -m venv .venv
+#   .venv\Scripts\python.exe -m pip install -r requirements.txt
+chromadb>=1.5.0,<2
+PyMuPDF>=1.25

@@ -16,3 +16,14 @@ __pycache__/
 
 # Plan privado de publicaciones de Henry
 /PLAN_PUBLICACIONES_HENRY.md
+
+# ── RAG local (rag/) ────────────────────────────────────────────────────────
+# Artefactos regenerables: entorno virtual, índice vectorial, caché del texto
+# extraído de los PDFs y modelo ONNX de embeddings.
+# Se reconstruyen con:  rag\.venv\Scripts\python.exe rag\build_index.py
+rag/.venv/
+rag/chroma_db/
+rag/cache/
+rag/models/
+rag/out/
+

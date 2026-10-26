@@ -13,6 +13,7 @@ A curated and reproducible research resource covering **Embodied Artificial Inte
 ## 📑 Contents
 - [What is Embodied AI?](#-what-is-embodied-ai)
 - [Paper Library (Metadata + Links)](#-paper-library-metadata--links)
+- [Local RAG (ChromaDB + ONNX Embeddings)](#-local-rag-chromadb--onnx-embeddings)
 - [Glossary (VLA/VLM/LLM, Sim2Real, ROS 2)](#-glossary-vlavlmllm-sim2real-ros-2)
 - [Vision-Language-Action (VLA) Models](#-vision-language-action-vla-models)
 - [Simulation Environments & Digital Twins](#-simulation-environments--digital-twins)
@@ -46,6 +47,35 @@ A curated collection of **62 foundational papers** with structured metadata and 
 
 👉 **Full index:** [papers/PAPERS.md](papers/PAPERS.md)
 🔄 **Re-download/update:** `python scripts/download_papers.py`
+
+### 🔎 Local RAG (ChromaDB + ONNX Embeddings)
+
+[`rag/`](rag/README.md) adds a **fully local, credential-free** vector index over the 62 PDFs and the curated repo docs: persisted ChromaDB plus `all-MiniLM-L6-v2` embeddings (384 dims) running on CPU with `onnxruntime`.
+
+```powershell
+# One-time setup
+py -3.14 -m venv awesome-embodied-ai\rag\.venv
+awesome-embodied-ai\rag\.venv\Scripts\python.exe -m pip install -r awesome-embodied-ai\rag\requirements.txt
+
+# Build / refresh the index
+rag\.venv\Scripts\python.exe rag\build_index.py
+
+# Query it
+rag\.venv\Scripts\python.exe rag\query.py "Which VLAs run as native ROS 2 nodes?" -k 6
+```
+
+| What it does | How |
+|--------------|-----|
+| Extracts and chunks PDF text | PyMuPDF, ~1400-char blocks with overlap, page ranges preserved |
+| Enriches every chunk with metadata | The 20 columns of [`papers.csv`](papers.csv): year, `model_type`, `robot_type`, `ros_integration`, `sim2real`, `gap_category`, … |
+| Supports composable filters | By category, folder, year, source, minimum similarity and required text |
+| Returns citable evidence | Title, arXiv, year and page range of every fragment |
+| Builds LLM-ready context | `--prompt` / `--export` emit the context block with its citations |
+
+> 🔒 **No API keys.** The index and the embedding model live inside `rag/`; no external LLM is ever called. `rag/chroma_db/`, `rag/cache/`, `rag/models/` and `rag/.venv/` are gitignored as regenerable artifacts.
+
+📖 **Full documentation:** [`rag/README.md`](rag/README.md)
+
 
 ### 📊 Research Infrastructure
 
