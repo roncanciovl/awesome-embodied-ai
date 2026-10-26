@@ -18,8 +18,10 @@ y **sin credenciales**: ChromaDB persistido en disco + embeddings ONNX
 | `raglib.py` | Rutas, limpieza de texto, extracción de PDF, chunking, metadatos, cliente Chroma |
 | `build_index.py` | Construye / actualiza el índice vectorial |
 | `query.py` | Consulta el índice (CLI) |
+| `marco.py` | Evidencia con forma de marco teórico + verificación de citas |
 | `serve.py` | Interfaz web local (servidor `http.server`, solo lectura) |
 | `web/index.html` | Front de esa interfaz (autocontenido, sin CDN) |
+| `web/README.md` | Guía de uso de la interfaz web (controles, filtros, recetas, fallos) |
 | `requirements.txt` | Dependencias (`chromadb`, `PyMuPDF`) |
 | `ask.ps1` | Atajo de PowerShell con la consola en UTF‑8 |
 
@@ -101,18 +103,23 @@ Qué permite:
 * Botón **«Contexto LLM»**: genera el bloque con las citas numeradas y un botón
   para copiarlo (equivalente a `query.py --prompt`).
 
+> Guía paso a paso de la interfaz —qué hace cada control, recetas, seguridad y
+> solución de problemas— en [`web/README.md`](web/README.md).
+
 Es **solo lectura** y **solo loopback**: no escribe en disco, no hace peticiones
 salientes y no usa credenciales. Está construido únicamente con la stdlib
 (`http.server`), así que no añade ninguna dependencia al venv. Además valida el
 header `Host`, de modo que una página web maliciosa no pueda consultar tu índice
 desde el navegador (DNS rebinding).
 
-Los cuatro endpoints, por si quieres integrarlos con otro código:
+Los seis endpoints, por si quieres integrarlos con otro código:
 
 | Endpoint | Devuelve |
 |----------|----------|
 | `GET /api/search?q=...` | JSON con los fragmentos, metadatos y similitud |
 | `GET /api/prompt?q=...` | El bloque de contexto listo para un LLM |
+| `GET /api/marco?q=...` | Evidencia por secciones de marco teórico + BibTeX |
+| `GET /api/verify?ref=...` | Si una referencia existe en el corpus (anti-alucinación) |
 | `GET /api/facets` | Categorías, carpetas y rango de años presentes |
 | `GET /api/stats` | Chunks, documentos y reparto por carpeta |
 
@@ -169,6 +176,72 @@ Atajo con la consola en UTF‑8 (evita tildes rotas en PowerShell):
 `folder`, `year`, `arxiv_id`, `authors_first`, `model_type`, `task`, `robot_type`,
 `ros_integration`, `simulator`, `hardware`, `sim2real`, `code_available`,
 `gap_category`, `retired`, `page_start`, `page_end`, `chunk_index`, `heading_path`.
+
+---
+
+## Marco teórico y verificación de citas
+
+Pensado para quien redacta un paper —o para un **agente de IA** que lo redacta.
+El contrato completo para agentes vive en [`../AGENTS.md`](../AGENTS.md).
+
+### `--marco`: evidencia por secciones
+
+Un marco teórico no necesita "los k fragmentos más parecidos": necesita fuentes
+citables con localización exacta, las limitaciones de cada trabajo y los vacíos
+que el propio corpus reconoce. `--marco` ensambla eso:
+
+```powershell
+rag\.venv\Scripts\python.exe rag\query.py "VLA models for manipulation with ROS 2" --marco
+rag\.venv\Scripts\python.exe rag\query.py "sim2real safety" --marco --json --export marco.json
+rag\.venv\Scripts\python.exe rag\query.py "..." --marco --per-section 5 --category VLA_Models
+```
+
+| Sección | Origen |
+|---------|--------|
+| Estado del arte | búsqueda semántica sobre `papers/` (solo PDF, un paper = una entrada) |
+| Limitaciones documentadas | columna `limitations` de `papers.csv` |
+| Vacíos de investigación | columna `gap_category` + `research-gaps.md` |
+| Bases teóricas | `GLOSSARY.md` |
+| Protocolo metodológico | `research-protocol.md` |
+| Comparativa cuantitativa | `latency_ms`, `compute_resources`, `sim2real`, `ros_integration` |
+| BibTeX | una entrada por paper recuperado + la cita de la colección |
+
+La clave del diseño: la búsqueda semántica decide **qué** papers importan y
+`papers.csv` aporta el análisis de esos papers. Lo primero es aproximado, lo
+segundo es exacto; mezclarlo al revés es como se acaba citando de oídas.
+
+`--marco` también emite **avisos** para quien redacta: cobertura baja (<3
+papers), sesgo hacia 2025-2026 y el recordatorio de que `authors_first` solo
+trae "Apellido et al." (el BibTeX sale como `Apellido and others`).
+
+### `--verify`: guardarrail anti-alucinación
+
+El corpus es cerrado (62 papers), así que "¿existe esta referencia?" tiene
+respuesta determinista. Es el riesgo nº1 de un marco teórico escrito por IA:
+
+```powershell
+rag\.venv\Scripts\python.exe rag\query.py "OpenVLA: An Open-Source Vision-Language-Action Model" --verify
+rag\.venv\Scripts\python.exe rag\query.py "arXiv:2212.06817" --verify
+rag\.venv\Scripts\python.exe rag\query.py "Kim et al. 2024" --verify
+```
+
+| Veredicto | Qué significa |
+|-----------|---------------|
+| `confirmed` | Está en el corpus. Citable; el BibTeX adjunto es la entrada correcta. |
+| `probable` | Ambigua: varios papers encajan casi igual. Añade año o `arxiv_id` y repite. |
+| `not_found` | **No está en el corpus.** Márcala como fuente externa y verifícala tú. |
+
+Devuelve siempre candidatos cercanos, también al fallar: es lo que permite
+autocorregir una cita mal escrita en vez de insistir en una referencia inventada.
+Código de salida `0` si `confirmed` y `1` en cualquier otro caso (útil en
+scripts).
+
+> `--verify` **no carga Chroma**: solo lee `papers.csv`, así que responde en
+> milisegundos en lugar de los 15-25 s que cuesta arrancar el índice.
+
+Desde HTTP, `/api/verify` acepta `ref` repetido o `refs=a|b|c` para verificar una
+bibliografía entera de una vez. Las comas **no** se usan como separador, porque
+una referencia legítima las lleva ("Kim et al., 2024").
 
 ---
 
