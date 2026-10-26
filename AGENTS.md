@@ -131,7 +131,7 @@ Use them with plain `query.py` / `/api/search`, where they do work.
   English even when you write in Spanish.
 - **Retired papers are excluded by default** (`papers/_retirados/`). Pass
   `--include-retired` only when you deliberately want them.
-- **Similitud scores are cosine similarities** from a small multilingual-weak
+- **Similarity scores are cosine similarities** from a small multilingual-weak
   model. Use them to rank, not as a truth threshold: a 0.45 hit can be the right
   paper and a 0.65 hit can be noise.
 
