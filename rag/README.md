@@ -18,6 +18,8 @@ y **sin credenciales**: ChromaDB persistido en disco + embeddings ONNX
 | `raglib.py` | Rutas, limpieza de texto, extracción de PDF, chunking, metadatos, cliente Chroma |
 | `build_index.py` | Construye / actualiza el índice vectorial |
 | `query.py` | Consulta el índice (CLI) |
+| `serve.py` | Interfaz web local (servidor `http.server`, solo lectura) |
+| `web/index.html` | Front de esa interfaz (autocontenido, sin CDN) |
 | `requirements.txt` | Dependencias (`chromadb`, `PyMuPDF`) |
 | `ask.ps1` | Atajo de PowerShell con la consola en UTF‑8 |
 
@@ -75,6 +77,53 @@ que desaparecieron del disco.
 * Se conserva el rango de páginas (`page_start` / `page_end`) para poder citar.
 * En Markdown se conserva la ruta de encabezados (`heading_path`).
 * Se descartan páginas sin prosa útil (portadas, páginas de solo números).
+
+---
+
+## Interfaz web local (la forma más cómoda)
+
+```powershell
+# Desde la raíz del repo
+rag\.venv\Scripts\python.exe rag\serve.py
+```
+
+Arranca un servidor en <http://127.0.0.1:8757/> y abre el navegador. Parar con
+`Ctrl+C`. Opciones: `--port 9000` (otro puerto) y `--no-browser` (no abrir el
+navegador).
+
+Qué permite:
+
+* Buscar en lenguaje natural y ver los fragmentos con su **similitud**, página,
+  categoría, carpeta, robot, simulador e integración con ROS 2.
+* Filtrar por categoría, carpeta, origen (PDF/Markdown), rango de años,
+  similitud mínima y texto obligatorio — los mismos filtros que el CLI.
+* Enlace directo a arXiv en cada resultado.
+* Botón **«Contexto LLM»**: genera el bloque con las citas numeradas y un botón
+  para copiarlo (equivalente a `query.py --prompt`).
+
+Es **solo lectura** y **solo loopback**: no escribe en disco, no hace peticiones
+salientes y no usa credenciales. Está construido únicamente con la stdlib
+(`http.server`), así que no añade ninguna dependencia al venv. Además valida el
+header `Host`, de modo que una página web maliciosa no pueda consultar tu índice
+desde el navegador (DNS rebinding).
+
+Los cuatro endpoints, por si quieres integrarlos con otro código:
+
+| Endpoint | Devuelve |
+|----------|----------|
+| `GET /api/search?q=...` | JSON con los fragmentos, metadatos y similitud |
+| `GET /api/prompt?q=...` | El bloque de contexto listo para un LLM |
+| `GET /api/facets` | Categorías, carpetas y rango de años presentes |
+| `GET /api/stats` | Chunks, documentos y reparto por carpeta |
+
+Ejemplo con los mismos parámetros del CLI:
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:8757/api/search?q=sim2real&k=5&year_min=2024"
+```
+
+> La web y el CLI comparten `build_where()` y `run_query()` de `query.py`, así
+> que una misma consulta devuelve exactamente lo mismo en ambos.
 
 ---
 

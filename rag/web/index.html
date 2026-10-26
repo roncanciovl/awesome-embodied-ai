@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG local · awesome-embodied-ai</title>
+<!-- Favicon SVG inline: evita el 404 de /favicon.ico sin añadir ficheros ni peticiones. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f1115'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%235eead4' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%235eead4'/%3E%3C/svg%3E">
+<!--
+  Interfaz del RAG local. Autocontenida a propósito: sin CDN, sin fuentes
+  externas, sin analítica. Funciona offline y solo habla con este servidor
+  (127.0.0.1).
+-->
+<style>
+:root{
+  --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2a2f3a;
+  --txt:#e6e8ee; --dim:#98a2b3; --acc:#5eead4; --acc2:#7dd3fc; --warn:#fbbf24;
+  --ok:#86efac;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font:15px/1.55 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif}
+header{padding:16px 22px;border-bottom:1px solid var(--line);background:var(--panel);
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;justify-content:space-between}
+h1{font-size:16px;margin:0;font-weight:650}
+h1 span{color:var(--acc)}
+.sub{color:var(--dim);font-size:12.5px}
+main{max-width:1100px;margin:0 auto;padding:18px 22px 70px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+input,select,button,textarea{font:inherit;color:inherit}
+input[type=search],input[type=number],input[type=text],select{
+  background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+  padding:9px 11px;outline:none}
+input:focus,select:focus{border-color:var(--acc)}
+#q{flex:1 1 380px;min-width:240px;font-size:16px}
+button{background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+  padding:9px 15px;cursor:pointer;transition:.15s}
+button:hover{border-color:var(--acc);color:var(--acc)}
+button.primary{background:var(--acc);color:#06231f;border-color:var(--acc);font-weight:600}
+button.primary:hover{filter:brightness(1.1);color:#06231f}
+details{margin-top:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:0 14px}
+summary{cursor:pointer;padding:11px 0;color:var(--dim);font-size:13.5px;user-select:none}
+summary:hover{color:var(--txt)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:12px;padding:4px 0 16px}
+.filters label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+.filters select,.filters input{width:100%}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--dim);padding-top:22px}
+.chk input{width:auto}
+.status{margin:18px 0 10px;color:var(--dim);font-size:13.5px;min-height:20px}
+.status.err{color:var(--warn)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;
+  padding:14px 16px;margin-bottom:11px}
+.card:hover{border-color:#3a4150}
+.top{display:flex;gap:10px;align-items:baseline}
+.rank{flex:0 0 auto;background:var(--panel2);border:1px solid var(--line);
+  border-radius:6px;padding:1px 8px;font-size:12px;color:var(--dim)}
+.ttl{flex:1 1 auto;font-weight:600;font-size:14.5px}
+.ttl a{color:var(--acc2);text-decoration:none;font-weight:400;font-size:13px}
+.ttl a:hover{text-decoration:underline}
+.sim{flex:0 0 auto;font-variant-numeric:tabular-nums;font-size:13px;color:var(--acc)}
+.bar{height:3px;background:var(--panel2);border-radius:2px;margin:9px 0 10px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:20px;
+  padding:2px 9px;font-size:11.5px;color:var(--dim)}
+.chip.k{color:var(--acc2)}
+.snip{margin:0;color:#cdd3de;font-size:13.5px;white-space:pre-wrap;
+  max-height:112px;overflow:auto}
+.path{margin-top:8px;font-size:11.5px;color:#6b7280;
+  font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.66);display:none;
+  align-items:center;justify-content:center;padding:24px;z-index:9}
+#modal.on{display:flex}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  max-width:900px;width:100%;max-height:86vh;display:flex;flex-direction:column}
+.box header{background:none;border-bottom:1px solid var(--line);padding:13px 18px}
+textarea{flex:1 1 auto;width:100%;background:var(--bg);border:0;resize:none;
+  padding:16px 18px;font:12.5px/1.6 ui-monospace,Consolas,monospace;outline:none}
+.foot{display:flex;gap:9px;justify-content:flex-end;padding:12px 18px;
+  border-top:1px solid var(--line)}
+.kbd{border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11px;
+  background:var(--panel2);color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>RAG local · <span>awesome-embodied-ai</span></h1>
+    <div class="sub">Recuperación semántica 100&nbsp;% local · ChromaDB + all-MiniLM-L6-v2 · sin credenciales</div>
+  </div>
+  <div class="sub" id="hdstats">cargando índice…</div>
+</header>
+
+<main>
+  <form id="f" class="row" autocomplete="off">
+    <input id="q" type="search"
+      placeholder="Pregunta algo: ¿qué VLAs corren como nodos nativos de ROS 2?" autofocus>
+    <button class="primary" type="submit">Buscar</button>
+    <button type="button" id="btnprompt"
+      title="Genera el bloque de contexto con sus citas, listo para pegar en tu LLM">Contexto LLM</button>
+  </form>
+
+  <details id="fd">
+    <summary>Filtros <span class="kbd">opcionales</span></summary>
+    <div class="filters">
+      <div><label for="k">Fragmentos (k)</label>
+        <input id="k" type="number" min="1" max="50" value="6"></div>
+      <div><label for="source">Origen</label>
+        <select id="source">
+          <option value="all">todo</option>
+          <option value="pdf">solo PDFs</option>
+          <option value="markdown">solo Markdown</option>
+        </select></div>
+      <div><label for="category">Categoría</label>
+        <select id="category"><option value="">todas</option></select></div>
+      <div><label for="folder">Carpeta</label>
+        <select id="folder"><option value="">todas</option></select></div>
+      <div><label for="ymin">Año desde</label>
+        <input id="ymin" type="number" placeholder="—"></div>
+      <div><label for="ymax">Año hasta</label>
+        <input id="ymax" type="number" placeholder="—"></div>
+      <div><label for="minsim">Similitud mínima</label>
+        <input id="minsim" type="number" step="0.05" min="0" max="1" placeholder="0"></div>
+      <div><label for="contains">Debe contener</label>
+        <input id="contains" type="text" placeholder="p.ej. VLA"></div>
+      <label class="chk"><input id="retired" type="checkbox"> incluir retirados</label>
+    </div>
+  </details>
+
+  <div class="status" id="status"></div>
+  <div id="results"></div>
+</main>
+
+<div id="modal">
+  <div class="box">
+    <header><h1>Contexto para pegar en tu LLM</h1>
+      <div class="sub" id="mpromptinfo"></div></header>
+    <textarea id="ptext" readonly spellcheck="false"></textarea>
+    <div class="foot">
+      <button type="button" id="copy">Copiar</button>
+      <button type="button" id="close">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+// Todo lo que viene del índice se escapa: los PDFs contienen <, > y & sueltos.
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// Query string compartida por /api/search y /api/prompt: mismos filtros, misma URL.
+function params() {
+  const p = new URLSearchParams();
+  const q = $("q").value.trim();
+  if (q) p.set("q", q);
+  p.set("k", $("k").value || "6");
+  p.set("source", $("source").value);
+  if ($("category").value) p.set("category", $("category").value);
+  if ($("folder").value) p.set("folder", $("folder").value);
+  if ($("ymin").value) p.set("year_min", $("ymin").value);
+  if ($("ymax").value) p.set("year_max", $("ymax").value);
+  if ($("minsim").value) p.set("min_sim", $("minsim").value);
+  if ($("contains").value.trim()) p.set("contains", $("contains").value.trim());
+  if ($("retired").checked) p.set("include_retired", "1");
+  return p.toString();
+}
+
+async function getJSON(path) {
+  const res = await fetch(path);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function setStatus(msg, isErr) {
+  const el = $("status");
+  el.textContent = msg || "";
+  el.classList.toggle("err", !!isErr);
+}
+
+function chip(label, value, key) {
+  if (value === undefined || value === null || value === "" || value === "-") return "";
+  return `<span class="chip${key ? " k" : ""}">${esc(label)}: ${esc(value)}</span>`;
+}
+function card(i, hit) {
+  const m = hit.metadata || {};
+  const sim = Number(hit.similarity) || 0;
+  const pct = Math.max(0, Math.min(100, Math.round(sim * 100)));
+  const aid = String(m.arxiv_id || "").trim();
+  const link = aid && aid !== "-"
+    ? ` <a href="https://arxiv.org/abs/${esc(aid)}" target="_blank" rel="noreferrer">arXiv:${esc(aid)}</a>`
+    : "";
+  const pages = m.page_start
+    ? (m.page_end && m.page_end !== m.page_start ? `pp.${m.page_start}-${m.page_end}` : `p.${m.page_start}`)
+    : "";
+  const title = m.source_type === "markdown"
+    ? (m.doc_path || "markdown")
+    : (m.title || String(m.doc_path || "").split("/").pop());
+  const snippet = String(hit.document || "").replace(/\s+/g, " ").trim();
+  return `<article class="card">
+    <div class="top"><span class="rank">${i}</span>
+      <div class="ttl">${esc(title)}${link}</div>
+      <span class="sim">${sim.toFixed(3)}</span></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="chips">
+      ${chip("año", m.year)}${chip("pág.", pages)}${chip("cat.", m.category, 1)}
+      ${chip("carpeta", m.folder)}${chip("ROS 2", m.ros_integration)}
+      ${chip("robot", m.robot_type)}${chip("sim.", m.simulator)}
+      ${chip("hardware", m.hardware)}${chip("sección", m.heading_path)}
+    </div>
+    <p class="snip">${esc(snippet)}</p>
+    <div class="path">${esc(m.doc_path || "")}</div>
+  </article>`;
+}
+
+async function search() {
+  if (!$("q").value.trim()) { setStatus("Escribe una pregunta.", true); return; }
+  setStatus("buscando…");
+  $("results").innerHTML = "";
+  try {
+    const t0 = performance.now();
+    const data = await getJSON("/api/search?" + params());
+    const ms = Math.round(performance.now() - t0);
+    if (!data.hits.length) {
+      setStatus("Sin resultados con esos filtros. Quita filtros o reformula en inglés: el corpus está en inglés.", true);
+      return;
+    }
+    setStatus(`${data.count} fragmentos de ${data.documents} documentos distintos · ${ms} ms`);
+    $("results").innerHTML = data.hits.map((h, i) => card(i + 1, h)).join("");
+  } catch (err) {
+    setStatus("Error: " + err.message, true);
+  }
+}
+
+async function showPrompt() {
+  if (!$("q").value.trim()) { setStatus("Escribe una pregunta antes de generar el contexto.", true); return; }
+  try {
+    const data = await getJSON("/api/prompt?" + params());
+    $("ptext").value = data.prompt;
+    $("mpromptinfo").textContent =
+      `${data.count} fragmentos · ${data.prompt.length.toLocaleString("es")} caracteres · pégalo en el LLM que prefieras`;
+    $("modal").classList.add("on");
+  } catch (err) {
+    setStatus("Error: " + err.message, true);
+  }
+}
+
+async function copyPrompt() {
+  const ta = $("ptext");
+  try {
+    await navigator.clipboard.writeText(ta.value);
+  } catch {
+    ta.select();                       // localhost es contexto seguro; respaldo por si acaso
+    document.execCommand("copy");
+  }
+  const btn = $("copy");
+  btn.textContent = "Copiado ✓";
+  setTimeout(() => { btn.textContent = "Copiar"; }, 1600);
+}
+
+async function init() {
+  try {
+    const s = await getJSON("/api/stats");
+    $("hdstats").textContent =
+      `${s.chunks.toLocaleString("es")} chunks · ${s.documents} docs (${s.pdfs} PDF, ${s.markdowns} MD) · ${s.collection}`;
+  } catch (err) {
+    $("hdstats").textContent = "índice no disponible";
+    setStatus(err.message + " — reconstrúyelo con rag\\build_index.py", true);
+  }
+  try {
+    const f = await getJSON("/api/facets");
+    const fill = (sel, pairs) => {
+      for (const [name, n] of pairs)
+        $(sel).insertAdjacentHTML("beforeend", `<option value="${esc(name)}">${esc(name)} (${n})</option>`);
+    };
+    fill("category", f.categories);
+    fill("folder", f.folders);
+    if (f.year_min) $("ymin").placeholder = String(f.year_min);
+    if (f.year_max) $("ymax").placeholder = String(f.year_max);
+  } catch { /* sin facets la búsqueda sigue funcionando */ }
+}
+
+$("f").addEventListener("submit", (e) => { e.preventDefault(); search(); });
+$("btnprompt").addEventListener("click", showPrompt);
+$("copy").addEventListener("click", copyPrompt);
+const hideModal = () => $("modal").classList.remove("on");
+$("close").addEventListener("click", hideModal);
+$("modal").addEventListener("click", (e) => { if (e.target.id === "modal") hideModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideModal(); });
+init();
+</script>
+</body>
+</html>
