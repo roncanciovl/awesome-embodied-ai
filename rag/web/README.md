@@ -410,7 +410,7 @@ Everything is deliberate and lives in the code, not only in the documentation:
 | The first query takes several seconds | The ONNX model is loaded into memory at start-up | Normal: the following ones drop to tens–hundreds of ms (147 ms measured with `k=4`) |
 | No chunks from a just-added paper | The index was not rebuilt | `build_index.py` and `F5` |
 | `403 {"error": "Host no permitido: solo acceso local."}` | You entered through the LAN IP or another hostname | Use `http://127.0.0.1:8757/` or `http://localhost:8757/` |
-| `404 {"error": "Ruta desconocida: /…"}` | You asked for something that is neither `/` nor `/api/*` | Only the page and the six endpoints exist |
+| `404 {"error": "Ruta desconocida: /…"}` | You asked for something that is neither `/`, `/api/*` nor `/healthz` | Only the page, the six `/api/*` endpoints and `/healthz` exist |
 | `503 {"error": "La colección … no está disponible"}` | The index was missing when the server started | Rebuild the index and restart the server |
 | A result shows no arXiv link | That paper has no `arxiv_id` in `papers.csv` (or it is `-`) | Open the document through its `doc_path` |
 | The PDFs are not on disk | They are not versioned, because of redistribution licences | `python scripts/download_papers.py` and re-index |
