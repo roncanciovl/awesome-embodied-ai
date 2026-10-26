@@ -9,6 +9,19 @@ Retrieval-augmented generation (**RAG**) over this repo's paper collection,
 > and, with `--prompt`, a context block ready to paste into whichever LLM you
 > choose.
 
+![Animated diagram of the RAG: offline indexing into ChromaDB, the embedding space, the
+loopback query path and the citation guardrails](assets/rag-architecture.svg)
+
+**How the pieces fit.** `build_index.py` chunks the corpus and embeds it offline into a
+persistent ChromaDB collection; `serve.py` answers read-only queries on `127.0.0.1`; the
+**same** 384-d model embeds the query, so hits are comparable; and `--marco` / `--verify`
+turn those hits into verifiable citations. The only thing that ever leaves the machine is
+the text you copy into your own LLM.
+
+> The diagram is an animated SVG: open
+> [`assets/rag-architecture.svg`](assets/rag-architecture.svg) in a browser to see the
+> packets flow (it honours `prefers-reduced-motion`, and stays readable frozen).
+
 ---
 
 ## Contents
@@ -22,6 +35,7 @@ Retrieval-augmented generation (**RAG**) over this repo's paper collection,
 | `serve.py` | Local web UI (`http.server`, read-only) |
 | `web/index.html` | That UI's front end (self-contained, no CDN) |
 | `web/README.md` | Web UI user guide (controls, filters, recipes, troubleshooting) |
+| `assets/rag-architecture.svg` | Animated diagram of the whole pipeline (index → query → citations) |
 | `requirements.txt` | Dependencies (`chromadb`, `PyMuPDF`) |
 | `ask.ps1` | PowerShell shortcut with the console pinned to UTF-8 |
 
